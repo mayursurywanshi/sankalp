@@ -1,0 +1,15 @@
+.specialist-section { background: linear-gradient(135deg, #edfafa, #f7f7ff); border-radius: 18px; display: grid; grid-template-columns: 0.75fr 1.25fr; min-height: 245px; overflow: hidden; padding: 14px 20px 0; }
+.specialist-section__image { align-self: end; height: 230px; overflow: hidden; }
+.specialist-section__image img { height: 100%; object-fit: contain; width: 100%; }
+.specialist-section__copy { padding: 12px 0 16px; }
+.specialist-section h2 { font-size: 20px; margin: 0; }
+.specialist-section__accent { background: var(--teal); display: block; height: 2px; margin: 9px 0; width: 34px; }
+.specialist-section h3 { color: #078e94; font-size: 18px; margin: 0 0 2px; }
+.specialist-section__designation { color: #6331a5; font-size: 13px; font-weight: 700; margin: 0 0 6px; }
+.specialist-section ul { margin: 0; padding-left: 17px; }
+.specialist-section li { color: #36415d; font-size: 11px; line-height: 1.35; margin: 3px 0; }
+
+@media (max-width: 500px) {
+  .specialist-section { grid-template-columns: 1fr; padding-top: 20px; }
+  .specialist-section__image { height: 260px; }
+}
