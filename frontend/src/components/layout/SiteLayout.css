@@ -1,0 +1,11 @@
+.site-layout {
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-top: 78px;
+}
+
+@media (max-width: 860px) {
+  .site-layout {
+    padding-top: 68px;
+  }
+}
