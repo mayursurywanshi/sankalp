@@ -1,0 +1,31 @@
+.button-link {
+  align-items: center;
+  background: linear-gradient(135deg, #6831b5, #50208d);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  box-shadow: 0 8px 18px rgba(91, 42, 165, 0.18);
+  color: #fff;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 23px;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.button-link:hover {
+  box-shadow: 0 11px 24px rgba(91, 42, 165, 0.28);
+  transform: translateY(-2px);
+}
+.button-link--small {
+  font-size: 12px;
+  min-height: 40px;
+  padding: 0 18px;
+}
+.button-link--outline {
+  background: #fff;
+  border-color: #d6d8e4;
+  box-shadow: none;
+  color: var(--navy);
+}
