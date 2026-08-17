@@ -1,5 +1,5 @@
 .story-section { display: grid; gap: 24px; grid-template-columns: 1fr 1fr; }
-.story-section > img { border-radius: 20px; height: 250px; object-fit: cover; width: 100%; }
+.story-section > img { align-self: stretch; border-radius: 20px; height: 100%; min-height: 250px; object-fit: cover; width: 100%; }
 .story-section__copy { padding: 8px 0; }
 .story-section h2 { font-size: 22px; margin: 0; }
 .story-section__accent { background: var(--teal); display: block; height: 3px; margin: 12px 0 16px; width: 36px; }
