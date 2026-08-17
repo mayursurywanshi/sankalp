@@ -61,5 +61,7 @@
   .main-nav a { font-size: 14px; padding: 10px 0; }
 }
 @media (max-width: 540px) {
-  .brand img { height: 48px; width: 175px; }
+  .site-header__inner { padding-left: 14px; padding-right: 14px; }
+  .brand img { height: 46px; width: min(165px, 52vw); }
+  .main-nav { left: 12px; right: 12px; }
 }

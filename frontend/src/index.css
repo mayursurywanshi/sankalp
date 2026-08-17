@@ -7,7 +7,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   margin: 0;
@@ -17,11 +17,63 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #fff;
   color: #38425d;
+  min-width: 320px;
+  overflow-x: hidden;
 }
+
+img { max-width: 100%; }
+
+/* Shared card interaction: add .interactive-card to every new non-flipping card. */
+.interactive-card,
+:where(
+  .services-hero__copy,
+  .services-hero__image,
+  .services-cta__copy,
+  .services-cta > img,
+  .story-section,
+  .specialist-section,
+  .approach-section,
+  .about-cta,
+  .about-hero__image img
+) {
+  transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+
+.interactive-card:hover,
+:where(
+  .services-hero__copy,
+  .services-hero__image,
+  .services-cta__copy,
+  .services-cta > img,
+  .story-section,
+  .specialist-section,
+  .approach-section,
+  .about-cta,
+  .about-hero__image img
+):hover {
+  border-color: rgba(7, 154, 164, .38);
+  box-shadow: 0 16px 34px rgba(19, 43, 97, .14);
+  transform: translateY(-5px);
+}
+
+.approach-section article { border-radius: 14px; transition: background-color 220ms ease, transform 220ms ease; }
+.approach-section article:hover { background: rgba(255, 255, 255, .58); transform: translateY(-4px); }
 
 button, input, textarea, select { font: inherit; }
 
 a:focus-visible, button:focus-visible {
   outline: 3px solid #f6b925;
   outline-offset: 3px;
+}
+
+@media (hover: none) {
+  .interactive-card:hover,
+  :where(.services-hero__copy, .services-hero__image, .services-cta__copy, .services-cta > img, .story-section, .specialist-section, .approach-section, .about-cta, .about-hero__image img):hover,
+  .approach-section article:hover { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-card,
+  :where(.services-hero__copy, .services-hero__image, .services-cta__copy, .services-cta > img, .story-section, .specialist-section, .approach-section, .about-cta, .about-hero__image img),
+  .approach-section article { transition-duration: .01ms; }
 }

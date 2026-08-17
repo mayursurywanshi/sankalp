@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { PageSkeleton } from "../../components/loading/PageSkeleton";
 import { AboutCallToAction } from "./AboutCallToAction";
 import { AboutHero } from "./AboutHero";
 import { ApproachSection } from "./ApproachSection";
@@ -39,7 +40,7 @@ export const About = () => {
   }
 
   if (!content) {
-    return <main className="about-status" aria-live="polite"><p>Loading About Sankalp...</p></main>;
+    return <PageSkeleton cards={3} />;
   }
 
   return (
