@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
+import aboutRouter from "./module/about/about.routes";
 import homeRouter from "./module/home/home.routes";
 
 const app = express();
@@ -16,6 +17,7 @@ app.get("/api/health", (_request: Request, response: Response) => {
   });
 });
 
+app.use("/api/about", aboutRouter);
 app.use("/api/home", homeRouter);
 
 export default app;
