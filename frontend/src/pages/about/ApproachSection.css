@@ -1,0 +1,20 @@
+.approach-section { background: linear-gradient(135deg, #f7f7ff, #f4effd); border-radius: 18px; padding: 20px 26px 12px; }
+.approach-section > h2 { font-size: 20px; margin: 0; }
+.approach-section__accent { background: #9273cf; display: block; height: 2px; margin: 9px 0 14px; width: 34px; }
+.approach-section__steps { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); }
+.approach-section article { position: relative; text-align: center; }
+.approach-section__icon { align-items: center; background: #fff; border-radius: 50%; box-shadow: 0 4px 15px rgba(39, 39, 91, 0.08); color: #07959c; display: flex; height: 66px; justify-content: center; margin: 0 auto 9px; width: 66px; }
+.approach-section__icon svg { fill: none; height: 35px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.1; width: 35px; }
+.approach-section__icon.step-2 { color: #e53976; }
+.approach-section__icon.step-3 { color: #7b3ed1; }
+.approach-section__icon.step-4 { color: #f39a10; }
+.approach-section h3 { font-size: 14px; margin: 0 0 5px; }
+.approach-section article p { color: #3f4962; font-size: 12px; line-height: 1.45; margin: 0 auto; max-width: 145px; }
+.approach-section__arrow { color: #7c3bc5; font-size: 26px; position: absolute; right: -22px; top: 20px; }
+.approach-section__summary { color: #6b32b3; font-size: 13px; font-weight: 800; margin: 16px 0 0; text-align: center; }
+
+@media (max-width: 680px) {
+  .approach-section__steps { grid-template-columns: repeat(2, 1fr); row-gap: 24px; }
+  .approach-section__arrow { display: none; }
+}
+@media (max-width: 420px) { .approach-section__steps { grid-template-columns: 1fr; } }

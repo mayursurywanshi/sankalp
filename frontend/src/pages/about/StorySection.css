@@ -1,0 +1,10 @@
+.story-section { display: grid; gap: 24px; grid-template-columns: 1fr 1fr; }
+.story-section > img { border-radius: 20px; height: 250px; object-fit: cover; width: 100%; }
+.story-section__copy { padding: 8px 0; }
+.story-section h2 { font-size: 22px; margin: 0; }
+.story-section__accent { background: var(--teal); display: block; height: 3px; margin: 12px 0 16px; width: 36px; }
+.story-section p { color: #3f4962; font-size: 14px; line-height: 1.65; margin: 0 0 12px; }
+
+@media (max-width: 1100px) { .story-section { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .story-section { grid-template-columns: 0.8fr 1.2fr; } }
+@media (max-width: 620px) { .story-section { grid-template-columns: 1fr; } }
