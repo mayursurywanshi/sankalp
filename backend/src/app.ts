@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
+import homeRouter from "./module/home/home.routes";
 
 const app = express();
 
@@ -14,5 +15,7 @@ app.get("/api/health", (_request: Request, response: Response) => {
     message: "Sankalp API is running",
   });
 });
+
+app.use("/api/home", homeRouter);
 
 export default app;
