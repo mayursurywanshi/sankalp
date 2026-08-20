@@ -28,7 +28,7 @@ model ContactMessage {
   status      ContactMessageStatus @default(NEW)
   createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  @@index([status])
-  @@index([createdAt])
-  @@map("contact_messages")
+  @@index([status], map: "message_from_contact_us_status_idx")
+  @@index([createdAt], map: "message_from_contact_us_created_at_idx")
+  @@map("message_from_contact_us")
 }
