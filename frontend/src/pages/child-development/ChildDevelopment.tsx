@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { ButtonLink } from "../../components/button/ButtonLink";
 import { PageSkeleton } from "../../components/loading/PageSkeleton";
 import heroImage from "../../assets/child-development/child-development-hero.png";
-import earlyInterventionImage from "../../assets/child-development/early-intervention.png";
 import zeroToTwoYearsImage from "../../assets/child-development/milestones/0-2-years.png";
 import twoToFourYearsImage from "../../assets/child-development/milestones/2-4-years.png";
 import fourToSixYearsImage from "../../assets/child-development/milestones/4-6-years.png";
@@ -85,15 +83,6 @@ export const ChildDevelopment = () => {
         </article>
       </section>
 
-      <section className="early-intervention-card interactive-card" aria-labelledby="early-intervention-title">
-        <div className="early-intervention-card__copy">
-          <span>Timely support matters</span>
-          <h2 id="early-intervention-title">{content.earlyIntervention.title}</h2>
-          <p>{content.earlyIntervention.description}</p>
-          <ButtonLink href={content.earlyIntervention.buttonHref}>{content.earlyIntervention.buttonLabel}</ButtonLink>
-        </div>
-        <img src={earlyInterventionImage} alt="Therapists supporting a child during an early intervention activity" />
-      </section>
     </main>
   );
 };

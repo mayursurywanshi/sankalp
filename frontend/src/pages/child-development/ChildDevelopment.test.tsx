@@ -14,7 +14,6 @@ const response = {
         { id: "4-6-years", label: "4–6 Years", title: "4–6 Years", milestones: ["Hops and balances on one foot"], guidance: "School-readiness develops through play." },
       ],
     },
-    earlyIntervention: { title: "Early intervention makes a difference.", description: "Timely support improves outcomes.", buttonLabel: "Book a Developmental Assessment", buttonHref: "/appointment" },
   },
 };
 

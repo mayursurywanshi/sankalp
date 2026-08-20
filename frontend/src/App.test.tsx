@@ -12,7 +12,7 @@ test("renders the Sankalp home page", async () => {
   render(<App />);
   expect(screen.getByRole("heading", { name: /reach their full potential/i })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /why choose sankalp/i })).toBeInTheDocument();
-  expect(screen.getAllByRole("link", { name: /book appointment/i })).toHaveLength(3);
+  expect(screen.getAllByRole("link", { name: /book appointment/i })).toHaveLength(2);
   expect(screen.getByRole("contentinfo")).toBeInTheDocument();
   expect(screen.getByText("Empowering little minds. Enriching young lives.")).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "info@sankalp.com" })).toHaveAttribute("href", "mailto:info@sankalp.com");

@@ -47,10 +47,4 @@ export const SERVICES_CONTENT = {
       color: "green",
     },
   ],
-  callToAction: {
-    title: "Not sure which service is right for your child?",
-    description: "Talk to our specialist for guidance.",
-    buttonLabel: "Book an Appointment",
-    buttonHref: "/appointment",
-  },
 } as const;

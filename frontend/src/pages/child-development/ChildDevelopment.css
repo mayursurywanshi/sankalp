@@ -27,8 +27,7 @@
   padding: 34px;
 }
 .child-development-hero__copy > span,
-.development-milestones__heading > span,
-.early-intervention-card__copy > span {
+.development-milestones__heading > span {
   color: var(--teal);
   font-size: 12px;
   font-weight: 800;
@@ -192,38 +191,6 @@
   line-height: 1.55;
   margin: 18px 0 0;
 }
-.early-intervention-card {
-  align-items: center;
-  background: linear-gradient(100deg, #eaf9fb, #f3effd);
-  border: 1px solid #dfe9f2;
-  border-radius: 22px;
-  display: grid;
-  gap: 24px;
-  grid-template-columns: 1fr 0.75fr;
-  margin: 40px auto 0;
-  max-width: 1180px;
-  min-height: 195px;
-  overflow: hidden;
-  padding: 18px 32px;
-}
-.early-intervention-card__copy {
-  position: relative;
-  z-index: 1;
-}
-.early-intervention-card h2 {
-  font-size: clamp(24px, 3vw, 34px);
-  margin: 9px 0;
-}
-.early-intervention-card p {
-  color: var(--muted);
-  line-height: 1.6;
-  margin: 0 0 20px;
-}
-.early-intervention-card > img {
-  height: 185px;
-  object-fit: contain;
-  width: 100%;
-}
 .child-development-status {
   align-items: center;
   display: flex;
@@ -272,16 +239,6 @@
   }
   .milestone-card__content {
     padding: 18px 16px 24px;
-  }
-  .early-intervention-card {
-    grid-template-columns: 1fr;
-    margin-left: 20px;
-    margin-right: 20px;
-    padding: 24px 22px 16px;
-    text-align: center;
-  }
-  .early-intervention-card > img {
-    height: 170px;
   }
 }
 @media (max-width: 380px) {

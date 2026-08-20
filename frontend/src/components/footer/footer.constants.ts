@@ -7,8 +7,7 @@ export const FOOTER_CONTENT = {
     { label: "Child Development", path: "/child-development" },
   ],
   importantLinks: [
-    { label: "Testimonials", path: "/testimonials" },
-    { label: "Success Stories", path: "/success-stories" },
+    { label: "Our Impact", path: "/our-impact" },
     { label: "Book Appointment", path: "/appointment" },
     { label: "Contact Us", path: "/contact" },
   ],

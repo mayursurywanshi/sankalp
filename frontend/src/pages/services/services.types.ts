@@ -11,12 +11,6 @@ export interface ServicesContent {
     description: string;
   };
   services: ServiceItem[];
-  callToAction: {
-    title: string;
-    description: string;
-    buttonLabel: string;
-    buttonHref: string;
-  };
 }
 
 export interface ServicesResponse {

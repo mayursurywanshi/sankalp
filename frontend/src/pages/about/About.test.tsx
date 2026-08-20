@@ -9,7 +9,6 @@ const aboutData = {
   values: { title: "Our Values", items: ["Compassion", "Excellence"] },
   specialist: { sectionTitle: "Meet Our Specialist", name: "Dr. Priyanka Sharnat", designation: "Pediatric Physiotherapist", qualifications: ["MPT (Pediatrics)"] },
   approach: { title: "Our Approach", steps: [{ title: "Assessment", description: "Understanding your child's needs" }], summary: "A step-by-step approach for meaningful progress." },
-  callToAction: { title: "Let's Work Together", description: "Every child has the potential to shine.", buttonLabel: "Book Appointment" },
 };
 
 beforeEach(() => {

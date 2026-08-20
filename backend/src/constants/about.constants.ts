@@ -73,11 +73,4 @@ export const ABOUT_CONTENT = {
     ],
     summary: "A step-by-step approach for meaningful progress.",
   },
-
-  callToAction: {
-    title: "Let’s Work Together for Your Child’s Better Tomorrow",
-    description:
-      "Every child has the potential to shine with the right support and care.",
-    buttonLabel: "Book Appointment",
-  },
 } as const;

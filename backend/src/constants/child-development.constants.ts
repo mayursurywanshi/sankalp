@@ -59,12 +59,4 @@ export const CHILD_DEVELOPMENT_CONTENT = {
       },
     ],
   },
-
-  earlyIntervention: {
-    title: "Early intervention makes a difference.",
-    description:
-      "The earlier a child receives the right support, the better their outcomes.",
-    buttonLabel: "Book a Developmental Assessment",
-    buttonHref: "/appointment",
-  },
 } as const;

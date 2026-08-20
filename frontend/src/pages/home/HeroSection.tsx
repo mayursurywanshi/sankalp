@@ -12,7 +12,6 @@ export const HeroSection = ({ description, isLoading }: HeroSectionProps) => (
       <h2>Pediatric Physiotherapy &amp; Child Development Center</h2>
       <p className={isLoading ? "hero-description is-loading" : "hero-description"}>{description}</p>
       <div className="hero-actions">
-        <ButtonLink href="#appointment">Book Appointment</ButtonLink>
         <ButtonLink href="#services" variant="outline">Explore Services</ButtonLink>
       </div>
     </div>

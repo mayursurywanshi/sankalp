@@ -30,11 +30,6 @@ export interface AboutContent {
     steps: AboutTextSection[];
     summary: string;
   };
-  callToAction: {
-    title: string;
-    description: string;
-    buttonLabel: string;
-  };
 }
 
 export interface AboutResponse {

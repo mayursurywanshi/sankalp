@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { ButtonLink } from "../../components/button/ButtonLink";
 import { PageSkeleton } from "../../components/loading/PageSkeleton";
 import heroImage from "../../assets/services/services-hero.png";
-import ctaImage from "../../assets/services/services-cta.png";
 import pediatricPhysiotherapyImage from "../../assets/services/cards/pediatric-physiotherapy.png";
 import developmentalAssessmentImage from "../../assets/services/cards/developmental-assessment.png";
 import neuromotorTherapyImage from "../../assets/services/cards/neuromotor-therapy.png";
@@ -94,15 +92,6 @@ export const Services = () => {
         </div>
       </section>
 
-      <section className="services-cta" aria-labelledby="services-cta-title">
-        <div className="services-cta__copy">
-          <span>We’re here to guide you</span>
-          <h2 id="services-cta-title">{content.callToAction.title}</h2>
-          <p>{content.callToAction.description}</p>
-          <ButtonLink href={content.callToAction.buttonHref}>{content.callToAction.buttonLabel}</ButtonLink>
-        </div>
-        <img src={ctaImage} alt="Therapist and child enjoying a developmental play activity" />
-      </section>
     </main>
   );
 };

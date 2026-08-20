@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { PageSkeleton } from "../../components/loading/PageSkeleton";
-import { AboutCallToAction } from "./AboutCallToAction";
 import { AboutHero } from "./AboutHero";
 import { ApproachSection } from "./ApproachSection";
 import { getAboutContent } from "./about.service";
@@ -54,7 +53,6 @@ export const About = () => {
         <SpecialistSection content={content.specialist} />
         <ApproachSection content={content.approach} />
       </div>
-      <AboutCallToAction content={content.callToAction} />
     </main>
   );
 };

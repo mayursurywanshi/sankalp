@@ -6,8 +6,8 @@ import "./Header.css";
 
 const navigation = [
   ["Home", "/"], ["About Us", "/about"], ["Services", "/services"],
-  ["Child Development", "/child-development"], ["Testimonials", "/testimonials"],
-  ["Success Stories", "/success-stories"], ["Contact Us", "/contact"],
+  ["Child Development", "/child-development"], ["Our Impact", "/our-impact"],
+  ["Contact Us", "/contact"],
 ] as const;
 
 export const Header = () => {
