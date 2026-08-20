@@ -18,6 +18,32 @@ enum ContactMessageStatus {
   CLOSED
 }
 
+enum AppointmentRequestStatus {
+  REQUESTED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model AppointmentRequest {
+  id             String                   @id @default(uuid()) @db.Uuid
+  referenceId    String                   @unique @map("reference_id") @db.VarChar(32)
+  parentName     String                   @map("parent_name") @db.VarChar(80)
+  childName      String                   @map("child_name") @db.VarChar(80)
+  childAge       String                   @map("child_age") @db.VarChar(30)
+  phone          String                   @db.VarChar(20)
+  email          String                   @db.VarChar(120)
+  preferredDate  DateTime                 @map("preferred_date") @db.Date
+  preferredTime  String                   @map("preferred_time") @db.VarChar(20)
+  consent        Boolean
+  status         AppointmentRequestStatus @default(REQUESTED)
+  createdAt      DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([preferredDate], map: "appointment_requests_preferred_date_idx")
+  @@index([status], map: "appointment_requests_status_idx")
+  @@map("appointment_requests")
+}
+
 model ContactMessage {
   id          String               @id @default(uuid()) @db.Uuid
   referenceId String               @unique @map("reference_id") @db.VarChar(32)

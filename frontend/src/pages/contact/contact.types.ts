@@ -9,7 +9,7 @@ export interface ContactContent {
   hero: { title: string; description: string };
   details: ContactDetail[];
   form: { title: string; successMessage: string };
-  map: { embedUrl: string; label: string };
+  map: { embedUrl: string; label: string; directionsUrl: string };
 }
 
 export interface ContactResponse { success: boolean; data: ContactContent; }

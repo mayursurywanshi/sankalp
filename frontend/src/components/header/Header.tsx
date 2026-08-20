@@ -27,7 +27,7 @@ export const Header = () => {
             <NavLink className={({ isActive }) => isActive ? "active" : undefined}
               end={index === 0} to={path} key={label} onClick={() => setIsOpen(false)}>{label}</NavLink>
           ))}
-          <ButtonLink href="#appointment" size="small" onClick={() => setIsOpen(false)}>
+          <ButtonLink href="/book-appointment" size="small" onClick={() => setIsOpen(false)}>
             Book Appointment
           </ButtonLink>
         </nav>

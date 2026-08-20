@@ -8,7 +8,7 @@ export const FOOTER_CONTENT = {
   ],
   importantLinks: [
     { label: "Our Impact", path: "/our-impact" },
-    { label: "Book Appointment", path: "/appointment" },
+    { label: "Book Appointment", path: "/book-appointment" },
     { label: "Contact Us", path: "/contact" },
   ],
   contact: {

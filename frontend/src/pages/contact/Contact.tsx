@@ -87,7 +87,10 @@ export const Contact = () => {
             {fieldErrors.email?.[0] && <small className="contact-field-error">{fieldErrors.email[0]}</small>}
 
             <label htmlFor="contact-message">Message</label>
-            <textarea id="contact-message" name="message" value={form.message} onChange={updateField} placeholder="Type your message..." rows={5} aria-invalid={Boolean(fieldErrors.message?.length)} required />
+            <div className="contact-message-field">
+              <textarea id="contact-message" name="message" value={form.message} onChange={updateField} placeholder="Type your message..." rows={5} maxLength={900} aria-describedby="contact-message-count" aria-invalid={Boolean(fieldErrors.message?.length)} required />
+              <span id="contact-message-count" className="contact-message-count" aria-live="polite">{form.message.length}/900 characters</span>
+            </div>
             {fieldErrors.message?.[0] && <small className="contact-field-error">{fieldErrors.message[0]}</small>}
 
             {status && <p className={`contact-form-status contact-form-status--${status.type}`} role="status">{status.message}</p>}
@@ -97,6 +100,7 @@ export const Contact = () => {
 
         <article className="contact-panel contact-map interactive-card">
           <iframe src={content.map.embedUrl} title={`Location of ${content.map.label}`} allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" />
+          <a className="contact-map__button" href={content.map.directionsUrl} target="_blank" rel="noreferrer">See On Map</a>
         </article>
       </section>
     </main>

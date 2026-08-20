@@ -27,8 +27,25 @@ CREATE TABLE IF NOT EXISTS message_from_contact_us (
   email VARCHAR(120) NOT NULL,
   message TEXT NOT NULL,
   status "ContactMessageStatus" NOT NULL DEFAULT 'NEW',
-  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT message_from_contact_us_message_length_check
+    CHECK (char_length(message) <= 900)
 );
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'message_from_contact_us_message_length_check'
+      AND conrelid = 'public.message_from_contact_us'::regclass
+  ) THEN
+    ALTER TABLE message_from_contact_us
+      ADD CONSTRAINT message_from_contact_us_message_length_check
+      CHECK (char_length(message) <= 900);
+  END IF;
+END
+$$;
 
 DO $$
 BEGIN

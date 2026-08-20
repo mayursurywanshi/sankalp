@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SiteLayout } from "./components/layout/SiteLayout";
 import { ScrollToTop } from "./components/layout/ScrollToTop";
 import { About } from "./pages/about/About";
+import { BookAppointment } from "./pages/book-appointment/BookAppointment";
 import { ChildDevelopment } from "./pages/child-development/ChildDevelopment";
 import { Contact } from "./pages/contact/Contact";
 import { Home } from "./pages/home/Home";
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/book-appointment" element={<BookAppointment />} />
           <Route path="/child-development" element={<ChildDevelopment />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/our-impact" element={<OurImpact />} />
