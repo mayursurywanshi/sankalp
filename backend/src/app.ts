@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import aboutRouter from "./module/about/about.routes";
+import childDevelopmentRouter from "./module/child-development/child-development.routes";
 import homeRouter from "./module/home/home.routes";
 import servicesRouter from "./module/services/services.routes";
 
@@ -19,6 +20,7 @@ app.get("/api/health", (_request: Request, response: Response) => {
 });
 
 app.use("/api/about", aboutRouter);
+app.use("/api/child-development", childDevelopmentRouter);
 app.use("/api/home", homeRouter);
 app.use("/api/services", servicesRouter);
 
