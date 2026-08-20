@@ -11,6 +11,7 @@ dist/
 
 # Generated Prisma Client
 generated/prisma/
+src/generated/prisma/
 
 # Prisma-generated AI assistant files
 .agents/

@@ -1,20 +1,15 @@
 import { randomUUID } from "node:crypto";
+import { prisma } from "../../config/database.config";
 import { ContactMessageInput } from "./contact.validation";
 
-export interface ContactMessageReceipt extends ContactMessageInput {
-  referenceId: string;
-  receivedAt: string;
-}
-
-const testStageMessages: ContactMessageReceipt[] = [];
-
-export const receiveContactMessage = (message: ContactMessageInput): ContactMessageReceipt => {
-  const receipt = {
-    ...message,
-    referenceId: `SC-${randomUUID().slice(0, 8).toUpperCase()}`,
-    receivedAt: new Date().toISOString(),
-  };
-
-  testStageMessages.push(receipt);
-  return receipt;
-};
+export const receiveContactMessage = async (message: ContactMessageInput) =>
+  prisma.contactMessage.create({
+    data: {
+      ...message,
+      referenceId: `SC-${randomUUID().slice(0, 8).toUpperCase()}`,
+    },
+    select: {
+      referenceId: true,
+      createdAt: true,
+    },
+  });

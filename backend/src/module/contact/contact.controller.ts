@@ -7,7 +7,7 @@ export const getContact = (_request: Request, response: Response): void => {
   response.status(200).json({ success: true, data: CONTACT_CONTENT });
 };
 
-export const submitContactMessage = (request: Request, response: Response): void => {
+export const submitContactMessage = async (request: Request, response: Response): Promise<void> => {
   const validation = contactMessageSchema.safeParse(request.body);
 
   if (!validation.success) {
@@ -19,10 +19,18 @@ export const submitContactMessage = (request: Request, response: Response): void
     return;
   }
 
-  const receipt = receiveContactMessage(validation.data);
-  response.status(201).json({
-    success: true,
-    message: CONTACT_CONTENT.form.successMessage,
-    data: { referenceId: receipt.referenceId, receivedAt: receipt.receivedAt },
-  });
+  try {
+    const receipt = await receiveContactMessage(validation.data);
+    response.status(201).json({
+      success: true,
+      message: CONTACT_CONTENT.form.successMessage,
+      data: { referenceId: receipt.referenceId, receivedAt: receipt.createdAt.toISOString() },
+    });
+  } catch (error) {
+    console.error("Unable to save contact message", error);
+    response.status(500).json({
+      success: false,
+      message: "We could not save your message. Please try again.",
+    });
+  }
 };

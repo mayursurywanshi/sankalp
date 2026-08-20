@@ -5,9 +5,30 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum ContactMessageStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+model ContactMessage {
+  id          String               @id @default(uuid()) @db.Uuid
+  referenceId String               @unique @map("reference_id") @db.VarChar(32)
+  name        String               @db.VarChar(80)
+  phone       String               @db.VarChar(20)
+  email       String               @db.VarChar(120)
+  message     String               @db.Text
+  status      ContactMessageStatus @default(NEW)
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
 }
