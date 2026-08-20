@@ -3,6 +3,7 @@ import { SiteLayout } from "./components/layout/SiteLayout";
 import { ScrollToTop } from "./components/layout/ScrollToTop";
 import { About } from "./pages/about/About";
 import { ChildDevelopment } from "./pages/child-development/ChildDevelopment";
+import { Contact } from "./pages/contact/Contact";
 import { Home } from "./pages/home/Home";
 import { OurImpact } from "./pages/our-impact/OurImpact";
 import { Services } from "./pages/services/Services";
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/child-development" element={<ChildDevelopment />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/our-impact" element={<OurImpact />} />
           <Route path="/services" element={<Services />} />
         </Routes>
