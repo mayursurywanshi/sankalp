@@ -2,13 +2,13 @@
   align-items: center;
   background: linear-gradient(135deg, #fff 55%, #f2fbfc);
   display: grid;
-  gap: 50px;
+  gap: 34px;
   grid-template-columns: 0.9fr 1.2fr;
   margin: 0 auto;
   max-width: 1440px;
-  min-height: 330px;
+  min-height: 285px;
   overflow: hidden;
-  padding: 36px max(30px, calc((100% - 1180px) / 2));
+  padding: 25px max(var(--page-gutter), calc((100% - 1180px) / 2));
   position: relative;
 }
 .about-hero::before, .about-hero::after {
@@ -24,11 +24,11 @@
 .about-hero__accent { background: var(--teal); height: 3px; margin: 17px 0 20px; width: 44px; }
 .about-hero p { color: #303b58; font-size: 15px; line-height: 1.65; margin: 0 0 12px; max-width: 510px; }
 .about-hero__image { position: relative; z-index: 1; }
-.about-hero__image img { border-radius: 24px; display: block; height: 250px; object-fit: cover; width: 100%; }
+.about-hero__image img { border-radius: 24px; display: block; height: 220px; object-fit: cover; width: 100%; }
 
 @media (max-width: 800px) {
-  .about-hero { grid-template-columns: 1fr; padding-bottom: 30px; padding-top: 35px; }
-  .about-hero__image img { height: 230px; }
+  .about-hero { grid-template-columns: 1fr; padding-bottom: 24px; padding-top: 26px; }
+  .about-hero__image img { height: 210px; }
 }
 @media (max-width: 540px) {
   .about-hero { gap: 25px; padding-left: 20px; padding-right: 20px; }

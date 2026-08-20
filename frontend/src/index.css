@@ -4,6 +4,10 @@
   --purple: #5b2aa5;
   --coral: #ed6072;
   --muted: #697189;
+  --header-height: 68px;
+  --page-gutter: 30px;
+  --section-space: 48px;
+  --content-gap: 20px;
 }
 
 * { box-sizing: border-box; }
@@ -76,4 +80,13 @@ a:focus-visible, button:focus-visible {
   .interactive-card,
   :where(.services-hero__copy, .services-hero__image, .services-cta__copy, .services-cta > img, .story-section, .specialist-section, .approach-section, .about-cta, .about-hero__image img),
   .approach-section article { transition-duration: .01ms; }
+}
+
+@media (max-width: 680px) {
+  :root {
+    --header-height: 60px;
+    --page-gutter: 20px;
+    --section-space: 36px;
+    --content-gap: 16px;
+  }
 }

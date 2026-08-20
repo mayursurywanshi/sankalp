@@ -1,11 +1,11 @@
 .about-page { color: var(--navy); }
 .about-story-purpose, .about-details {
   display: grid;
-  gap: 28px;
+  gap: var(--content-gap);
   grid-template-columns: 0.9fr 1.5fr;
   margin: 0 auto;
   max-width: 1240px;
-  padding: 28px 30px 0;
+  padding: 20px var(--page-gutter) 0;
 }
 .about-details { grid-template-columns: 0.95fr 1.55fr; }
 .about-status {

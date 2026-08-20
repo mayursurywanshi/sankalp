@@ -1,9 +1,9 @@
-.why-us { margin: 0 auto; max-width: 1180px; padding: 22px 30px 70px; text-align: center; }
-.why-us > h2 { color: var(--navy); font-size: 24px; margin: 0 0 27px; }
+.why-us { margin: 0 auto; max-width: 1180px; padding: 16px var(--page-gutter) 48px; text-align: center; }
+.why-us > h2 { color: var(--navy); font-size: 24px; margin: 0 0 20px; }
 .feature-grid { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); }
-.feature-card { min-height: 238px; perspective: 1000px; }
-.feature-card-button { background: transparent; border: 0; color: inherit; cursor: pointer; display: block; font: inherit; height: 100%; min-height: 238px; padding: 0; text-align: center; width: 100%; }
-.feature-card-inner { display: block; height: 100%; min-height: 238px; position: relative; transform-style: preserve-3d; transition: transform 0.65s cubic-bezier(.2,.75,.25,1); }
+.feature-card { min-height: 220px; perspective: 1000px; }
+.feature-card-button { background: transparent; border: 0; color: inherit; cursor: pointer; display: block; font: inherit; height: 100%; min-height: 220px; padding: 0; text-align: center; width: 100%; }
+.feature-card-inner { display: block; height: 100%; min-height: 220px; position: relative; transform-style: preserve-3d; transition: transform 0.65s cubic-bezier(.2,.75,.25,1); }
 .feature-card:hover .feature-card-inner { transform: translateY(-6px); }
 .feature-card.is-flipped .feature-card-inner,
 .feature-card.is-flipped:hover .feature-card-inner { transform: rotateY(180deg) translateY(-3px); }
@@ -37,6 +37,6 @@
 
 @media (max-width: 860px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 540px) {
-  .why-us { padding: 25px 20px 50px; }
+  .why-us { padding: 18px 20px 36px; }
   .feature-grid { grid-template-columns: 1fr; }
 }
