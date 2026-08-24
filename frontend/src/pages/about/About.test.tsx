@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { About } from "./About";
 
 const aboutData = {
@@ -25,4 +25,10 @@ test("renders the About page content returned by the API", async () => {
   expect(screen.getByRole("heading", { name: "Our Story" })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "Meet Our Specialist" })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "Our Approach" })).toBeInTheDocument();
+  const purposeButton = screen.getByRole("button", { name: "Show Our Mission details" });
+  const purposeCard = purposeButton.closest("article");
+  fireEvent.mouseEnter(purposeCard as HTMLElement);
+  expect(purposeCard).toHaveClass("is-flipped");
+  fireEvent.mouseLeave(purposeCard as HTMLElement);
+  expect(purposeCard).not.toHaveClass("is-flipped");
 });

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { HeroSection } from "./HeroSection";
 import { WhyChooseUs } from "./WhyChooseUs";
+import { HomeGuidance } from "./HomeGuidance";
 import { getHomeContent } from "./home.service";
 
 const fallbackDescription =
@@ -23,6 +24,7 @@ export const Home = () => {
     <>
       <HeroSection description={description} isLoading={isLoading} />
       <WhyChooseUs />
+      <HomeGuidance />
     </>
   );
 };

@@ -59,21 +59,22 @@ export const Contact = () => {
       </section>
 
       <section className="contact-layout" aria-label="Contact Sankalp">
-        <article className="contact-panel contact-details interactive-card">
-          <header><span>Connect with us</span><h2>We’re here for your family</h2></header>
-          <div className="contact-details__list">
-            {content.details.map((detail) => (
-              <div className="contact-detail" key={detail.id}>
-                <span className={`contact-detail__icon contact-detail__icon--${detail.id}`} aria-hidden="true">{detailIcons[detail.id] ?? "•"}</span>
-                <div><strong>{detail.label}</strong>{detail.href ? <a href={detail.href}>{detail.value}</a> : <p>{detail.value}</p>}</div>
-              </div>
-            ))}
-          </div>
-        </article>
+        <article className="contact-panel contact-combined">
+          <section className="contact-details" aria-labelledby="contact-details-title">
+            <header><span>Connect with us</span><h2 id="contact-details-title">We’re here for your family</h2></header>
+            <div className="contact-details__list">
+              {content.details.map((detail) => (
+                <div className="contact-detail" key={detail.id}>
+                  <span className={`contact-detail__icon contact-detail__icon--${detail.id}`} aria-hidden="true">{detailIcons[detail.id] ?? "•"}</span>
+                  <div><strong>{detail.label}</strong>{detail.href ? <a href={detail.href}>{detail.value}</a> : <p>{detail.value}</p>}</div>
+                </div>
+              ))}
+            </div>
+          </section>
 
-        <article className="contact-panel contact-form-card interactive-card">
-          <header><span>Tell us how we can help</span><h2>{content.form.title}</h2></header>
-          <form onSubmit={submitForm} noValidate>
+          <section className="contact-form-card" aria-labelledby="contact-form-title">
+            <header><span>Tell us how we can help</span><h2 id="contact-form-title">{content.form.title}</h2></header>
+            <form onSubmit={submitForm} noValidate>
             <label htmlFor="contact-name">Your Name</label>
             <input id="contact-name" name="name" value={form.name} onChange={updateField} placeholder="Enter your name" autoComplete="name" aria-invalid={Boolean(fieldErrors.name?.length)} required />
             {fieldErrors.name?.[0] && <small className="contact-field-error">{fieldErrors.name[0]}</small>}
@@ -95,10 +96,11 @@ export const Contact = () => {
 
             {status && <p className={`contact-form-status contact-form-status--${status.type}`} role="status">{status.message}</p>}
             <button className="contact-submit" type="submit" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Send Message"}</button>
-          </form>
+            </form>
+          </section>
         </article>
 
-        <article className="contact-panel contact-map interactive-card">
+        <article className="contact-panel contact-map">
           <iframe src={content.map.embedUrl} title={`Location of ${content.map.label}`} allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" />
           <a className="contact-map__button" href={content.map.directionsUrl} target="_blank" rel="noreferrer">See On Map</a>
         </article>

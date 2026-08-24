@@ -40,47 +40,6 @@ img {
   max-width: 100%;
 }
 
-/* Shared card interaction: add .interactive-card to every new non-flipping card. */
-.interactive-card,
-:where(
-  .services-hero__copy,
-  .services-hero__image,
-  .story-section,
-  .specialist-section,
-  .approach-section,
-  .about-hero__image img
-) {
-  transition:
-    border-color 220ms ease,
-    box-shadow 220ms ease,
-    transform 220ms ease;
-}
-
-.interactive-card:hover,
-:where(
-  .services-hero__copy,
-  .services-hero__image,
-  .story-section,
-  .specialist-section,
-  .approach-section,
-  .about-hero__image img
-):hover {
-  border-color: rgba(7, 154, 164, 0.38);
-  box-shadow: 0 16px 34px rgba(19, 43, 97, 0.14);
-  transform: translateY(-5px);
-}
-
-.approach-section article {
-  border-radius: 14px;
-  transition:
-    background-color 220ms ease,
-    transform 220ms ease;
-}
-.approach-section article:hover {
-  background: rgba(255, 255, 255, 0.58);
-  transform: translateY(-4px);
-}
-
 button,
 input,
 textarea,
@@ -92,36 +51,6 @@ a:focus-visible,
 button:focus-visible {
   outline: 3px solid #f6b925;
   outline-offset: 3px;
-}
-
-@media (hover: none) {
-  .interactive-card:hover,
-  :where(
-    .services-hero__copy,
-    .services-hero__image,
-    .story-section,
-    .specialist-section,
-    .approach-section,
-    .about-hero__image img
-  ):hover,
-  .approach-section article:hover {
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .interactive-card,
-  :where(
-    .services-hero__copy,
-    .services-hero__image,
-    .story-section,
-    .specialist-section,
-    .approach-section,
-    .about-hero__image img
-  ),
-  .approach-section article {
-    transition-duration: 0.01ms;
-  }
 }
 
 @media (max-width: 680px) {

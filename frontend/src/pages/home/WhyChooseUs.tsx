@@ -29,22 +29,24 @@ const featureImages = [expertCareImage, personalizedTherapyImage, childCenteredI
 export const WhyChooseUs = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
-  const toggleCard = (index: number) => {
-    setActiveCard((current) => (current === index ? null : index));
-  };
-
   return (
     <section className="why-us" id="services" aria-labelledby="why-us-title">
       <h2 id="why-us-title">Why Choose Sankalp?</h2>
       <div className="feature-grid">
         {features.map((feature, index) => (
-          <article className={`feature-card ${activeCard === index ? "is-flipped" : ""}`} key={feature.title}>
+          <article
+            className={`feature-card ${activeCard === index ? "is-flipped" : ""}`}
+            onMouseEnter={() => setActiveCard(index)}
+            onMouseLeave={() => setActiveCard(null)}
+            key={feature.title}
+          >
             <button
               className="feature-card-button"
               type="button"
               aria-pressed={activeCard === index}
               aria-label={`${feature.title}. ${activeCard === index ? "Show summary" : "Show more"}`}
-              onClick={() => toggleCard(index)}
+              onFocus={() => setActiveCard(index)}
+              onBlur={() => setActiveCard(null)}
             >
               <span className="feature-card-inner">
                 <span className="feature-card-face feature-card-front">
@@ -59,7 +61,7 @@ export const WhyChooseUs = () => {
                   </span>
                   <span className="feature-title">{feature.title}</span>
                   <span className="feature-description">{feature.detail}</span>
-                  <span className="feature-hint">Click to return</span>
+                  <span className="feature-hint">Move cursor away to return</span>
                 </span>
               </span>
             </button>

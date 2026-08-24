@@ -65,13 +65,19 @@ export const Services = () => {
         </div>
         <div className="services-grid">
           {content.services.map((service, index) => (
-            <article className={`service-card service-card--${service.color} ${activeCard === index ? "is-flipped" : ""}`} key={service.id}>
+            <article
+              className={`service-card service-card--${service.color} ${activeCard === index ? "is-flipped" : ""}`}
+              onMouseEnter={() => setActiveCard(index)}
+              onMouseLeave={() => setActiveCard(null)}
+              key={service.id}
+            >
               <button
                 className="service-card__button"
                 type="button"
                 aria-pressed={activeCard === index}
                 aria-label={`${service.title}. ${activeCard === index ? "Show image" : "Show details"}`}
-                onClick={() => setActiveCard((current) => current === index ? null : index)}
+                onFocus={() => setActiveCard(index)}
+                onBlur={() => setActiveCard(null)}
               >
                 <span className="service-card__inner">
                   <span className="service-card__face service-card__front">
@@ -83,7 +89,7 @@ export const Services = () => {
                     <span className="service-card__icon"><ServiceIcon serviceId={service.id} /></span>
                     <h3 className="service-card__title">{service.title}</h3>
                     <p className="service-card__description">{service.description}</p>
-                    <span className="service-card__hint">Click to return</span>
+                    <span className="service-card__hint">Move cursor away to return</span>
                   </span>
                 </span>
               </button>

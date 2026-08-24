@@ -28,19 +28,24 @@ export const PurposeSection = ({ mission, vision, values }: PurposeSectionProps)
       {cards.map((card, index) => {
         const isActive = activeCard === index;
         return (
-          <article className={`purpose-card${isActive ? " is-flipped" : ""}`} key={card.title}>
-            <button className="purpose-card__button" type="button" aria-label={`${isActive ? "Hide" : "Show"} ${card.title} details`} aria-pressed={isActive} onClick={() => setActiveCard(isActive ? null : index)}>
+          <article
+            className={`purpose-card${isActive ? " is-flipped" : ""}`}
+            onMouseEnter={() => setActiveCard(index)}
+            onMouseLeave={() => setActiveCard(null)}
+            key={card.title}
+          >
+            <button className="purpose-card__button" type="button" aria-label={`${isActive ? "Hide" : "Show"} ${card.title} details`} aria-pressed={isActive} onFocus={() => setActiveCard(index)} onBlur={() => setActiveCard(null)}>
               <span className="purpose-card__inner">
                 <span className="purpose-card__face purpose-card__front">
                   <img src={card.image} alt={card.imageAlt} />
                   <span className="purpose-card__front-title">{card.title}</span>
-                  <span className="purpose-card__hint">Click to learn more</span>
+                  <span className="purpose-card__hint">Hover to learn more</span>
                 </span>
                 <span className="purpose-card__face purpose-card__back">
                   <span className={`purpose-section__icon ${card.tone}`}>{card.icon}</span>
                   <span className="purpose-card__back-title">{card.title}</span>
                   {card.content}
-                  <span className="purpose-card__hint">Click to return</span>
+                  <span className="purpose-card__hint">Move cursor away to return</span>
                 </span>
               </span>
             </button>
