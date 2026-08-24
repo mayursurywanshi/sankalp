@@ -92,9 +92,8 @@
   align-items: center;
   background: #eee8ff;
   border-radius: 50%;
-  color: #6c3cb7;
   display: flex;
-  font-size: 26px;
+  font-size: 23px;
   height: 46px;
   justify-content: center;
   width: 46px;
@@ -114,13 +113,12 @@
   align-items: center;
   background: #e4f7f7;
   border-radius: 50%;
-  color: var(--teal);
   display: flex;
   flex: 0 0 auto;
-  font-size: 19px;
-  height: 42px;
+  font-size: 21px;
+  height: 44px;
   justify-content: center;
-  width: 42px;
+  width: 44px;
 }
 .appointment-help__step:nth-child(2) > span {
   background: #eee7ff;
@@ -144,12 +142,29 @@
   margin: 4px 0 0;
 }
 .appointment-help__contact {
+  align-items: flex-start;
   border-bottom: 1px solid #dce8ed;
   border-top: 1px solid #dce8ed;
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  flex-direction: row;
+  gap: 11px;
   padding: 15px 2px;
+}
+.appointment-help__contact > span,
+.appointment-help__privacy > span {
+  align-items: center;
+  background: #fff3d7;
+  border-radius: 12px;
+  display: flex;
+  flex: 0 0 auto;
+  font-size: 19px;
+  height: 40px;
+  justify-content: center;
+  width: 40px;
+}
+.appointment-help__contact a {
+  display: block;
+  margin-top: 5px;
 }
 .appointment-help__contact a {
   color: #263d70;
@@ -158,7 +173,13 @@
   text-decoration: none;
 }
 .appointment-help__privacy {
+  align-items: flex-start;
+  display: flex;
+  gap: 11px;
   padding: 15px 2px 0;
+}
+.appointment-help__privacy > span {
+  background: #e8f8f4;
 }
 .appointment-form-card {
   padding: 27px;
@@ -322,41 +343,83 @@
 }
 .appointment-trust article {
   align-items: center;
-  background: linear-gradient(145deg, #fff, #f7f3ff);
-  border: 1px solid #e6eaf2;
-  border-radius: 16px;
+  background: linear-gradient(145deg, #fff 30%, #fff0f5);
+  border: 1px solid #f6d8e3;
+  border-top: 4px solid #ed6082;
+  border-radius: 18px;
   display: flex;
-  gap: 12px;
-  padding: 15px;
+  gap: 15px;
+  min-height: 112px;
+  overflow: hidden;
+  padding: 18px;
+  position: relative;
+}
+.appointment-trust article::after {
+  background: rgba(237, 96, 130, 0.09);
+  border-radius: 50%;
+  content: "";
+  height: 82px;
+  pointer-events: none;
+  position: absolute;
+  right: -28px;
+  top: -34px;
+  width: 82px;
 }
 .appointment-trust article > span {
   align-items: center;
-  background: #ffe7ef;
-  border-radius: 50%;
-  color: #e84c78;
+  background: #ffe4ed;
+  border: 1px solid #f8cad8;
+  border-radius: 15px;
+  box-shadow: 0 7px 16px rgba(19, 43, 97, 0.1);
   display: flex;
   flex: 0 0 auto;
-  font-size: 21px;
-  height: 43px;
+  font-size: 25px;
+  height: 52px;
   justify-content: center;
-  width: 43px;
+  position: relative;
+  width: 52px;
+  z-index: 1;
+}
+.appointment-trust article > div {
+  position: relative;
+  z-index: 1;
+}
+.appointment-trust article:nth-child(2) {
+  background: linear-gradient(145deg, #fff 30%, #f2edff);
+  border-color: #e1d6f7;
+  border-top-color: var(--purple);
+}
+.appointment-trust article:nth-child(2)::after {
+  background: rgba(91, 42, 165, 0.09);
 }
 .appointment-trust article:nth-child(2) > span {
   background: #eee7ff;
+  border-color: #dacdf3;
   color: #6d3cba;
+}
+.appointment-trust article:nth-child(3) {
+  background: linear-gradient(145deg, #fff 30%, #eafafa);
+  border-color: #cfeaec;
+  border-top-color: var(--teal);
+}
+.appointment-trust article:nth-child(3)::after {
+  background: rgba(7, 154, 164, 0.09);
 }
 .appointment-trust article:nth-child(3) > span {
   background: #e4f7f7;
+  border-color: #c4e8e9;
   color: var(--teal);
 }
 .appointment-trust strong {
-  font-size: 12px;
+  color: var(--navy);
+  font-size: 14px;
+  line-height: 1.3;
 }
 .appointment-trust p {
   color: var(--muted);
-  font-size: 11px;
-  line-height: 1.4;
-  margin: 3px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 5px 0 0;
 }
 .appointment-status {
   align-items: center;

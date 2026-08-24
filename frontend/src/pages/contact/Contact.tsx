@@ -5,7 +5,15 @@ import { ContactContent, ContactFormData, ContactMessageResponse } from "./conta
 import "./Contact.css";
 
 const initialForm: ContactFormData = { name: "", phone: "", email: "", message: "" };
-const detailIcons: Record<string, string> = { phone: "☎", whatsapp: "W", email: "@", address: "●", timings: "◷" };
+
+const DetailIcon = ({ type }: { type: string }) => {
+  if (type === "phone") return <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.2 11 11 0 0 0 3.5 1.1 1 1 0 0 1 .8 1v3.4a1 1 0 0 1-1 1A18.2 18.2 0 0 1 2.5 4.3a1 1 0 0 1 1-1h3.4a1 1 0 0 1 1 .8A11 11 0 0 0 9 7.6a1 1 0 0 1-.2 1l-2.2 2.2Z" /></svg>;
+  if (type === "whatsapp") return <svg viewBox="0 0 24 24"><path d="M20 11.6a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.6Z" /><path d="M9 8.5c.5 2.8 2 4.4 4.8 5.2M9.1 8.5l1.2 2-1 1M13.8 13.7l1-1 2 1.1" /></svg>;
+  if (type === "email") return <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg>;
+  if (type === "address") return <svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>;
+  if (type === "timings") return <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>;
+  return <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /></svg>;
+};
 
 export const Contact = () => {
   const [content, setContent] = useState<ContactContent | null>(null);
@@ -60,19 +68,19 @@ export const Contact = () => {
 
       <section className="contact-layout" aria-label="Contact Sankalp">
         <article className="contact-panel contact-combined">
-          <section className="contact-details" aria-labelledby="contact-details-title">
+          <section className="contact-details contact-inner-card" aria-labelledby="contact-details-title">
             <header><span>Connect with us</span><h2 id="contact-details-title">We’re here for your family</h2></header>
             <div className="contact-details__list">
               {content.details.map((detail) => (
                 <div className="contact-detail" key={detail.id}>
-                  <span className={`contact-detail__icon contact-detail__icon--${detail.id}`} aria-hidden="true">{detailIcons[detail.id] ?? "•"}</span>
+                  <span className={`contact-detail__icon contact-detail__icon--${detail.id}`} aria-hidden="true"><DetailIcon type={detail.id} /></span>
                   <div><strong>{detail.label}</strong>{detail.href ? <a href={detail.href}>{detail.value}</a> : <p>{detail.value}</p>}</div>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="contact-form-card" aria-labelledby="contact-form-title">
+          <section className="contact-form-card contact-inner-card" aria-labelledby="contact-form-title">
             <header><span>Tell us how we can help</span><h2 id="contact-form-title">{content.form.title}</h2></header>
             <form onSubmit={submitForm} noValidate>
             <label htmlFor="contact-name">Your Name</label>

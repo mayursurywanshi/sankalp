@@ -17,8 +17,8 @@ export const FOOTER_CONTENT = {
     address: "Sankalp Physiotherapy And Child Development Clinic Opposite Vithal Mandir, Navathe Stop, Navathe Nagar, Amravati, Maharashtra 444601",
   },
   socialLinks: [
-    { label: "Instagram", symbol: "◎", path: "#instagram" },
-    { label: "WhatsApp", symbol: "◔", path: "#whatsapp" },
+    { label: "Instagram", symbol: "◎", path: "https://www.instagram.com/sankalp_physiotherapy_center/?hl=en" },
+    { label: "WhatsApp", symbol: "◔", path: "https://wa.me/917620149613?text=Hello%20Sankalp%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." },
   ],
   copyright: `© ${new Date().getFullYear()} Sankalp Child Development Center. All Rights Reserved.`,
 } as const;

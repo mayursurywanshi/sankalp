@@ -61,7 +61,7 @@ export const Footer = () => (
         <h2>Follow Us</h2>
         <div>
           {FOOTER_CONTENT.socialLinks.map((social) => (
-            <a href={social.path} aria-label={social.label} key={social.label}>
+            <a href={social.path} aria-label={social.label} target="_blank" rel="noopener noreferrer" key={social.label}>
               <SocialIcon label={social.label} />
             </a>
           ))}

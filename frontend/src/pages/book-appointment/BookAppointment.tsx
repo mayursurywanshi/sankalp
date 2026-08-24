@@ -10,7 +10,7 @@ const initialForm: AppointmentFormData = {
   preferredDate: "", preferredTime: "", consent: false,
 };
 
-const helpSymbols = ["✦", "◷", "✓"];
+const helpSymbols = ["📝", "🕐", "💌"];
 const clockHours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] as const;
 type ClockMinute = 0 | 30;
 type ClockPeriod = "AM" | "PM";
@@ -136,16 +136,16 @@ export const BookAppointment = () => {
 
       <section className="appointment-layout">
         <aside className="appointment-help interactive-card" aria-labelledby="appointment-help-title">
-          <header><span className="appointment-help__mark">♡</span><h2 id="appointment-help-title">{content.help.title}</h2></header>
+          <header><span className="appointment-help__mark" aria-hidden="true">🫶</span><h2 id="appointment-help-title">{content.help.title}</h2></header>
           <div className="appointment-help__steps">
             {content.help.steps.map((step, index) => <div className="appointment-help__step" key={step.title}><span>{helpSymbols[index]}</span><div><strong>{step.title}</strong><p>{step.description}</p></div></div>)}
           </div>
           <div className="appointment-help__contact">
-            <strong>Clinic Hours</strong><p>{content.clinicHours.weekdays}<br />{content.clinicHours.sunday}</p>
+            <span aria-hidden="true">🕒</span><div><strong>Clinic Hours</strong><p>{content.clinicHours.weekdays}<br />{content.clinicHours.sunday}</p>
             <a href={`tel:${content.phone.replace(/\s/g, "")}`}>{content.phone}</a>
-            <a href={`mailto:${content.email}`}>{content.email}</a>
+            <a href={`mailto:${content.email}`}>{content.email}</a></div>
           </div>
-          <div className="appointment-help__privacy"><strong>Your information is safe with us.</strong><p>We respect your privacy and never share your details.</p></div>
+          <div className="appointment-help__privacy"><span aria-hidden="true">🔒</span><div><strong>Your information is safe with us.</strong><p>We respect your privacy and never share your details.</p></div></div>
         </aside>
 
         <div className="appointment-form-card interactive-card">
@@ -173,9 +173,9 @@ export const BookAppointment = () => {
       </section>
 
       <section className="appointment-trust" aria-label="Our appointment commitments">
-        <article className="interactive-card"><span>♡</span><div><strong>Compassionate Care</strong><p>Every child is treated with kindness and respect.</p></div></article>
-        <article className="interactive-card"><span>◎</span><div><strong>Experienced Specialists</strong><p>Expertise and dedication in every session.</p></div></article>
-        <article className="interactive-card"><span>▣</span><div><strong>Confidential &amp; Secure</strong><p>Your information is protected with care.</p></div></article>
+        <article className="appointment-trust__card appointment-trust__card--care"><span aria-hidden="true">💗</span><div><strong>Compassionate Care</strong><p>Every child is treated with kindness and respect.</p></div></article>
+        <article className="appointment-trust__card appointment-trust__card--specialists"><span aria-hidden="true">🧑‍⚕️</span><div><strong>Experienced Specialists</strong><p>Expertise and dedication in every session.</p></div></article>
+        <article className="appointment-trust__card appointment-trust__card--secure"><span aria-hidden="true">🔒</span><div><strong>Confidential &amp; Secure</strong><p>Your information is protected with care.</p></div></article>
       </section>
 
       {isTimePickerOpen && <div className="appointment-time-dialog" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) cancelTimeSelection(); }}>

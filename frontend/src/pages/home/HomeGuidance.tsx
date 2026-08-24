@@ -6,14 +6,14 @@ import clearGuidanceImage from "../../assets/home/first-visit/clear-guidance.png
 import "./HomeGuidance.css";
 
 const challenges = [
-  { symbol: "◒", text: "Difficulty sitting, standing or walking independently" },
-  { symbol: "⌁", text: "Frequent falls or difficulty with balance" },
-  { symbol: "↗", text: "Difficulty running, jumping or climbing stairs" },
-  { symbol: "◫", text: "Muscle weakness, stiffness or unusual movement patterns" },
-  { symbol: "✋", text: "Difficulty using hands for play and everyday activities" },
-  { symbol: "◉", text: "Sensitivity to sound, touch, movement or textures" },
-  { symbol: "△", text: "Difficulty participating in school or playground activities" },
-  { symbol: "♡", text: "Needing extra help with everyday routines" },
+  { symbol: "🚶", text: "Difficulty sitting, standing or walking independently" },
+  { symbol: "⚖️", text: "Frequent falls or difficulty with balance" },
+  { symbol: "🏃", text: "Difficulty running, jumping or climbing stairs" },
+  { symbol: "💪", text: "Muscle weakness, stiffness or unusual movement patterns" },
+  { symbol: "🧩", text: "Difficulty using hands for play and everyday activities" },
+  { symbol: "🎧", text: "Sensitivity to sound, touch, movement or textures" },
+  { symbol: "🛝", text: "Difficulty participating in school or playground activities" },
+  { symbol: "🌟", text: "Needing extra help with everyday routines" },
 ];
 
 const guidanceSigns = [

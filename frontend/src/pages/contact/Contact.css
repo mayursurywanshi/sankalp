@@ -57,13 +57,20 @@
   padding: 26px;
 }
 .contact-combined {
+  background: linear-gradient(135deg, #f2fbfc, #f7f3ff);
   display: grid;
+  gap: 20px;
   grid-template-columns: 0.9fr 1.1fr;
-  overflow: hidden;
+  padding: 20px;
+}
+.contact-inner-card {
+  background: #fff;
+  border: 1px solid #dfe9ef;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(19, 43, 97, 0.06);
 }
 .contact-details {
   background: linear-gradient(155deg, #f3fbfb, #fff 48%, #f8f4ff);
-  border-right: 1px solid #e2ebf1;
 }
 .contact-details__list {
   display: flex;
@@ -82,11 +89,18 @@
   color: #078e98;
   display: flex;
   flex: 0 0 auto;
-  font-size: 17px;
-  font-weight: 900;
   height: 39px;
   justify-content: center;
   width: 39px;
+}
+.contact-detail__icon svg {
+  fill: none;
+  height: 21px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  width: 21px;
 }
 .contact-detail__icon--whatsapp {
   background: #e9f9ef;
@@ -279,7 +293,7 @@
   }
   .contact-layout { padding-top: 22px; }
   .contact-combined { grid-template-columns: 1fr; }
-  .contact-details { border-bottom: 1px solid #e2ebf1; border-right: 0; }
+  .contact-combined { gap: 16px; padding: 16px; }
   .contact-map {
     min-height: 370px;
   }
