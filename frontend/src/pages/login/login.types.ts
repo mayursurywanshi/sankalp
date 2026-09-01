@@ -17,6 +17,11 @@ export type AuthenticatedUser = {
 export type LoginResponse = {
   success: boolean;
   message: string;
-  data?: AuthenticatedUser;
+  data?: {
+    accessToken: string;
+    tokenType: "Bearer";
+    expiresAt: string;
+    user: AuthenticatedUser;
+  };
   errors?: Record<string, string[]>;
 };

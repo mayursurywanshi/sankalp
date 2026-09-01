@@ -9,6 +9,8 @@ import { Home } from "./pages/home/Home";
 import { OurImpact } from "./pages/our-impact/OurImpact";
 import { Services } from "./pages/services/Services";
 import { Login } from "./pages/login/Login";
+import { ProtectedAdminRoute } from "./components/auth/ProtectedAdminRoute";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
         <Route path="*" element={(
           <SiteLayout>
             <Routes>

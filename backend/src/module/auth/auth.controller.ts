@@ -1,17 +1,7 @@
-import { CookieOptions, Request, Response } from "express";
-import { env } from "../../config/env.config";
+import { Request, Response } from "express";
 import { authenticateUser, getAuthenticatedUser, revokeAuthenticationSession } from "./auth.service";
+import { getBearerToken } from "./auth.token";
 import { loginSchema } from "./auth.validation";
-
-export const AUTH_COOKIE_NAME = "sankalp_session";
-
-const cookieOptions = (expiresAt?: Date): CookieOptions => ({
-  httpOnly: true,
-  secure: env.NODE_ENV === "production",
-  sameSite: "lax",
-  path: "/",
-  ...(expiresAt ? { expires: expiresAt } : {}),
-});
 
 export const login = async (request: Request, response: Response): Promise<void> => {
   const validation = loginSchema.safeParse(request.body);
@@ -31,8 +21,16 @@ export const login = async (request: Request, response: Response): Promise<void>
       return;
     }
 
-    response.cookie(AUTH_COOKIE_NAME, session.token, cookieOptions(session.expiresAt));
-    response.status(200).json({ success: true, message: "Welcome back!", data: session.user });
+    response.status(200).json({
+      success: true,
+      message: "Welcome back!",
+      data: {
+        accessToken: session.token,
+        tokenType: "Bearer",
+        expiresAt: session.expiresAt.toISOString(),
+        user: session.user,
+      },
+    });
   } catch (error) {
     console.error("Unable to log in", error);
     response.status(500).json({ success: false, message: "Unable to log in. Please try again." });
@@ -41,7 +39,7 @@ export const login = async (request: Request, response: Response): Promise<void>
 
 export const getSession = async (request: Request, response: Response): Promise<void> => {
   try {
-    const user = await getAuthenticatedUser(request.cookies[AUTH_COOKIE_NAME]);
+    const user = await getAuthenticatedUser(getBearerToken(request));
     if (!user) {
       response.status(401).json({ success: false, message: "Your session is not active." });
       return;
@@ -55,8 +53,17 @@ export const getSession = async (request: Request, response: Response): Promise<
 
 export const logout = async (request: Request, response: Response): Promise<void> => {
   try {
-    await revokeAuthenticationSession(request.cookies[AUTH_COOKIE_NAME]);
-    response.clearCookie(AUTH_COOKIE_NAME, cookieOptions());
+    const token = getBearerToken(request);
+    const user = await getAuthenticatedUser(token);
+    if (!token || !user) {
+      response.status(401).json({
+        success: false,
+        message: "A valid Bearer token is required to log out.",
+      });
+      return;
+    }
+
+    await revokeAuthenticationSession(token);
     response.status(200).json({ success: true, message: "You have been logged out successfully." });
   } catch (error) {
     console.error("Unable to log out", error);

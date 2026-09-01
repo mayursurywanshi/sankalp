@@ -1,14 +1,16 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/sankalp-logo.png";
 import background from "../../assets/login/login-background.png";
 import { loginUser } from "./login.service";
 import { LoginFormData, LoginResponse } from "./login.types";
+import { storeAccessToken } from "./auth-storage";
 import "./Login.css";
 
 const initialForm: LoginFormData = { role: "", loginId: "", password: "", rememberMe: false };
 
 export const Login = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState(initialForm);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,8 +52,14 @@ export const Login = () => {
         setStatus({ type: "error", message: result.message });
         return;
       }
+      if (!result.data?.accessToken) {
+        setStatus({ type: "error", message: "The login response did not contain an access token." });
+        return;
+      }
+      storeAccessToken(result.data.accessToken, form.rememberMe);
       setForm((current) => ({ ...current, password: "" }));
-      setStatus({ type: "success", message: `${result.message} ${result.data?.fullName ?? ""}`.trim() });
+      setStatus({ type: "success", message: `${result.message} ${result.data.user.fullName}`.trim() });
+      if (result.data.user.role === "ADMIN") navigate("/admin/dashboard", { replace: true });
     } catch {
       setStatus({
         type: "error",

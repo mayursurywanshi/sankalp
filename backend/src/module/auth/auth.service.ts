@@ -44,6 +44,8 @@ export const authenticateUser = async (input: LoginInput): Promise<CreatedAuthen
 
   await prisma.$transaction([
     prisma.adminAuthenticationSession.deleteMany({ where: { expiresAt: { lte: new Date() } } }),
+    // Keep one active session per Admin. A new login revokes every older token.
+    prisma.adminAuthenticationSession.deleteMany({ where: { adminId: admin.id } }),
     prisma.adminAuthenticationSession.create({
       data: { adminId: admin.id, tokenHash: hashToken(token), expiresAt },
     }),

@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import authRouter from "./module/auth/auth.routes";
+import adminDashboardRouter from "./module/admin-dashboard/admin-dashboard.routes";
 import aboutRouter from "./module/about/about.routes";
 import appointmentsRouter from "./module/appointments/appointments.routes";
 import childDevelopmentRouter from "./module/child-development/child-development.routes";
@@ -24,14 +24,12 @@ const isAllowedOrigin = (origin?: string) => {
 
 app.use(helmet());
 app.use(cors({
-  credentials: true,
   origin: (origin, callback) => {
     if (isAllowedOrigin(origin)) callback(null, true);
     else callback(new Error("Origin is not allowed by CORS"));
   },
 }));
 app.use(express.json());
-app.use(cookieParser());
 
 app.get("/api/health", (_request: Request, response: Response) => {
   response.status(200).json({
@@ -41,6 +39,7 @@ app.get("/api/health", (_request: Request, response: Response) => {
 });
 
 app.use("/api/about", aboutRouter);
+app.use("/api/admin", adminDashboardRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", appointmentsRouter);
 app.use("/api/child-development", childDevelopmentRouter);
