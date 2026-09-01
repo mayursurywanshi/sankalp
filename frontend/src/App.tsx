@@ -8,22 +8,28 @@ import { Contact } from "./pages/contact/Contact";
 import { Home } from "./pages/home/Home";
 import { OurImpact } from "./pages/our-impact/OurImpact";
 import { Services } from "./pages/services/Services";
+import { Login } from "./pages/login/Login";
 
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <SiteLayout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/book-appointment" element={<BookAppointment />} />
-          <Route path="/child-development" element={<ChildDevelopment />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/our-impact" element={<OurImpact />} />
-          <Route path="/services" element={<Services />} />
-        </Routes>
-      </SiteLayout>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={(
+          <SiteLayout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/book-appointment" element={<BookAppointment />} />
+              <Route path="/child-development" element={<ChildDevelopment />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/our-impact" element={<OurImpact />} />
+              <Route path="/services" element={<Services />} />
+            </Routes>
+          </SiteLayout>
+        )} />
+      </Routes>
     </BrowserRouter>
   );
 }
