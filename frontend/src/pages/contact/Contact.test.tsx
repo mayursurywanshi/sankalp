@@ -8,7 +8,7 @@ const response = { success: true, data: {
   map: { embedUrl: "https://www.google.com/maps/embed?pb=test", label: "Sankalp Clinic", directionsUrl: "https://www.google.com/maps/search/?api=1&query=Sankalp" },
 } };
 
-beforeEach(() => { global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => response } as Response); });
+beforeEach(() => { global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => response } as Response); });
 
 test("loads Contact content and displays its message form and map", async () => {
   render(<Contact />);

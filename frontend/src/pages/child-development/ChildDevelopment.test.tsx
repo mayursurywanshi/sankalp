@@ -18,7 +18,7 @@ const response = {
 };
 
 beforeEach(() => {
-  global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => response } as Response);
+  global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => response } as Response);
 });
 
 test("loads milestones and changes the selected age group", async () => {

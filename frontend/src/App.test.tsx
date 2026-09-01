@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
 
 beforeEach(() => {
-  global.fetch = jest.fn().mockResolvedValue({
+  global.fetch = vi.fn().mockResolvedValue({
     ok: true,
     json: async () => ({ success: true, data: { title: "Welcome to Sankalp", description: "Compassionate care for every child." } }),
   } as Response);

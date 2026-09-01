@@ -10,7 +10,7 @@ const response = { success: true, data: {
   videoTestimonials: { title: "Video Testimonials", items: [{ id: "video", title: "Family Experience", thumbnailKey: "anaya-family", videoUrl: "#video" }] },
 } };
 
-beforeEach(() => { global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => response } as Response); });
+beforeEach(() => { global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => response } as Response); });
 
 test("loads and renders the Our Impact API content", async () => {
   render(<OurImpact />);

@@ -13,7 +13,7 @@ const servicesResponse = {
 };
 
 beforeEach(() => {
-  global.fetch = jest.fn().mockResolvedValue({
+  global.fetch = vi.fn().mockResolvedValue({
     ok: true,
     json: async () => servicesResponse,
   });

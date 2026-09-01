@@ -9,7 +9,7 @@ const response = { success: true, data: {
   consentLabel: "I consent to be contacted.", successMessage: "Request received.",
 } };
 
-beforeEach(() => { global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => response } as Response); });
+beforeEach(() => { global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => response } as Response); });
 
 test("loads appointment content and renders the request form without service or message fields", async () => {
   render(<BookAppointment />);
