@@ -4,9 +4,12 @@ import { DashboardData, DashboardResponse, SessionResponse } from "./admin-dashb
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 
 const authorizedFetch = async (path: string, init?: RequestInit) => {
+  const headers = new Headers(init?.headers);
+  const authorization = getBearerAuthorization().Authorization;
+  if (authorization) headers.set("Authorization", authorization);
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
-    headers: { ...getBearerAuthorization(), ...init?.headers },
+    headers,
   });
   if (response.status === 401 || response.status === 403) clearAccessToken();
   return response;
