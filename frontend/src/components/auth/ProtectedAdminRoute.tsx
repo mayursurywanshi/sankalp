@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { clearAccessToken, getAccessToken } from "../../pages/login/auth-storage";
-import { verifyAdminSession } from "../../pages/admin/admin-dashboard.service";
+import { verifySession } from "../../pages/admin/admin-dashboard.service";
 
 type GuardState = "checking" | "allowed" | "denied";
 
@@ -16,7 +16,7 @@ export const ProtectedAdminRoute = ({ children }: PropsWithChildren) => {
     }
 
     let active = true;
-    verifyAdminSession()
+    verifySession()
       .then((user) => {
         if (!active) return;
         if (user?.role === "ADMIN") setState("allowed");

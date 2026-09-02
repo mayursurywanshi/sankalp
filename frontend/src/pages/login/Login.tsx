@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/sankalp-logo.png";
 import background from "../../assets/login/login-background.png";
@@ -13,9 +13,26 @@ export const Login = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState(initialForm);
   const [showPassword, setShowPassword] = useState(false);
+  const [roleOpen, setRoleOpen] = useState(false);
+  const roleSelector = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  useEffect(() => {
+    const closeRoleSelector = (event: MouseEvent) => {
+      if (!roleSelector.current?.contains(event.target as Node)) setRoleOpen(false);
+    };
+    document.addEventListener("mousedown", closeRoleSelector);
+    return () => document.removeEventListener("mousedown", closeRoleSelector);
+  }, []);
+
+  const selectRole = (role: "ADMIN" | "DOCTOR") => {
+    setForm((current) => ({ ...current, role }));
+    setFieldErrors((current) => ({ ...current, role: [] }));
+    setStatus(null);
+    setRoleOpen(false);
+  };
 
   const updateField = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = event.target;
@@ -59,7 +76,7 @@ export const Login = () => {
       storeAccessToken(result.data.accessToken, form.rememberMe);
       setForm((current) => ({ ...current, password: "" }));
       setStatus({ type: "success", message: `${result.message} ${result.data.user.fullName}`.trim() });
-      if (result.data.user.role === "ADMIN") navigate("/admin/dashboard", { replace: true });
+      navigate(result.data.user.role === "ADMIN" ? "/admin/dashboard" : "/doctor/dashboard", { replace: true });
     } catch {
       setStatus({
         type: "error",
@@ -83,13 +100,15 @@ export const Login = () => {
 
         <form onSubmit={submitLogin} noValidate>
           <label htmlFor="login-role">Select Role</label>
-          <div className="login-field login-field--select">
-            <span aria-hidden="true">🛡️</span>
-            <select id="login-role" name="role" value={form.role} onChange={updateField} aria-invalid={Boolean(fieldErrors.role?.length)} required>
-              <option value="" disabled>Select your role</option>
-              <option value="ADMIN">Admin</option>
-              <option value="DOCTOR">Doctor</option>
-            </select>
+          <div className={`login-role-select${roleOpen ? " is-open" : ""}`} ref={roleSelector}>
+            <button id="login-role" className="login-role-trigger" type="button" aria-haspopup="listbox" aria-expanded={roleOpen} aria-invalid={Boolean(fieldErrors.role?.length)} onClick={() => setRoleOpen((open) => !open)}>
+              <span className="login-role-trigger__icon" aria-hidden="true">{form.role === "DOCTOR" ? "🩺" : "🛡️"}</span>
+              <span>{form.role === "ADMIN" ? "Admin" : form.role === "DOCTOR" ? "Doctor" : "Select your role"}</span>
+            </button>
+            {roleOpen && <div className="login-role-options" role="listbox" aria-label="Available roles">
+              <button type="button" role="option" aria-selected={form.role === "ADMIN"} onClick={() => selectRole("ADMIN")}><span aria-hidden="true">🛡️</span><span><strong>Admin</strong><small>Manage clinic and team</small></span>{form.role === "ADMIN" && <b aria-hidden="true">✓</b>}</button>
+              <button type="button" role="option" aria-selected={form.role === "DOCTOR"} onClick={() => selectRole("DOCTOR")}><span aria-hidden="true">🩺</span><span><strong>Doctor</strong><small>Access patients and schedule</small></span>{form.role === "DOCTOR" && <b aria-hidden="true">✓</b>}</button>
+            </div>}
           </div>
           {fieldErrors.role?.[0] && <small className="login-field-error">{fieldErrors.role[0]}</small>}
 

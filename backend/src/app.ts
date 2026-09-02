@@ -10,6 +10,7 @@ import contactRouter from "./module/contact/contact.routes";
 import homeRouter from "./module/home/home.routes";
 import ourImpactRouter from "./module/our-impact/our-impact.routes";
 import servicesRouter from "./module/services/services.routes";
+import doctorDashboardRouter from "./module/doctor-dashboard/doctor-dashboard.routes";
 import { env } from "./config/env.config";
 
 const app = express();
@@ -43,6 +44,7 @@ app.use("/api/admin", adminDashboardRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", appointmentsRouter);
 app.use("/api/child-development", childDevelopmentRouter);
+app.use("/api/doctor", doctorDashboardRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/home", homeRouter);
 app.use("/api/our-impact", ourImpactRouter);

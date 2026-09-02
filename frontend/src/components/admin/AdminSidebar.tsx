@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import logo from "../../assets/sankalp-logo.png";
 import "./AdminSidebar.css";
 
 const menuItems = [
-  ["▦", "Dashboard"], ["▣", "Appointments"], ["♙", "Patients"], ["⚕", "Doctors"],
-  ["★", "Success Stories"], ["☵", "Feedback"], ["✉", "Contact Requests"],
-  ["⌁", "Performance"], ["♚", "Users & Roles"], ["⚙", "Settings"],
+  ["▦", "Dashboard", "/admin/dashboard"], ["▣", "Appointments", ""], ["♙", "Patients", ""], ["⚕", "Doctors", "/admin/doctors"],
+  ["★", "Success Stories", ""], ["☵", "Feedback", ""], ["✉", "Contact Requests", ""],
+  ["⌁", "Performance", ""], ["♚", "Users & Roles", ""], ["⚙", "Settings", ""],
 ] as const;
 
 type Props = { onLogout: () => void; loggingOut: boolean };
@@ -18,8 +19,12 @@ export const AdminSidebar = ({ onLogout, loggingOut }: Props) => {
     <aside id="admin-sidebar" className={`admin-sidebar${open ? " is-open" : ""}`}>
       <div className="admin-sidebar__brand"><img src={logo} alt="Sankalp" /></div>
       <nav aria-label="Admin navigation">
-        {menuItems.map(([icon, label], index) => (
-          <button className={index === 0 ? "is-active" : ""} type="button" key={label} disabled={index !== 0} title={index !== 0 ? `${label} will be available in the next development stage` : undefined}>
+        {menuItems.map(([icon, label, path]) => path ? (
+          <NavLink className={({ isActive }) => isActive ? "is-active" : ""} to={path} key={label} onClick={() => setOpen(false)}>
+            <span aria-hidden="true">{icon}</span>{label}
+          </NavLink>
+        ) : (
+          <button type="button" key={label} disabled title={`${label} will be available in the next development stage`}>
             <span aria-hidden="true">{icon}</span>{label}{label === "Contact Requests" && <b>!</b>}
           </button>
         ))}

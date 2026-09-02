@@ -19,6 +19,7 @@ export const getDashboardData = async () => {
     pendingRequests,
     patients,
     newEnquiries,
+    totalDoctors,
     recentAppointments,
     todayStatuses,
     recentAppointmentActivity,
@@ -28,6 +29,7 @@ export const getDashboardData = async () => {
     prisma.appointmentRequest.count({ where: { status: "REQUESTED" } }),
     prisma.appointmentRequest.groupBy({ by: ["childName", "phone"] }),
     prisma.contactMessage.count({ where: { status: "NEW" } }),
+    prisma.doctorDetail.count({ where: { isActive: true } }),
     prisma.appointmentRequest.findMany({
       orderBy: { createdAt: "desc" },
       take: 5,
@@ -62,7 +64,7 @@ export const getDashboardData = async () => {
     totalAppointments,
     pendingRequests,
     totalPatients: patients.length,
-    totalDoctors: 0,
+    totalDoctors,
     newEnquiries,
   };
 

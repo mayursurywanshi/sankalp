@@ -3,7 +3,7 @@ import { DashboardData, DashboardResponse, SessionResponse } from "./admin-dashb
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 
-const authorizedFetch = async (path: string, init?: RequestInit) => {
+export const authorizedFetch = async (path: string, init?: RequestInit) => {
   const headers = new Headers(init?.headers);
   const authorization = getBearerAuthorization().Authorization;
   if (authorization) headers.set("Authorization", authorization);
@@ -15,7 +15,7 @@ const authorizedFetch = async (path: string, init?: RequestInit) => {
   return response;
 };
 
-export const verifyAdminSession = async () => {
+export const verifySession = async () => {
   const response = await authorizedFetch("/api/auth/session");
   const result = await response.json() as SessionResponse;
   if (!response.ok || !result.success) throw new Error("SESSION_INVALID");

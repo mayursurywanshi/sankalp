@@ -23,7 +23,8 @@ beforeEach(() => {
 test("submits the Admin login form and stores a session Bearer token", async () => {
   render(<MemoryRouter><Login /></MemoryRouter>);
 
-  fireEvent.change(screen.getByLabelText("Select Role"), { target: { value: "ADMIN" } });
+  fireEvent.click(screen.getByLabelText("Select Role"));
+  fireEvent.click(screen.getByRole("option", { name: /Admin/ }));
   fireEvent.change(screen.getByLabelText("Login ID"), { target: { value: "Admin.Sankalp" } });
   fireEvent.change(screen.getByLabelText("Password"), { target: { value: "Admin@Sankalp" } });
   fireEvent.click(screen.getByRole("button", { name: "Login" }));
