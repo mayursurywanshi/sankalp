@@ -82,6 +82,12 @@ export const createDoctorCredentials = async (doctorId: string, input: DoctorCre
 export const deleteDoctorById = async (doctorId: string) => {
   const doctor = await prisma.doctorDetail.findUnique({ where: { doctorId }, select: { id: true, doctorId: true } });
   if (!doctor) return null;
+  const [appointments, caseHistories, appointmentLogs] = await Promise.all([
+    prisma.appointmentRequest.count({ where: { assignedDoctorId: doctor.id } }),
+    prisma.patientCaseHistory.count({ where: { attendingDoctorId: doctor.id } }),
+    prisma.appointmentLog.count({ where: { OR: [{ previousDoctorId: doctor.id }, { assignedDoctorId: doctor.id }] } }),
+  ]);
+  if (appointments || caseHistories || appointmentLogs) return { doctorId: doctor.doctorId, blocked: true as const };
   await prisma.doctorDetail.delete({ where: { id: doctor.id } });
-  return { doctorId: doctor.doctorId };
+  return { doctorId: doctor.doctorId, blocked: false as const };
 };

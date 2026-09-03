@@ -4,8 +4,8 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -21,9 +21,24 @@ enum ContactMessageStatus {
 
 enum AppointmentRequestStatus {
   REQUESTED
-  CONFIRMED
+  ASSIGNED
   COMPLETED
   CANCELLED
+}
+
+enum AppointmentLogEvent {
+  REQUEST_CREATED
+  DOCTOR_ASSIGNED
+  DOCTOR_REASSIGNED
+  STATUS_CHANGED
+  APPOINTMENT_COMPLETED
+  APPOINTMENT_CANCELLED
+}
+
+enum AppointmentActorRole {
+  PUBLIC
+  ADMIN
+  DOCTOR
 }
 
 enum UserRole {
@@ -72,12 +87,12 @@ model AdminLoginAudit {
 }
 
 model AdminAuthenticationSession {
-  id        String         @id @default(uuid()) @db.Uuid
-  adminId   String         @map("admin_id") @db.Uuid
-  tokenHash String         @unique @map("token_hash") @db.VarChar(64)
-  expiresAt DateTime       @map("expires_at") @db.Timestamptz(6)
-  createdAt DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
-  admin     AdminLoginLog  @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  id        String        @id @default(uuid()) @db.Uuid
+  adminId   String        @map("admin_id") @db.Uuid
+  tokenHash String        @unique @map("token_hash") @db.VarChar(64)
+  expiresAt DateTime      @map("expires_at") @db.Timestamptz(6)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  admin     AdminLoginLog @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
   @@index([adminId], map: "admin_authentication_sessions_admin_id_idx")
   @@index([expiresAt], map: "admin_authentication_sessions_expires_at_idx")
@@ -85,22 +100,113 @@ model AdminAuthenticationSession {
 }
 
 model AppointmentRequest {
-  id             String                   @id @default(uuid()) @db.Uuid
-  referenceId    String                   @unique @map("reference_id") @db.VarChar(32)
-  parentName     String                   @map("parent_name") @db.VarChar(80)
-  childName      String                   @map("child_name") @db.VarChar(80)
-  childAge       String                   @map("child_age") @db.VarChar(30)
-  phone          String                   @db.VarChar(20)
-  email          String                   @db.VarChar(120)
-  preferredDate  DateTime                 @map("preferred_date") @db.Date
-  preferredTime  String                   @map("preferred_time") @db.VarChar(20)
-  consent        Boolean
-  status         AppointmentRequestStatus @default(REQUESTED)
-  createdAt      DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  id                String                   @id @default(uuid()) @db.Uuid
+  referenceId       String                   @unique @map("reference_id") @db.VarChar(32)
+  parentName        String                   @map("parent_name") @db.VarChar(80)
+  childName         String                   @map("child_name") @db.VarChar(80)
+  childAge          String                   @map("child_age") @db.VarChar(30)
+  childDateOfBirth  DateTime?                @map("child_date_of_birth") @db.Date
+  phone             String                   @db.VarChar(20)
+  email             String                   @db.VarChar(120)
+  preferredDate     DateTime                 @map("preferred_date") @db.Date
+  preferredTime     String                   @map("preferred_time") @db.VarChar(20)
+  consent           Boolean
+  status            AppointmentRequestStatus @default(REQUESTED)
+  createdAt         DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(6)
+  patientDbId       String                   @map("patient_db_id") @db.Uuid
+  assignedDoctorId  String?                  @map("assigned_doctor_id") @db.Uuid
+  scheduledDate     DateTime?                @map("scheduled_date") @db.Date
+  scheduledTime     String?                  @map("scheduled_time") @db.VarChar(20)
+  assignmentNote    String?                  @map("assignment_note") @db.VarChar(500)
+  assignedAt        DateTime?                @map("assigned_at") @db.Timestamptz(6)
+  assignedByAdminId String?                  @map("assigned_by_admin_id") @db.Uuid
+  patient           Patient                  @relation(fields: [patientDbId], references: [id], onDelete: Restrict)
+  assignedDoctor    DoctorDetail?            @relation(fields: [assignedDoctorId], references: [id], onDelete: Restrict)
+  logs              AppointmentLog[]
+  caseHistory       PatientCaseHistory?
 
   @@index([preferredDate], map: "appointment_requests_preferred_date_idx")
   @@index([status], map: "appointment_requests_status_idx")
+  @@index([patientDbId], map: "appointment_requests_patient_id_idx")
+  @@index([assignedDoctorId], map: "appointment_requests_doctor_id_idx")
+  @@index([scheduledDate], map: "appointment_requests_scheduled_date_idx")
   @@map("appointment_requests")
+}
+
+model Patient {
+  id                    String               @id @default(uuid()) @db.Uuid
+  patientId             String               @unique @default(dbgenerated("'PAT' || lpad(nextval('patient_number_seq')::text, 6, '0')")) @map("patient_id") @db.VarChar(9)
+  patientName           String               @map("patient_name") @db.VarChar(80)
+  normalizedPatientName String               @map("normalized_patient_name") @db.VarChar(80)
+  dateOfBirth           DateTime?            @map("date_of_birth") @db.Date
+  gender                String?              @db.VarChar(20)
+  parentName            String               @map("parent_name") @db.VarChar(80)
+  primaryPhone          String               @map("primary_phone") @db.VarChar(20)
+  email                 String?              @db.VarChar(120)
+  isActive              Boolean              @default(true) @map("is_active")
+  createdAt             DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+  appointments          AppointmentRequest[]
+  caseHistories         PatientCaseHistory[]
+
+  @@unique([normalizedPatientName, primaryPhone], map: "patients_name_phone_key")
+  @@index([primaryPhone], map: "patients_primary_phone_idx")
+  @@map("patients")
+}
+
+model AppointmentLog {
+  id                   String                    @id @default(uuid()) @db.Uuid
+  appointmentRequestId String                    @map("appointment_request_id") @db.Uuid
+  patientDbId          String?                   @map("patient_db_id") @db.Uuid
+  previousStatus       AppointmentRequestStatus? @map("previous_status")
+  newStatus            AppointmentRequestStatus  @map("new_status")
+  previousDoctorId     String?                   @map("previous_doctor_id") @db.Uuid
+  assignedDoctorId     String?                   @map("assigned_doctor_id") @db.Uuid
+  event                AppointmentLogEvent
+  note                 String?                   @db.VarChar(500)
+  performedById        String?                   @map("performed_by_id") @db.Uuid
+  performedByRole      AppointmentActorRole      @map("performed_by_role")
+  createdAt            DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  appointment          AppointmentRequest        @relation(fields: [appointmentRequestId], references: [id], onDelete: Cascade)
+
+  @@index([appointmentRequestId], map: "appointment_logs_appointment_id_idx")
+  @@index([patientDbId], map: "appointment_logs_patient_id_idx")
+  @@index([createdAt], map: "appointment_logs_created_at_idx")
+  @@map("appointment_logs")
+}
+
+model PatientCaseHistory {
+  id                   String             @id @default(uuid()) @db.Uuid
+  patientDbId          String             @map("patient_db_id") @db.Uuid
+  appointmentRequestId String             @unique @map("appointment_request_id") @db.Uuid
+  appointmentNumber    Int                @map("appointment_number")
+  appointmentDate      DateTime           @map("appointment_date") @db.Date
+  nextAppointmentDate  DateTime?          @map("next_appointment_date") @db.Date
+  attendingDoctorId    String             @map("attending_doctor_id") @db.Uuid
+  presentingConcern    String?            @map("presenting_concern") @db.Text
+  medicalHistory       String?            @map("medical_history") @db.Text
+  assessment           String?            @db.Text
+  treatmentProvided    String?            @map("treatment_provided") @db.Text
+  therapyGoals         String?            @map("therapy_goals") @db.Text
+  progressNotes        String?            @map("progress_notes") @db.Text
+  homeProgram          String?            @map("home_program") @db.Text
+  recommendations      String?            @db.Text
+  caseHistory          String             @map("case_history") @db.Text
+  additionalNotes      String?            @map("additional_notes") @db.Text
+  isLocked             Boolean            @default(false) @map("is_locked")
+  createdByDoctorId    String             @map("created_by_doctor_id") @db.Uuid
+  updatedByDoctorId    String             @map("updated_by_doctor_id") @db.Uuid
+  createdAt            DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  patient              Patient            @relation(fields: [patientDbId], references: [id], onDelete: Restrict)
+  appointment          AppointmentRequest @relation(fields: [appointmentRequestId], references: [id], onDelete: Restrict)
+  attendingDoctor      DoctorDetail       @relation(fields: [attendingDoctorId], references: [id], onDelete: Restrict)
+
+  @@unique([patientDbId, appointmentNumber], map: "patient_case_history_appointment_number_key")
+  @@index([attendingDoctorId], map: "patient_case_history_doctor_id_idx")
+  @@index([appointmentDate], map: "patient_case_history_appointment_date_idx")
+  @@map("patient_case_history")
 }
 
 model ContactMessage {
@@ -119,21 +225,23 @@ model ContactMessage {
 }
 
 model DoctorDetail {
-  id                String                 @id @default(uuid()) @db.Uuid
-  doctorId          String                 @unique @default(dbgenerated("'DOC' || lpad(nextval('doctor_employee_number_seq')::text, 6, '0')")) @map("doctor_id") @db.VarChar(9)
-  generatedLoginId  String                 @unique @map("generated_login_id") @db.VarChar(9)
-  firstName         String                 @map("first_name") @db.VarChar(50)
-  lastName          String                 @map("last_name") @db.VarChar(50)
-  phone             String                 @unique @db.VarChar(20)
-  email             String                 @unique @db.Citext
-  designation       String                 @db.VarChar(100)
-  joiningDate       DateTime               @map("joining_date") @db.Date
-  dateOfBirth       DateTime               @map("date_of_birth") @db.Date
-  credentialStatus  DoctorCredentialStatus @default(PENDING) @map("credential_status")
-  isActive          Boolean                @default(true) @map("is_active")
-  createdAt         DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt         DateTime               @updatedAt @map("updated_at") @db.Timestamptz(6)
-  login             DoctorLoginDetail?
+  id                   String                 @id @default(uuid()) @db.Uuid
+  doctorId             String                 @unique @default(dbgenerated("'DOC' || lpad(nextval('doctor_employee_number_seq')::text, 6, '0')")) @map("doctor_id") @db.VarChar(9)
+  generatedLoginId     String                 @unique @map("generated_login_id") @db.VarChar(9)
+  firstName            String                 @map("first_name") @db.VarChar(50)
+  lastName             String                 @map("last_name") @db.VarChar(50)
+  phone                String                 @unique @db.VarChar(20)
+  email                String                 @unique @db.Citext
+  designation          String                 @db.VarChar(100)
+  joiningDate          DateTime               @map("joining_date") @db.Date
+  dateOfBirth          DateTime               @map("date_of_birth") @db.Date
+  credentialStatus     DoctorCredentialStatus @default(PENDING) @map("credential_status")
+  isActive             Boolean                @default(true) @map("is_active")
+  createdAt            DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime               @updatedAt @map("updated_at") @db.Timestamptz(6)
+  login                DoctorLoginDetail?
+  assignedAppointments AppointmentRequest[]
+  caseHistories        PatientCaseHistory[]
 
   @@index([credentialStatus], map: "doctor_details_credential_status_idx")
   @@index([isActive], map: "doctor_details_is_active_idx")
@@ -141,16 +249,16 @@ model DoctorDetail {
 }
 
 model DoctorLoginDetail {
-  id              String       @id @default(uuid()) @db.Uuid
-  doctorDetailsId String       @unique @map("doctor_details_id") @db.Uuid
-  loginId         String       @unique @map("login_id") @db.Citext
-  passwordHash    String       @map("password_hash") @db.Text
-  isActive        Boolean      @default(true) @map("is_active")
-  createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
-  createdBy       String       @map("created_by") @db.VarChar(100)
-  updatedBy       String       @map("updated_by") @db.VarChar(100)
-  doctor          DoctorDetail @relation(fields: [doctorDetailsId], references: [id], onDelete: Cascade)
+  id              String                        @id @default(uuid()) @db.Uuid
+  doctorDetailsId String                        @unique @map("doctor_details_id") @db.Uuid
+  loginId         String                        @unique @map("login_id") @db.Citext
+  passwordHash    String                        @map("password_hash") @db.Text
+  isActive        Boolean                       @default(true) @map("is_active")
+  createdAt       DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime                      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy       String                        @map("created_by") @db.VarChar(100)
+  updatedBy       String                        @map("updated_by") @db.VarChar(100)
+  doctor          DoctorDetail                  @relation(fields: [doctorDetailsId], references: [id], onDelete: Cascade)
   sessions        DoctorAuthenticationSession[]
   auditEvents     DoctorLoginAudit[]
 

@@ -77,7 +77,7 @@ export const getDashboardData = async () => {
   const todaySchedule: DashboardScheduleSummary = {
     total: todayStatuses.reduce((total, item) => total + item._count._all, 0),
     requested: statusCounts.get("REQUESTED") ?? 0,
-    confirmed: statusCounts.get("CONFIRMED") ?? 0,
+    assigned: statusCounts.get("ASSIGNED") ?? 0,
     completed: statusCounts.get("COMPLETED") ?? 0,
     cancelled: statusCounts.get("CANCELLED") ?? 0,
   };

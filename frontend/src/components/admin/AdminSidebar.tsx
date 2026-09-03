@@ -4,7 +4,7 @@ import logo from "../../assets/sankalp-logo.png";
 import "./AdminSidebar.css";
 
 const menuItems = [
-  ["▦", "Dashboard", "/admin/dashboard"], ["▣", "Appointments", ""], ["♙", "Patients", ""], ["⚕", "Doctors", "/admin/doctors"],
+  ["▦", "Dashboard", "/admin/dashboard"], ["▣", "Appointments", "/admin/appointments"], ["♙", "Patients", ""], ["⚕", "Doctors", "/admin/doctors"],
   ["★", "Success Stories", ""], ["☵", "Feedback", ""], ["✉", "Contact Requests", ""],
   ["⌁", "Performance", ""], ["♚", "Users & Roles", ""], ["⚙", "Settings", ""],
 ] as const;

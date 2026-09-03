@@ -15,6 +15,7 @@ export interface AppointmentFormData {
   parentName: string;
   childName: string;
   childAge: string;
+  childDateOfBirth: string;
   phone: string;
   email: string;
   preferredDate: string;
@@ -25,6 +26,6 @@ export interface AppointmentFormData {
 export interface AppointmentSubmitResponse {
   success: boolean;
   message: string;
-  data?: { referenceId: string; status: string; receivedAt: string };
+  data?: { referenceId: string; patientId: string; status: string; receivedAt: string };
   errors?: Record<string, string[]>;
 }

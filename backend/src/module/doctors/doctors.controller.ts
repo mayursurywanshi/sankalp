@@ -46,6 +46,7 @@ export const deleteDoctor = async (request: Request, response: Response): Promis
   try {
     const deleted = await deleteDoctorById(doctorId);
     if (!deleted) { response.status(404).json({ success: false, message: "Doctor was not found." }); return; }
+    if (deleted.blocked) { response.status(409).json({ success: false, message: "Doctors with appointment or case history cannot be deleted. Mark the Doctor inactive instead." }); return; }
     response.status(200).json({ success: true, message: `Doctor ${doctorId} was deleted successfully.`, data: deleted });
   } catch (error) {
     console.error("Unable to delete doctor", error);

@@ -21,7 +21,7 @@ export type DashboardAppointmentRequest = {
 export type DashboardScheduleSummary = {
   total: number;
   requested: number;
-  confirmed: number;
+  assigned: number;
   completed: number;
   cancelled: number;
 };

@@ -6,7 +6,7 @@ import { AppointmentContent, AppointmentFormData, AppointmentSubmitResponse } fr
 import "./BookAppointment.css";
 
 const initialForm: AppointmentFormData = {
-  parentName: "", childName: "", childAge: "", phone: "", email: "",
+  parentName: "", childName: "", childAge: "", childDateOfBirth: "", phone: "", email: "",
   preferredDate: "", preferredTime: "", consent: false,
 };
 
@@ -38,6 +38,7 @@ export const BookAppointment = () => {
   const [draftMinute, setDraftMinute] = useState<ClockMinute>(0);
   const timeTriggerRef = useRef<HTMLButtonElement>(null);
   const minimumDate = useMemo(() => new Date().toLocaleDateString("en-CA"), []);
+  const maximumBirthDate = minimumDate;
   const availableTimes = useMemo(() => new Set(content?.timeSlots ?? []), [content]);
 
   useEffect(() => {
@@ -108,6 +109,11 @@ export const BookAppointment = () => {
 
   const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!form.childDateOfBirth) {
+      setFieldErrors((current) => ({ ...current, childDateOfBirth: ["Select the child’s date of birth"] }));
+      setStatus({ type: "error", message: "Please select the child’s date of birth." });
+      return;
+    }
     setIsSubmitting(true);
     setFieldErrors({});
     setStatus(null);
@@ -155,6 +161,7 @@ export const BookAppointment = () => {
               <label>Parent Name<input name="parentName" value={form.parentName} onChange={updateField} placeholder="Enter parent name" autoComplete="name" aria-invalid={Boolean(fieldErrors.parentName?.length)} required />{fieldErrors.parentName?.[0] && <small>{fieldErrors.parentName[0]}</small>}</label>
               <label>Child’s Name<input name="childName" value={form.childName} onChange={updateField} placeholder="Enter child’s name" aria-invalid={Boolean(fieldErrors.childName?.length)} required />{fieldErrors.childName?.[0] && <small>{fieldErrors.childName[0]}</small>}</label>
               <label>Child’s Age<input name="childAge" value={form.childAge} onChange={updateField} placeholder="Example: 4 years" aria-invalid={Boolean(fieldErrors.childAge?.length)} required />{fieldErrors.childAge?.[0] && <small>{fieldErrors.childAge[0]}</small>}</label>
+              <label>Child’s Date of Birth<input name="childDateOfBirth" type="date" max={maximumBirthDate} value={form.childDateOfBirth} onChange={updateField} aria-invalid={Boolean(fieldErrors.childDateOfBirth?.length)} required />{fieldErrors.childDateOfBirth?.[0] && <small>{fieldErrors.childDateOfBirth[0]}</small>}</label>
               <label>Phone Number<input name="phone" type="tel" value={form.phone} onChange={updateField} placeholder="Enter 10-digit mobile number" autoComplete="tel" aria-invalid={Boolean(fieldErrors.phone?.length)} required />{fieldErrors.phone?.[0] && <small>{fieldErrors.phone[0]}</small>}</label>
               <label className="appointment-form__email">Email Address<input name="email" type="email" value={form.email} onChange={updateField} placeholder="Enter your email address" autoComplete="email" aria-invalid={Boolean(fieldErrors.email?.length)} required />{fieldErrors.email?.[0] && <small>{fieldErrors.email[0]}</small>}</label>
               <label>Preferred Date<input name="preferredDate" type="date" min={minimumDate} value={form.preferredDate} onChange={updateField} aria-invalid={Boolean(fieldErrors.preferredDate?.length)} required />{fieldErrors.preferredDate?.[0] && <small>{fieldErrors.preferredDate[0]}</small>}</label>

@@ -41,6 +41,7 @@ export const submitAppointmentRequest = async (request: Request, response: Respo
       message: APPOINTMENT_CONTENT.successMessage,
       data: {
         referenceId: receipt.referenceId,
+        patientId: receipt.patientId,
         status: receipt.status,
         receivedAt: receipt.createdAt.toISOString(),
       },

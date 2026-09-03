@@ -1,0 +1,12 @@
+import { authorizedFetch } from "../admin/admin-dashboard.service";
+import { CaseHistory, CaseHistoryForm, DoctorAppointment, DoctorAppointmentDetail, PatientHistory } from "./doctor-appointments.types";
+type ApiResponse<T> = { success: boolean; message?: string; data?: T };
+const parse = async <T>(response: globalThis.Response): Promise<T> => { const result = await response.json() as ApiResponse<T>; if (!response.ok || !result.success || result.data === undefined) throw new Error(response.status === 401 || response.status === 403 ? "SESSION_INVALID" : result.message ?? "Request failed"); return result.data; };
+const send = (path: string, method: string, body: unknown) => authorizedFetch(path, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+const toDisplay = (value: string) => value ? value.split("-").reverse().join("-") : undefined;
+const payload = (form: CaseHistoryForm, updating = false) => ({ ...form, ...(updating ? {} : { appointmentDate: toDisplay(form.appointmentDate) }), nextAppointmentDate: toDisplay(form.nextAppointmentDate) });
+export const fetchDoctorAppointments = async () => parse<DoctorAppointment[]>(await authorizedFetch("/api/doctor/appointments"));
+export const fetchDoctorAppointment = async (id: string) => parse<DoctorAppointmentDetail>(await authorizedFetch(`/api/doctor/appointments/${encodeURIComponent(id)}`));
+export const fetchPatientHistory = async (id: string) => parse<PatientHistory>(await authorizedFetch(`/api/doctor/appointments/patients/${encodeURIComponent(id)}/case-history`));
+export const createCaseHistory = async (id: string, form: CaseHistoryForm) => parse<CaseHistory>(await send(`/api/doctor/appointments/${encodeURIComponent(id)}/case-history`, "POST", payload(form)));
+export const updateCaseHistory = async (id: string, form: CaseHistoryForm) => { const { appointmentDate: _date, ...update } = payload(form, true); return parse<CaseHistory>(await send(`/api/doctor/appointments/case-history/${encodeURIComponent(id)}`, "PATCH", update)); };

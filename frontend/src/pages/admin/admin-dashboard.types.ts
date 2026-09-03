@@ -23,7 +23,7 @@ export type DashboardData = {
   todaySchedule: {
     total: number;
     requested: number;
-    confirmed: number;
+    assigned: number;
     completed: number;
     cancelled: number;
   };
