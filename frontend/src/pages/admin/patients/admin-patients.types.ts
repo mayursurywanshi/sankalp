@@ -1,0 +1,7 @@
+export type PatientStatus = "ACTIVE" | "FOLLOW_UP" | "INACTIVE";
+export type PatientSummary = { totalPatients: number; newPatients: number; activePatients: number; followUpsDue: number; inactivePatients: number; dischargedPatients: number };
+export type PatientListItem = { patientId: string; patientName: string; age: number | null; dateOfBirth: string | null; gender: string | null; parentName: string; primaryPhone: string; email: string | null; status: PatientStatus; createdAt: string; nextAppointment: { referenceId: string; date: string | null; time: string | null } | null; latestAppointment: { referenceId: string; status: string; requestedDate: string; requestedTime: string } | null; therapist: { doctorId: string; name: string; designation: string } | null };
+export type PatientList = { items: PatientListItem[]; pagination: { page: number; pageSize: number; total: number; totalPages: number } };
+export type PatientDetail = { patient: PatientListItem & { isActive: boolean; updatedAt: string }; appointments: Array<Record<string, any>>; caseHistory: Array<Record<string, any>> };
+export type PatientForm = { patientName: string; dateOfBirth: string; gender: "" | "Male" | "Female" | "Other"; parentName: string; primaryPhone: string; email: string; isActive: boolean };
+export type PatientFilters = { search: string; status: "" | PatientStatus; ageGroup: string; page: number; pageSize: number };

@@ -1,5 +1,5 @@
 import { clearAccessToken, getBearerAuthorization } from "../login/auth-storage";
-import { DashboardData, DashboardResponse, SessionResponse } from "./admin-dashboard.types";
+import { AdminSearchResults, DashboardData, DashboardResponse, SessionResponse } from "./admin-dashboard.types";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 
@@ -28,6 +28,13 @@ export const fetchAdminDashboard = async (): Promise<DashboardData> => {
   if (!response.ok || !result.success || !result.data) {
     throw new Error(response.status === 401 || response.status === 403 ? "SESSION_INVALID" : result.message ?? "DASHBOARD_ERROR");
   }
+  return result.data;
+};
+
+export const searchAdminRecords = async (query: string): Promise<AdminSearchResults> => {
+  const response = await authorizedFetch(`/api/admin/search?query=${encodeURIComponent(query)}`);
+  const result = await response.json() as { success: boolean; message?: string; data?: AdminSearchResults };
+  if (!response.ok || !result.success || !result.data) throw new Error(response.status === 401 || response.status === 403 ? "SESSION_INVALID" : result.message ?? "SEARCH_ERROR");
   return result.data;
 };
 

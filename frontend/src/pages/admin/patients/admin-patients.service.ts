@@ -1,0 +1,11 @@
+import { authorizedFetch } from "../admin-dashboard.service";
+import { PatientDetail, PatientFilters, PatientForm, PatientList, PatientListItem, PatientSummary } from "./admin-patients.types";
+type ApiResponse<T> = { success: boolean; message?: string; data?: T; errors?: Record<string, string[]> };
+const parse = async <T>(response: Response) => { const result = await response.json() as ApiResponse<T>; if (!response.ok || !result.success || result.data === undefined) { const error = new Error(response.status === 401 || response.status === 403 ? "SESSION_INVALID" : result.message ?? "Request failed") as Error & { errors?: Record<string, string[]> }; error.errors = result.errors; throw error; } return result.data; };
+const toDisplayDate = (value: string) => value.split("-").reverse().join("-");
+export const fetchPatientSummary = async () => parse<PatientSummary>(await authorizedFetch("/api/admin/patients/summary"));
+export const fetchPatients = async (filters: PatientFilters) => { const params = new URLSearchParams({ page: String(filters.page), pageSize: String(filters.pageSize) }); if (filters.search) params.set("search", filters.search); if (filters.status) params.set("status", filters.status); if (filters.ageGroup) params.set("ageGroup", filters.ageGroup); return parse<PatientList>(await authorizedFetch(`/api/admin/patients?${params}`)); };
+export const fetchPatient = async (patientId: string) => parse<PatientDetail>(await authorizedFetch(`/api/admin/patients/${encodeURIComponent(patientId)}`));
+const formBody = (form: PatientForm, includeStatus = false) => ({ patientName: form.patientName, dateOfBirth: toDisplayDate(form.dateOfBirth), gender: form.gender || undefined, parentName: form.parentName, primaryPhone: form.primaryPhone, email: form.email, ...(includeStatus ? { isActive: form.isActive } : {}) });
+export const createPatient = async (form: PatientForm) => parse<PatientListItem>(await authorizedFetch("/api/admin/patients", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(formBody(form)) }));
+export const updatePatient = async (patientId: string, form: PatientForm) => parse<PatientListItem>(await authorizedFetch(`/api/admin/patients/${encodeURIComponent(patientId)}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(formBody(form, true)) }));

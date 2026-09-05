@@ -20,5 +20,6 @@ export const caseHistorySchema = z.object({
 });
 
 export const caseHistoryUpdateSchema = caseHistorySchema.partial().omit({ appointmentDate: true });
+export const caseHistoryIdSchema = z.string().uuid("Enter a valid case-history ID");
 export type CaseHistoryInput = z.infer<typeof caseHistorySchema>;
 export type CaseHistoryUpdateInput = z.infer<typeof caseHistoryUpdateSchema>;

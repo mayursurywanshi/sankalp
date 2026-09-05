@@ -10,6 +10,8 @@ const environmentSchema = z.object({
 
   FRONTEND_URL: z.string().url(),
 
+  CORS_ALLOWED_ORIGINS: z.string().optional().default(""),
+
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
 });
 

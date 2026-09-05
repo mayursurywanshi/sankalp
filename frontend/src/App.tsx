@@ -15,6 +15,7 @@ import { AdminDoctors } from "./pages/admin/doctors/AdminDoctors";
 import { ProtectedDoctorRoute } from "./components/auth/ProtectedDoctorRoute";
 import { DoctorDashboard } from "./pages/doctor/DoctorDashboard";
 import { AdminAppointments } from "./pages/admin/appointments/AdminAppointments";
+import { AdminPatients } from "./pages/admin/patients/AdminPatients";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
         <Route path="/admin/doctors" element={<ProtectedAdminRoute><AdminDoctors /></ProtectedAdminRoute>} />
         <Route path="/admin/appointments" element={<ProtectedAdminRoute><AdminAppointments /></ProtectedAdminRoute>} />
+        <Route path="/admin/patients" element={<ProtectedAdminRoute><AdminPatients /></ProtectedAdminRoute>} />
         <Route path="/doctor/dashboard" element={<ProtectedDoctorRoute><DoctorDashboard /></ProtectedDoctorRoute>} />
         <Route path="*" element={(
           <SiteLayout>

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createCaseHistory, getDoctorAppointment, getPatientHistoryForDoctor, listDoctorAppointments, updateCaseHistory } from "./doctor-appointments.service";
-import { caseHistorySchema, caseHistoryUpdateSchema } from "./doctor-appointments.validation";
+import { caseHistoryIdSchema, caseHistorySchema, caseHistoryUpdateSchema } from "./doctor-appointments.validation";
 
 export const getMyAppointments = async (_request: Request, response: Response): Promise<void> => {
   try { response.status(200).json({ success: true, data: await listDoctorAppointments(response.locals.doctor.id) }); }
@@ -20,7 +20,8 @@ export const postCaseHistory = async (request: Request, response: Response): Pro
   catch (error) { console.error("Unable to create case history", error); response.status(500).json({ success: false, message: "Unable to create patient case history." }); }
 };
 export const patchCaseHistory = async (request: Request, response: Response): Promise<void> => {
+  const idValidation = caseHistoryIdSchema.safeParse(request.params.caseHistoryId); if (!idValidation.success) { response.status(400).json({ success: false, message: "Enter a valid case-history ID." }); return; }
   const validation = caseHistoryUpdateSchema.safeParse(request.body); if (!validation.success) { response.status(400).json({ success: false, message: "Please correct the case-history fields.", errors: validation.error.flatten().fieldErrors }); return; }
-  try { const result = await updateCaseHistory(response.locals.doctor.id, String(request.params.caseHistoryId ?? ""), validation.data); if (result.outcome === "NOT_FOUND") { response.status(404).json({ success: false, message: "Case history was not found." }); return; } if (result.outcome === "LOCKED") { response.status(409).json({ success: false, message: "Completed appointment history is locked and cannot be edited." }); return; } response.status(200).json({ success: true, message: "Patient case history updated successfully.", data: result.history }); }
+  try { const result = await updateCaseHistory(response.locals.doctor.id, idValidation.data, validation.data); if (result.outcome === "NOT_FOUND") { response.status(404).json({ success: false, message: "Case history was not found." }); return; } if (result.outcome === "LOCKED") { response.status(409).json({ success: false, message: "Completed appointment history is locked and cannot be edited." }); return; } response.status(200).json({ success: true, message: "Patient case history updated successfully.", data: result.history }); }
   catch (error) { console.error("Unable to update case history", error); response.status(500).json({ success: false, message: "Unable to update patient case history." }); }
 };
