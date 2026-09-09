@@ -1,8 +1,8 @@
 import { ReactNode, useState } from "react";
-import expertCareImage from "../../assets/home-cards/expert-care.png";
-import personalizedTherapyImage from "../../assets/home-cards/personalized-therapy.png";
-import childCenteredImage from "../../assets/home-cards/child-centered.png";
-import provenResultsImage from "../../assets/home-cards/proven-results.png";
+import expertCareImage from "../../assets/home-cards/expert-care.webp";
+import personalizedTherapyImage from "../../assets/home-cards/personalized-therapy.webp";
+import childCenteredImage from "../../assets/home-cards/child-centered.webp";
+import provenResultsImage from "../../assets/home-cards/proven-results.webp";
 import "./WhyChooseUs.css";
 
 interface Feature {
@@ -102,7 +102,7 @@ export const WhyChooseUs = () => {
               <span className="feature-card-inner">
                 <span className="feature-card-face feature-card-front">
                   <span className="feature-animation-wrap">
-                    <img src={featureImages[index]} alt="" aria-hidden="true" />
+                    <img src={featureImages[index]} alt="" aria-hidden="true" loading="lazy" decoding="async" />
                   </span>
                   <span className="visually-hidden">
                     {feature.title}. {feature.description}

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import missionImage from "../../assets/about/purpose/mission.png";
-import visionImage from "../../assets/about/purpose/vision.png";
-import valuesImage from "../../assets/about/purpose/values.png";
+import missionImage from "../../assets/about/purpose/mission.webp";
+import visionImage from "../../assets/about/purpose/vision.webp";
+import valuesImage from "../../assets/about/purpose/values.webp";
 import { AboutTextSection } from "./about.types";
 import "./PurposeSection.css";
 

@@ -1,4 +1,4 @@
-import therapyImage from "../../assets/about/therapy-story.png";
+import therapyImage from "../../assets/about/therapy-story.webp";
 import "./StorySection.css";
 
 interface StorySectionProps {

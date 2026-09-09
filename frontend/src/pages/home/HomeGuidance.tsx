@@ -1,8 +1,8 @@
 import { useState } from "react";
-import friendlyConversationImage from "../../assets/home/first-visit/friendly-conversation.png";
-import childObservationImage from "../../assets/home/first-visit/child-observation.png";
-import simpleActivitiesImage from "../../assets/home/first-visit/simple-activities.png";
-import clearGuidanceImage from "../../assets/home/first-visit/clear-guidance.png";
+import friendlyConversationImage from "../../assets/home/first-visit/friendly-conversation.webp";
+import childObservationImage from "../../assets/home/first-visit/child-observation.webp";
+import simpleActivitiesImage from "../../assets/home/first-visit/simple-activities.webp";
+import clearGuidanceImage from "../../assets/home/first-visit/clear-guidance.webp";
 import "./HomeGuidance.css";
 
 const challenges = [
@@ -73,7 +73,7 @@ export const HomeGuidance = () => {
             <button type="button" aria-label={`${step.title}. ${isActive ? "Showing details" : "Show details"}`} aria-pressed={isActive} onFocus={() => setActiveFirstVisitStep(index)} onBlur={() => setActiveFirstVisitStep(null)}>
               <span className="first-visit-card__inner">
                 <span className="first-visit-card__face first-visit-card__front">
-                  <img src={step.image} alt={step.imageAlt} />
+                  <img src={step.image} alt={step.imageAlt} loading="lazy" decoding="async" />
                 </span>
                 <span className="first-visit-card__face first-visit-card__back">
                   <span className="first-visit-card__number">{index + 1}</span>

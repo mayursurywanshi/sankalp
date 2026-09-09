@@ -1,6 +1,6 @@
 import { CSSProperties, ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { PageSkeleton } from "../../components/loading/PageSkeleton";
-import appointmentHeroImage from "../../assets/book-appointment/appointment-booking-hero.png";
+import appointmentHeroImage from "../../assets/book-appointment/appointment-booking-hero.webp";
 import { getAppointmentContent, requestAppointment } from "./book-appointment.service";
 import { AppointmentContent, AppointmentFormData, AppointmentSubmitResponse } from "./book-appointment.types";
 import "./BookAppointment.css";

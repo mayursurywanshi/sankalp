@@ -1,4 +1,4 @@
-import specialistImage from "../../assets/about/specialist.png";
+import specialistImage from "../../assets/about/specialist.webp";
 import "./SpecialistSection.css";
 
 interface SpecialistSectionProps {

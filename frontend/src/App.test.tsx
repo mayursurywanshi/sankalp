@@ -10,7 +10,7 @@ beforeEach(() => {
 
 test("renders the Sankalp home page", async () => {
   render(<App />);
-  expect(screen.getByRole("heading", { name: /reach their full potential/i })).toBeInTheDocument();
+  expect(await screen.findByRole("heading", { name: /reach their full potential/i })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /why choose sankalp/i })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /is your child facing these challenges/i })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: /when should parents seek guidance/i })).toBeInTheDocument();

@@ -1,27 +1,30 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SiteLayout } from "./components/layout/SiteLayout";
 import { ScrollToTop } from "./components/layout/ScrollToTop";
-import { About } from "./pages/about/About";
-import { BookAppointment } from "./pages/book-appointment/BookAppointment";
-import { ChildDevelopment } from "./pages/child-development/ChildDevelopment";
-import { Contact } from "./pages/contact/Contact";
-import { Home } from "./pages/home/Home";
-import { OurImpact } from "./pages/our-impact/OurImpact";
-import { Services } from "./pages/services/Services";
-import { Login } from "./pages/login/Login";
 import { ProtectedAdminRoute } from "./components/auth/ProtectedAdminRoute";
-import { AdminDashboard } from "./pages/admin/AdminDashboard";
-import { AdminDoctors } from "./pages/admin/doctors/AdminDoctors";
 import { ProtectedDoctorRoute } from "./components/auth/ProtectedDoctorRoute";
-import { DoctorDashboard } from "./pages/doctor/DoctorDashboard";
-import { AdminAppointments } from "./pages/admin/appointments/AdminAppointments";
-import { AdminPatients } from "./pages/admin/patients/AdminPatients";
+import { PageSkeleton } from "./components/loading/PageSkeleton";
+
+const About = lazy(() => import("./pages/about/About").then((module) => ({ default: module.About })));
+const BookAppointment = lazy(() => import("./pages/book-appointment/BookAppointment").then((module) => ({ default: module.BookAppointment })));
+const ChildDevelopment = lazy(() => import("./pages/child-development/ChildDevelopment").then((module) => ({ default: module.ChildDevelopment })));
+const Contact = lazy(() => import("./pages/contact/Contact").then((module) => ({ default: module.Contact })));
+const Home = lazy(() => import("./pages/home/Home").then((module) => ({ default: module.Home })));
+const OurImpact = lazy(() => import("./pages/our-impact/OurImpact").then((module) => ({ default: module.OurImpact })));
+const Services = lazy(() => import("./pages/services/Services").then((module) => ({ default: module.Services })));
+const Login = lazy(() => import("./pages/login/Login").then((module) => ({ default: module.Login })));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard").then((module) => ({ default: module.AdminDashboard })));
+const AdminDoctors = lazy(() => import("./pages/admin/doctors/AdminDoctors").then((module) => ({ default: module.AdminDoctors })));
+const DoctorDashboard = lazy(() => import("./pages/doctor/DoctorDashboard").then((module) => ({ default: module.DoctorDashboard })));
+const AdminAppointments = lazy(() => import("./pages/admin/appointments/AdminAppointments").then((module) => ({ default: module.AdminAppointments })));
+const AdminPatients = lazy(() => import("./pages/admin/patients/AdminPatients").then((module) => ({ default: module.AdminPatients })));
 
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Routes>
+      <Suspense fallback={<PageSkeleton cards={4} />}><Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/admin/dashboard" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
         <Route path="/admin/doctors" element={<ProtectedAdminRoute><AdminDoctors /></ProtectedAdminRoute>} />
@@ -41,7 +44,7 @@ function App() {
             </Routes>
           </SiteLayout>
         )} />
-      </Routes>
+      </Routes></Suspense>
     </BrowserRouter>
   );
 }

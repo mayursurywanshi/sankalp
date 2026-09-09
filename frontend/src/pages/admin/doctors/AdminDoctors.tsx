@@ -42,6 +42,8 @@ export const AdminDoctors = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [doctorSearch, setDoctorSearch] = useState("");
   const [message, setMessage] = useState<{
     type: "error" | "success";
     text: string;
@@ -87,6 +89,21 @@ export const AdminDoctors = () => {
   useEffect(() => {
     void loadDoctors();
   }, [loadDoctors]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(
+      () => setDoctorSearch(searchInput.trim().toLowerCase()),
+      400,
+    );
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
+
+  const visibleDoctors = doctorSearch
+    ? doctors.filter((doctor) =>
+        [doctor.doctorId, doctor.loginId, doctor.firstName, doctor.lastName, doctor.designation, doctor.phone, doctor.email]
+          .some((value) => value.toLowerCase().includes(doctorSearch)),
+      )
+    : doctors;
 
   const updateField = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -217,15 +234,17 @@ export const AdminDoctors = () => {
               <div>
                 <h2>Doctor Directory</h2>
                 <span>
-                  {doctors.length} {doctors.length === 1 ? "Doctor" : "Doctors"}
+                  {visibleDoctors.length}{" "}
+                  {visibleDoctors.length === 1 ? "Doctor" : "Doctors"}
                 </span>
               </div>
               <label>
                 <span>⌕</span>
                 <input
                   type="search"
-                  placeholder="Search will be available soon"
-                  disabled
+                  placeholder="Search Doctors"
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
                 />
               </label>
             </header>
@@ -235,7 +254,7 @@ export const AdminDoctors = () => {
                   <span key={index} />
                 ))}
               </div>
-            ) : doctors.length === 0 ? (
+            ) : visibleDoctors.length === 0 ? (
               <div className="doctor-empty">
                 <span>🩺</span>
                 <h2>No Doctors added yet</h2>
@@ -260,7 +279,7 @@ export const AdminDoctors = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {doctors.map((doctor) => (
+                    {visibleDoctors.map((doctor) => (
                       <tr key={doctor.doctorId}>
                         <td>
                           <div className="doctor-person">

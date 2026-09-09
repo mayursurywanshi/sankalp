@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import logo from "../../assets/sankalp-logo.png";
+import logo from "../../assets/sankalp-logo.webp";
 import "./AdminSidebar.css";
 
 const menuItems = [

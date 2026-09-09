@@ -1,4 +1,4 @@
-import logo from "../../assets/sankalp-logo.png";
+import logo from "../../assets/sankalp-logo.webp";
 import { FOOTER_CONTENT } from "./footer.constants";
 import "./Footer.css";
 
@@ -36,7 +36,7 @@ export const Footer = () => (
   <footer className="site-footer">
     <div className="footer-content">
       <div className="footer-brand">
-        <a href="/" aria-label="Sankalp home"><img src={logo} alt="Sankalp Child Development Center" /></a>
+        <a href="/" aria-label="Sankalp home"><img src={logo} alt="Sankalp Child Development Center" loading="lazy" decoding="async" /></a>
         <p>{FOOTER_CONTENT.description}</p>
       </div>
 

@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/sankalp-logo.png";
-import background from "../../assets/login/login-background.png";
+import logo from "../../assets/sankalp-logo.webp";
+import background from "../../assets/login/login-background.webp";
 import { loginUser } from "./login.service";
 import { LoginFormData, LoginResponse } from "./login.types";
 import { storeAccessToken } from "./auth-storage";

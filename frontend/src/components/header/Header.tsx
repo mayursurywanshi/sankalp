@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../../assets/sankalp-logo.png";
+import logo from "../../assets/sankalp-logo.webp";
 import { ButtonLink } from "../button/ButtonLink";
 import "./Header.css";
 
@@ -16,7 +16,7 @@ export const Header = () => {
     <header className="site-header">
       <div className="site-header__inner">
         <Link className="brand" to="/" aria-label="Sankalp home">
-          <img src={logo} alt="Sankalp Child Development Center" />
+          <img src={logo} alt="Sankalp Child Development Center" decoding="async" />
         </Link>
         <button className="menu-toggle" type="button" aria-label="Toggle navigation"
           aria-expanded={isOpen} onClick={() => setIsOpen((open) => !open)}>

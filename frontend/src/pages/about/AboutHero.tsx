@@ -1,4 +1,4 @@
-import facilityImage from "../../assets/about/facility.png";
+import facilityImage from "../../assets/about/facility.webp";
 import "./AboutHero.css";
 
 interface AboutHeroProps {

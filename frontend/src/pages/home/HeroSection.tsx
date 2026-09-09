@@ -1,4 +1,4 @@
-import heroImage from "../../assets/home-hero.png";
+import heroImage from "../../assets/home-hero.webp";
 import { ButtonLink } from "../../components/button/ButtonLink";
 import "./HeroSection.css";
 
@@ -19,7 +19,7 @@ export const HeroSection = ({ description, isLoading }: HeroSectionProps) => (
       <div className="shape shape-one" /><div className="shape shape-two" />
       <span className="spark spark-one">✦</span><span className="spark spark-two">◇</span>
       <span className="spark spark-three">✦</span>
-      <img src={heroImage} alt="Therapist helping a child play with developmental toys" />
+      <img src={heroImage} alt="Therapist helping a child play with developmental toys" decoding="async" fetchPriority="high" />
     </div>
   </main>
 );
