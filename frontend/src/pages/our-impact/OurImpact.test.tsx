@@ -17,5 +17,5 @@ test("loads and renders the Our Impact API content", async () => {
   expect(await screen.findByRole("heading", { name: "Our Impact" })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "From First Steps to Confident Walking" })).toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "What Parents Say" })).toBeInTheDocument();
-  expect(global.fetch).toHaveBeenCalledWith("http://localhost:5000/api/our-impact");
+  expect(global.fetch).toHaveBeenCalledWith("http://127.0.0.1:5000/api/our-impact");
 });

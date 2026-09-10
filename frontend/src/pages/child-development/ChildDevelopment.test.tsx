@@ -27,5 +27,5 @@ test("loads milestones and changes the selected age group", async () => {
   expect(screen.getByText("Develops head and trunk control")).toBeInTheDocument();
   fireEvent.click(screen.getByRole("tab", { name: "2–4 Years" }));
   expect(screen.getByText("Runs and climbs with improving coordination")).toBeInTheDocument();
-  expect(global.fetch).toHaveBeenCalledWith("http://localhost:5000/api/child-development");
+  expect(global.fetch).toHaveBeenCalledWith("http://127.0.0.1:5000/api/child-development");
 });

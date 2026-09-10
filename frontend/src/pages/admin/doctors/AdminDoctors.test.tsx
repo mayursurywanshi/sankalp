@@ -43,13 +43,13 @@ test("creates Doctor details, reviews generated IDs, and confirms credentials", 
 
   expect(await screen.findByText("DOC000001")).toBeInTheDocument();
   expect(screen.getByText("MAYSU3008")).toBeInTheDocument();
-  expect(global.fetch).toHaveBeenNthCalledWith(2, "http://localhost:5000/api/admin/doctors", expect.objectContaining({
+  expect(global.fetch).toHaveBeenNthCalledWith(2, "http://127.0.0.1:5000/api/admin/doctors", expect.objectContaining({
     method: "POST",
     body: expect.stringContaining('"joiningDate":"15-09-2026"'),
   }));
 
   fireEvent.click(screen.getByRole("button", { name: /confirm & create login/i }));
-  await waitFor(() => expect(global.fetch).toHaveBeenNthCalledWith(3, "http://localhost:5000/api/admin/doctors/DOC000001/credentials", expect.objectContaining({
+  await waitFor(() => expect(global.fetch).toHaveBeenNthCalledWith(3, "http://127.0.0.1:5000/api/admin/doctors/DOC000001/credentials", expect.objectContaining({
     method: "POST",
     body: JSON.stringify({ password: "Doctor@123", confirm: true }),
   })));
@@ -59,6 +59,6 @@ test("creates Doctor details, reviews generated IDs, and confirms credentials", 
   fireEvent.click(await screen.findByRole("button", { name: "Delete" }));
   expect(screen.getByRole("dialog", { name: /delete dr\. mayuri suryawanshi/i })).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: "Delete Doctor" }));
-  await waitFor(() => expect(global.fetch).toHaveBeenNthCalledWith(5, "http://localhost:5000/api/admin/doctors/DOC000001", expect.objectContaining({ method: "DELETE" })));
+  await waitFor(() => expect(global.fetch).toHaveBeenNthCalledWith(5, "http://127.0.0.1:5000/api/admin/doctors/DOC000001", expect.objectContaining({ method: "DELETE" })));
   expect(await screen.findByText(/deleted successfully/i)).toBeInTheDocument();
 }, 10000);

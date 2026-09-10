@@ -19,5 +19,5 @@ test("loads Contact content and displays its message form and map", async () => 
   expect(screen.getByRole("link", { name: "See On Map" })).toHaveAttribute("href", "https://www.google.com/maps/search/?api=1&query=Sankalp");
   fireEvent.change(screen.getByLabelText("Your Name"), { target: { value: "Mayur Patil" } });
   expect(screen.getByLabelText("Your Name")).toHaveValue("Mayur Patil");
-  expect(global.fetch).toHaveBeenCalledWith("http://localhost:5000/api/contact");
+  expect(global.fetch).toHaveBeenCalledWith("http://127.0.0.1:5000/api/contact");
 });

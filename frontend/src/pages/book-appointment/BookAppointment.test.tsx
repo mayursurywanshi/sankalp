@@ -26,5 +26,5 @@ test("loads appointment content and renders the request form without service or 
   fireEvent.click(screen.getByRole("button", { name: "00 minutes" }));
   fireEvent.click(screen.getByRole("button", { name: "Select" }));
   expect(screen.getByRole("button", { name: /Preferred Time 10:00 AM/i })).toBeInTheDocument();
-  expect(global.fetch).toHaveBeenCalledWith("http://localhost:5000/api/appointments-request");
+  expect(global.fetch).toHaveBeenCalledWith("http://127.0.0.1:5000/api/appointments-request");
 });

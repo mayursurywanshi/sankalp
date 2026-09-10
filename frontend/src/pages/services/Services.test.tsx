@@ -32,5 +32,5 @@ test("loads and renders services from the API", async () => {
   expect(serviceCard).toHaveClass("is-flipped");
   fireEvent.mouseLeave(serviceCard as HTMLElement);
   expect(serviceCard).not.toHaveClass("is-flipped");
-  expect(global.fetch).toHaveBeenCalledWith("http://localhost:5000/api/services");
+  expect(global.fetch).toHaveBeenCalledWith("http://127.0.0.1:5000/api/services");
 });

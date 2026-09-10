@@ -8,6 +8,9 @@ frontend/node_modules/
 .env.*
 backend/.env
 frontend/.env
+!.env.example
+!backend/.env.example
+!frontend/.env.example
 
 # Build output
 dist/
@@ -42,3 +45,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Original image backups kept outside Vite's watched source tree
+/asset-originals/

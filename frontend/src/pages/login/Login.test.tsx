@@ -30,7 +30,7 @@ test("submits the Admin login form and stores a session Bearer token", async () 
   fireEvent.click(screen.getByRole("button", { name: "Login" }));
 
   await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(
-    "http://localhost:5000/api/auth/login",
+    "http://127.0.0.1:5000/api/auth/login",
     expect.objectContaining({ method: "POST" }),
   ));
   expect(await screen.findByText("Welcome back! Sankalp Administrator")).toBeInTheDocument();
