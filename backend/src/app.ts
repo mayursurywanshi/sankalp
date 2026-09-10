@@ -13,6 +13,7 @@ import ourImpactRouter from "./module/our-impact/our-impact.routes";
 import servicesRouter from "./module/services/services.routes";
 import doctorDashboardRouter from "./module/doctor-dashboard/doctor-dashboard.routes";
 import { env } from "./config/env.config";
+import { preventSensitiveResponseCaching } from "./middleware/sensitive-response-cache";
 
 const app = express();
 
@@ -42,6 +43,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use("/uploads/our-impact", express.static(path.resolve(process.cwd(), "uploads", "our-impact")));
+app.use("/api/auth", preventSensitiveResponseCaching);
+app.use("/api/admin", preventSensitiveResponseCaching);
+app.use("/api/doctor", preventSensitiveResponseCaching);
 
 app.get("/api/health", (_request: Request, response: Response) => {
   response.status(200).json({
