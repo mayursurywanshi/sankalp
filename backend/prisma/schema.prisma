@@ -58,6 +58,21 @@ enum DoctorCredentialStatus {
   ACTIVE
 }
 
+enum OurImpactPostType {
+  SUCCESS_STORY
+  PARENT_FEEDBACK
+}
+
+enum OurImpactMediaType {
+  IMAGE
+  VIDEO
+}
+
+enum OurImpactPostStatus {
+  PUBLISHED
+  ARCHIVED
+}
+
 model AdminLoginLog {
   id           String                       @id @default(uuid()) @db.Uuid
   loginId      String                       @unique @map("login_id") @db.Citext
@@ -68,9 +83,30 @@ model AdminLoginLog {
   createdAt    DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
   sessions     AdminAuthenticationSession[]
   auditEvents  AdminLoginAudit[]
+  impactPosts  OurImpactPost[]
 
   @@index([role], map: "admin_login_logs_role_idx")
   @@map("admin_login_logs")
+}
+
+model OurImpactPost {
+  id               String              @id @default(uuid()) @db.Uuid
+  postType         OurImpactPostType   @map("post_type")
+  title            String              @db.VarChar(150)
+  story            String              @db.Text
+  mediaType        OurImpactMediaType  @map("media_type")
+  mediaUrl         String              @map("media_url") @db.Text
+  originalFileName String              @map("original_file_name") @db.VarChar(255)
+  mimeType         String              @map("mime_type") @db.VarChar(100)
+  status           OurImpactPostStatus @default(PUBLISHED)
+  createdBy        String?             @map("created_by") @db.Uuid
+  publishedAt      DateTime            @default(now()) @map("published_at") @db.Timestamptz(6)
+  createdAt        DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  admin            AdminLoginLog?      @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([postType, status, publishedAt], map: "our_impact_posts_type_status_published_idx")
+  @@map("our_impact_posts")
 }
 
 model AdminLoginAudit {

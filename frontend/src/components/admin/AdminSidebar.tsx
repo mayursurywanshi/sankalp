@@ -5,7 +5,7 @@ import "./AdminSidebar.css";
 
 const menuItems = [
   ["▦", "Dashboard", "/admin/dashboard"], ["▣", "Appointments", "/admin/appointments"], ["♙", "Patients", "/admin/patients"], ["⚕", "Doctors", "/admin/doctors"],
-  ["★", "Success Stories", ""], ["☵", "Feedback", ""], ["✉", "Contact Requests", ""],
+  ["★", "Success Stories", "/admin/success-stories"], ["☵", "Feedback", ""], ["✉", "Contact Requests", ""],
   ["⌁", "Performance", ""], ["♚", "Users & Roles", ""], ["⚙", "Settings", ""],
 ] as const;
 

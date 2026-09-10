@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import path from "node:path";
 import cors from "cors";
 import helmet from "helmet";
 import authRouter from "./module/auth/auth.routes";
@@ -28,7 +29,9 @@ const isAllowedOrigin = (origin?: string) => {
   return false;
 };
 
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 app.use(cors({
   origin: (origin, callback) => {
     if (isAllowedOrigin(origin)) callback(null, true);
@@ -38,6 +41,7 @@ app.use(cors({
   },
 }));
 app.use(express.json());
+app.use("/uploads/our-impact", express.static(path.resolve(process.cwd(), "uploads", "our-impact")));
 
 app.get("/api/health", (_request: Request, response: Response) => {
   response.status(200).json({

@@ -19,6 +19,11 @@ export const OUR_IMPACT_CONTENT = {
     title: "From First Steps to Confident Walking",
     summary:
       "With consistent therapy and family support, Aarav improved his balance, strength and confidence in independent walking.",
+    fullStory: [
+      "When Aarav first came to Sankalp, standing without support and taking independent steps were difficult for him. His family wanted him to move confidently and participate more freely in everyday play.",
+      "Our team created a child-friendly therapy plan focused on balance, lower-body strength and safe movement. Sessions used playful activities that encouraged Aarav to practise standing, reaching and walking without making therapy feel overwhelming.",
+      "With consistent sessions and regular practice at home, Aarav gradually needed less assistance. He began walking independently, joining family activities and exploring his surroundings with greater confidence.",
+    ],
     highlights: [
       "Improved balance and lower-body strength",
       "Independent walking with greater confidence",
@@ -36,6 +41,11 @@ export const OUR_IMPACT_CONTENT = {
       title: "Overcoming Delays with the Right Care",
       summary:
         "Personalized therapy strengthened Vihaan’s motor skills, attention and independence.",
+      fullStory: [
+        "Vihaan’s family noticed that motor activities and following multi-step tasks were taking more effort than expected. A detailed assessment helped the team understand his strengths and the areas where focused support could help.",
+        "His therapy plan combined movement, coordination and attention-building activities. Each task was adjusted to his pace, and his family received simple ideas to continue the learning at home.",
+        "Over time, Vihaan became more confident in movement and more independent during daily routines. His progress reflects the value of patient, personalized care and consistent family participation.",
+      ],
       buttonLabel: "Read Full Story",
       buttonHref: "/our-impact/vihaan-motor-skills",
     },
@@ -47,6 +57,11 @@ export const OUR_IMPACT_CONTENT = {
       title: "Better Balance, Better Confidence",
       summary:
         "Play-based therapy helped Myra build coordination, balance and confidence.",
+      fullStory: [
+        "Myra initially found balance and coordinated movement challenging, especially during active play. The Sankalp team designed sessions around the games and activities she enjoyed most.",
+        "Through playful balance exercises, obstacle activities and guided movement, Myra developed better body awareness and control. Her family supported the plan by practising short activities between sessions.",
+        "Myra now approaches physical activities with greater confidence, participates more comfortably with other children and continues to build new movement skills step by step.",
+      ],
       buttonLabel: "Read Full Story",
       buttonHref: "/our-impact/myra-balance-confidence",
     },
@@ -58,6 +73,11 @@ export const OUR_IMPACT_CONTENT = {
       title: "Growing Ready for School",
       summary:
         "A structured developmental plan helped Anaya strengthen everyday and school-readiness skills.",
+      fullStory: [
+        "As Anaya prepared for school, her family wanted support with everyday routines, attention and age-appropriate developmental skills. Her assessment provided a clear picture of the areas that needed encouragement.",
+        "The team introduced a structured but playful plan involving fine-motor activities, guided routines and tasks that strengthened attention and independence. Progress was reviewed regularly with her family.",
+        "Anaya gradually became more comfortable completing daily tasks and participating in learning activities. She approached school readiness with improved confidence and a stronger foundation for continued development.",
+      ],
       buttonLabel: "Read Full Story",
       buttonHref: "/our-impact/anaya-school-readiness",
     },

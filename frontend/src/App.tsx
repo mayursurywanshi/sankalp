@@ -19,6 +19,7 @@ const AdminDoctors = lazy(() => import("./pages/admin/doctors/AdminDoctors").the
 const DoctorDashboard = lazy(() => import("./pages/doctor/DoctorDashboard").then((module) => ({ default: module.DoctorDashboard })));
 const AdminAppointments = lazy(() => import("./pages/admin/appointments/AdminAppointments").then((module) => ({ default: module.AdminAppointments })));
 const AdminPatients = lazy(() => import("./pages/admin/patients/AdminPatients").then((module) => ({ default: module.AdminPatients })));
+const AdminSuccessStories = lazy(() => import("./pages/admin/success-stories/AdminSuccessStories").then((module) => ({ default: module.AdminSuccessStories })));
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/admin/doctors" element={<ProtectedAdminRoute><AdminDoctors /></ProtectedAdminRoute>} />
         <Route path="/admin/appointments" element={<ProtectedAdminRoute><AdminAppointments /></ProtectedAdminRoute>} />
         <Route path="/admin/patients" element={<ProtectedAdminRoute><AdminPatients /></ProtectedAdminRoute>} />
+        <Route path="/admin/success-stories" element={<ProtectedAdminRoute><AdminSuccessStories /></ProtectedAdminRoute>} />
         <Route path="/doctor/dashboard" element={<ProtectedDoctorRoute><DoctorDashboard /></ProtectedDoctorRoute>} />
         <Route path="*" element={(
           <SiteLayout>

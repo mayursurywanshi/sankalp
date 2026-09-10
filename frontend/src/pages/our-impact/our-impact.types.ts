@@ -1,7 +1,16 @@
 export interface ImpactStatistic { id: string; value: string; label: string; description: string; }
-export interface ImpactStory { id: string; imageKey: string; childName: string; age: string; title: string; summary: string; buttonLabel: string; buttonHref: string; }
+export interface ImpactStory { id: string; imageKey: string; childName: string; age: string; title: string; summary: string; fullStory: string[]; buttonLabel: string; buttonHref: string; }
 export interface ParentTestimonial { id: string; rating: number; quote: string; parentName: string; relation: string; }
 export interface VideoTestimonial { id: string; title: string; thumbnailKey: string; videoUrl: string; }
+export interface CommunityImpactPost {
+  id: string;
+  postType: "SUCCESS_STORY" | "PARENT_FEEDBACK";
+  title: string;
+  story: string;
+  mediaType: "IMAGE" | "VIDEO";
+  mediaUrl: string;
+  publishedAt: string;
+}
 
 export interface OurImpactContent {
   hero: { title: string; tagline: string; description: string };
@@ -10,6 +19,7 @@ export interface OurImpactContent {
   successStories: ImpactStory[];
   testimonials: { title: string; subtitle: string; items: ParentTestimonial[] };
   videoTestimonials: { title: string; items: VideoTestimonial[] };
+  communityPosts: CommunityImpactPost[];
 }
 
 export interface OurImpactResponse { success: boolean; data: OurImpactContent; }
