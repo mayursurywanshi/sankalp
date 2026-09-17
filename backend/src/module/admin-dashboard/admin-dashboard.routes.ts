@@ -6,6 +6,7 @@ import adminAppointmentsRouter from "../admin-appointments/admin-appointments.ro
 import adminPatientsRouter from "../admin-patients/admin-patients.routes";
 import adminSearchRouter from "../admin-search/admin-search.routes";
 import adminSuccessStoriesRouter from "../admin-success-stories/admin-success-stories.routes";
+import adminFeedbackRouter from "../admin-feedback/admin-feedback.routes";
 
 const adminDashboardRouter = Router();
 
@@ -17,5 +18,6 @@ adminDashboardRouter.use("/doctors", doctorAdminRouter);
 adminDashboardRouter.use("/appointments", adminAppointmentsRouter);
 adminDashboardRouter.use("/patients", adminPatientsRouter);
 adminDashboardRouter.use("/success-stories-posts", adminSuccessStoriesRouter);
+adminDashboardRouter.use("/feedback", adminFeedbackRouter);
 
 export default adminDashboardRouter;

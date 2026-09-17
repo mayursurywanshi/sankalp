@@ -14,6 +14,7 @@ import servicesRouter from "./module/services/services.routes";
 import doctorDashboardRouter from "./module/doctor-dashboard/doctor-dashboard.routes";
 import { env } from "./config/env.config";
 import { preventSensitiveResponseCaching } from "./middleware/sensitive-response-cache";
+import feedbackRouter from "./module/feedback/feedback.routes";
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use("/api/doctor", doctorDashboardRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/home", homeRouter);
 app.use("/api/our-impact", ourImpactRouter);
+app.use("/api/feedback", feedbackRouter);
 app.use("/api/services", servicesRouter);
 
 app.use((error: Error, _request: Request, response: Response, next: NextFunction) => {
