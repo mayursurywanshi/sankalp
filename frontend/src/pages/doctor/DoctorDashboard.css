@@ -236,16 +236,175 @@
   gap: 10px;
   grid-template-columns: 1fr 1fr;
 }
+.doctor-date-fields--single {
+  grid-template-columns: 1fr;
+}
 .doctor-case-main {
   min-height: 100px !important;
 }
-.doctor-case-form > button {
+.doctor-case-actions {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+.doctor-case-actions button {
   background: #0ca3a5;
   border: 0;
   border-radius: 10px;
   color: #fff;
+  cursor: pointer;
   font-weight: 900;
   padding: 12px;
+}
+.doctor-case-actions button.is-next {
+  background: linear-gradient(90deg, #7454cf, #8b68d9);
+}
+.doctor-case-actions button:only-child {
+  grid-column: 1 / -1;
+}
+.doctor-case-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.doctor-slot-dialog {
+  align-items: center;
+  background: rgba(10, 34, 66, 0.58);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 100;
+}
+.doctor-slot-dialog > section {
+  background: linear-gradient(145deg, #fff, #f5fbff);
+  border-radius: 22px;
+  box-shadow: 0 24px 70px rgba(5, 35, 68, 0.28);
+  max-height: min(88vh, 850px);
+  max-width: 900px;
+  overflow: hidden;
+  width: 100%;
+}
+.doctor-slot-dialog > section > header {
+  align-items: flex-start;
+  background: linear-gradient(110deg, #e4faf7, #f0ebff);
+  display: flex;
+  justify-content: space-between;
+  padding: 22px 26px;
+}
+.doctor-slot-dialog h2 {
+  margin: 4px 0;
+}
+.doctor-slot-dialog header p {
+  color: #687b96;
+  margin: 0;
+}
+.doctor-slot-dialog header > button {
+  background: #fff;
+  border: 1px solid #d7e6ed;
+  border-radius: 50%;
+  color: #a52e46;
+  cursor: pointer;
+  font-size: 25px;
+  height: 38px;
+  line-height: 1;
+  width: 38px;
+}
+.doctor-slot-days {
+  display: grid;
+  gap: 15px;
+  max-height: 58vh;
+  overflow-y: auto;
+  padding: 20px 26px;
+}
+.doctor-slot-days article {
+  border: 1px solid #dce9ef;
+  border-radius: 15px;
+  padding: 15px;
+}
+.doctor-slot-days h3 {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 12px;
+}
+.doctor-slot-days h3 small {
+  color: #75849a;
+  letter-spacing: normal;
+}
+.doctor-slot-grid {
+  display: grid;
+  gap: 9px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.doctor-slot-grid button {
+  border: 1px solid;
+  border-radius: 9px;
+  font-weight: 850;
+  padding: 10px 6px;
+}
+.doctor-slot-grid button.is-available {
+  background: #e3f8ed;
+  border-color: #94d8b5;
+  color: #08784d;
+  cursor: pointer;
+}
+.doctor-slot-grid button.is-booked {
+  background: #ffebee;
+  border-color: #efb1bb;
+  color: #b12f45;
+}
+.doctor-slot-grid button.is-selected {
+  background: #0ca3a5;
+  border-color: #087f91;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(12, 163, 165, 0.18);
+}
+.doctor-clinic-closed {
+  background: #fff0f1;
+  border-radius: 9px;
+  color: #b33a4f;
+  font-weight: 800;
+  margin: 0;
+  padding: 12px;
+  text-align: center;
+}
+.doctor-slots-loading {
+  min-height: 280px;
+  padding: 80px 20px;
+  text-align: center;
+}
+.doctor-slot-dialog footer {
+  align-items: center;
+  border-top: 1px solid #e1ebf0;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 26px;
+}
+.doctor-slot-dialog footer > span {
+  color: #536984;
+  font-weight: 800;
+}
+.doctor-slot-dialog footer div {
+  display: flex;
+  gap: 10px;
+}
+.doctor-slot-dialog footer button {
+  background: #fff;
+  border: 1px solid #cfdee7;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 850;
+  padding: 10px 16px;
+}
+.doctor-slot-dialog footer button.is-confirm {
+  background: #0ca3a5;
+  border-color: #0ca3a5;
+  color: #fff;
+}
+.doctor-slot-dialog footer button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 .doctor-locked {
   background: #eef3f6;
@@ -328,5 +487,22 @@
   }
   .doctor-case-panel {
     padding: 12px;
+  }
+  .doctor-case-actions,
+  .doctor-slot-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .doctor-slot-dialog {
+    padding: 8px;
+  }
+  .doctor-slot-dialog > section > header,
+  .doctor-slot-days,
+  .doctor-slot-dialog footer {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .doctor-slot-dialog footer {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

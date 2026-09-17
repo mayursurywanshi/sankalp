@@ -500,7 +500,8 @@ export const AdminPatients = () => {
                         ·{" "}
                         {String(
                           appointment.scheduledTime ??
-                            appointment.preferredTime,
+                            appointment.preferredTime ??
+                            "Time pending",
                         )}
                       </span>
                       <i>{String(appointment.status)}</i>

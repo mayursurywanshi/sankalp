@@ -162,7 +162,7 @@ model AppointmentRequest {
   phone               String                   @db.VarChar(20)
   email               String                   @db.VarChar(120)
   preferredDate       DateTime                 @map("preferred_date") @db.Date
-  preferredTime       String                   @map("preferred_time") @db.VarChar(20)
+  preferredTime       String?                  @map("preferred_time") @db.VarChar(20)
   consent             Boolean
   status              AppointmentRequestStatus @default(REQUESTED)
   createdAt           DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)

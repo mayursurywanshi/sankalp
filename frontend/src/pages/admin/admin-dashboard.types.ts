@@ -1,6 +1,7 @@
 import { AuthenticatedUser } from "../login/login.types";
 
-export type AppointmentStatus = "REQUESTED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+export type AppointmentStatus =
+  "REQUESTED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
 
 export type DashboardData = {
   admin: AuthenticatedUser;
@@ -17,7 +18,7 @@ export type DashboardData = {
     childName: string;
     childAge: string;
     preferredDate: string;
-    preferredTime: string;
+    preferredTime: string | null;
     status: AppointmentStatus;
   }>;
   todaySchedule: {
@@ -35,13 +36,37 @@ export type DashboardData = {
   }>;
 };
 
-export type DashboardResponse = { success: boolean; message?: string; data?: DashboardData };
+export type DashboardResponse = {
+  success: boolean;
+  message?: string;
+  data?: DashboardData;
+};
 export type SessionResponse = { success: boolean; data?: AuthenticatedUser };
 
 export type AdminSearchResults = {
   query: string;
   totalResults: number;
-  patients: Array<{ patientId: string; patientName: string; parentName: string; primaryPhone: string; isActive: boolean }>;
-  appointments: Array<{ referenceId: string; childName: string; parentName: string; status: string; preferredDate: string; preferredTime: string }>;
-  doctors: Array<{ doctorId: string; loginId: string; firstName: string; lastName: string; designation: string; isActive: boolean }>;
+  patients: Array<{
+    patientId: string;
+    patientName: string;
+    parentName: string;
+    primaryPhone: string;
+    isActive: boolean;
+  }>;
+  appointments: Array<{
+    referenceId: string;
+    childName: string;
+    parentName: string;
+    status: string;
+    preferredDate: string;
+    preferredTime: string | null;
+  }>;
+  doctors: Array<{
+    doctorId: string;
+    loginId: string;
+    firstName: string;
+    lastName: string;
+    designation: string;
+    isActive: boolean;
+  }>;
 };

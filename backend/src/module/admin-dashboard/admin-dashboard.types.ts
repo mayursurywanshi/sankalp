@@ -14,7 +14,7 @@ export type DashboardAppointmentRequest = {
   childName: string;
   childAge: string;
   preferredDate: string;
-  preferredTime: string;
+  preferredTime: string | null;
   status: AppointmentRequestStatus;
 };
 

@@ -6,7 +6,9 @@ import {
   createCaseHistory,
   fetchDoctorAppointment,
   fetchDoctorAppointments,
+  fetchMyAvailability,
   fetchPatientHistory,
+  scheduleFollowUp,
   updateCaseHistory,
 } from "./doctor-appointments.service";
 import {
@@ -19,7 +21,6 @@ import "./DoctorDashboard.css";
 
 const emptyForm: CaseHistoryForm = {
   appointmentDate: "",
-  nextAppointmentDate: "",
   presentingConcern: "",
   medicalHistory: "",
   assessment: "",
@@ -37,7 +38,6 @@ const fromHistory = (
   value: NonNullable<DoctorAppointmentDetail["caseHistory"]>,
 ): CaseHistoryForm => ({
   appointmentDate: inputDate(value.appointmentDate),
-  nextAppointmentDate: inputDate(value.nextAppointmentDate),
   presentingConcern: value.presentingConcern ?? "",
   medicalHistory: value.medicalHistory ?? "",
   assessment: value.assessment ?? "",
@@ -49,6 +49,14 @@ const fromHistory = (
   caseHistory: value.caseHistory,
   additionalNotes: value.additionalNotes ?? "",
 });
+
+export const patientIdForHistoryRefresh = (
+  detail: DoctorAppointmentDetail,
+): string => {
+  const patientId = detail.patient?.patientId || detail.patientId;
+  if (!patientId) throw new Error("Patient information is unavailable.");
+  return patientId;
+};
 
 export const DoctorDashboard = () => {
   const navigate = useNavigate();
@@ -64,6 +72,20 @@ export const DoctorDashboard = () => {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [menu, setMenu] = useState(false);
+  const [slotDialog, setSlotDialog] = useState(false);
+  const [slotDays, setSlotDays] = useState<
+    Array<{
+      date: string;
+      label: string;
+      closed: boolean;
+      slots: Array<{ time: string; available: boolean }>;
+    }>
+  >([]);
+  const [chosenSlot, setChosenSlot] = useState<{
+    date: string;
+    time: string;
+  } | null>(null);
+  const [slotsLoading, setSlotsLoading] = useState(false);
   const todayDisplay = useMemo(
     () => new Date().toLocaleDateString("en-GB").replaceAll("/", "-"),
     [],
@@ -93,6 +115,13 @@ export const DoctorDashboard = () => {
   useEffect(() => {
     void load();
   }, [load]);
+  useEffect(() => {
+    if (!slotDialog) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [slotDialog]);
   const visible = items.filter((item) => {
     if (view === "ALL") return true;
     if (view === "TODAY") return item.scheduledDate === todayDisplay;
@@ -137,7 +166,7 @@ export const DoctorDashboard = () => {
       const detail = await fetchDoctorAppointment(selected.referenceId);
       setSelected(detail);
       setForm(detail.caseHistory ? fromHistory(detail.caseHistory) : form);
-      setHistory(await fetchPatientHistory(selected.patientId));
+      setHistory(await fetchPatientHistory(patientIdForHistoryRefresh(detail)));
       setNotice("Patient case history saved successfully.");
       await load();
     } catch (reason) {
@@ -149,6 +178,83 @@ export const DoctorDashboard = () => {
   const logout = async () => {
     await logoutAdmin();
     navigate("/login", { replace: true });
+  };
+  const openNextAppointment = async () => {
+    if (!selected?.caseHistory) {
+      setError(
+        "Save the patient case history before scheduling the next appointment.",
+      );
+      return;
+    }
+    setError("");
+    setChosenSlot(null);
+    setSlotDialog(true);
+    setSlotsLoading(true);
+    const dates = Array.from({ length: 7 }, (_, index) => {
+      const date = new Date();
+      date.setDate(date.getDate() + index);
+      const iso = date.toLocaleDateString("en-CA");
+      return {
+        iso,
+        display: iso.split("-").reverse().join("-"),
+        label: date.toLocaleDateString("en-IN", {
+          weekday: "long",
+          day: "numeric",
+          month: "short",
+        }),
+        closed: date.getDay() === 0,
+      };
+    });
+    const results = await Promise.all(
+      dates.map(async (day) => {
+        if (day.closed)
+          return {
+            date: day.display,
+            label: day.label,
+            closed: true,
+            slots: [],
+          };
+        try {
+          const result = await fetchMyAvailability(day.display);
+          return {
+            date: day.display,
+            label: day.label,
+            closed: false,
+            slots: result.slots,
+          };
+        } catch {
+          return {
+            date: day.display,
+            label: day.label,
+            closed: true,
+            slots: [],
+          };
+        }
+      }),
+    );
+    setSlotDays(results);
+    setSlotsLoading(false);
+  };
+  const confirmNextAppointment = async () => {
+    if (!selected || !chosenSlot) return;
+    setBusy(true);
+    setError("");
+    try {
+      const result = await scheduleFollowUp(
+        selected.referenceId,
+        chosenSlot.date,
+        chosenSlot.time,
+      );
+      setNotice(
+        `Next appointment ${result.referenceId} scheduled for ${result.scheduledDate} at ${result.scheduledTime}.`,
+      );
+      setSlotDialog(false);
+      await load();
+    } catch (reason) {
+      handleError(reason);
+    } finally {
+      setBusy(false);
+    }
   };
   const fields: Array<[keyof CaseHistoryForm, string, string]> = [
     [
@@ -317,7 +423,7 @@ export const DoctorDashboard = () => {
                   </p>
                 )}
                 <form className="doctor-case-form" onSubmit={save}>
-                  <div className="doctor-date-fields">
+                  <div className="doctor-date-fields doctor-date-fields--single">
                     <label>
                       Appointment Date
                       <input
@@ -331,20 +437,6 @@ export const DoctorDashboard = () => {
                         }
                         disabled={Boolean(selected.caseHistory)}
                         required
-                      />
-                    </label>
-                    <label>
-                      Next Appointment Date
-                      <input
-                        type="date"
-                        min={todayInput}
-                        value={form.nextAppointmentDate}
-                        onChange={(event) =>
-                          setForm({
-                            ...form,
-                            nextAppointmentDate: event.target.value,
-                          })
-                        }
                       />
                     </label>
                   </div>
@@ -388,19 +480,30 @@ export const DoctorDashboard = () => {
                       placeholder="Any other notes for future visits"
                     />
                   </label>
-                  {selected.caseHistory?.isLocked ? (
+                  {selected.caseHistory?.isLocked && (
                     <p className="doctor-locked">
                       🔒 This completed appointment is locked.
                     </p>
-                  ) : (
-                    <button type="submit" disabled={busy}>
-                      {busy
-                        ? "Saving…"
-                        : selected.caseHistory
-                          ? "Update Case History"
-                          : "Save Case History"}
-                    </button>
                   )}
+                  <div className="doctor-case-actions">
+                    {!selected.caseHistory?.isLocked && (
+                      <button type="submit" disabled={busy}>
+                        {busy
+                          ? "Saving…"
+                          : selected.caseHistory
+                            ? "Update Case History"
+                            : "Save Case History"}
+                      </button>
+                    )}
+                    <button
+                      className="is-next"
+                      type="button"
+                      disabled={busy || !selected.caseHistory}
+                      onClick={() => void openNextAppointment()}
+                    >
+                      Next Appointment
+                    </button>
+                  </div>
                 </form>
                 {history && history.caseHistory.length > 0 && (
                   <details className="doctor-history">
@@ -428,6 +531,89 @@ export const DoctorDashboard = () => {
           </section>
         </div>
       </main>
+      {slotDialog && (
+        <div
+          className="doctor-slot-dialog"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setSlotDialog(false);
+          }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="doctor-slot-title"
+          >
+            <header>
+              <div>
+                <small>FOLLOW-UP SCHEDULING</small>
+                <h2 id="doctor-slot-title">Choose the Next Appointment</h2>
+                <p>Green slots are available. Red slots are already booked.</p>
+              </div>
+              <button
+                type="button"
+                aria-label="Close appointment slots"
+                onClick={() => setSlotDialog(false)}
+              >
+                ×
+              </button>
+            </header>
+            {slotsLoading ? (
+              <p className="doctor-slots-loading">Loading Doctor schedule…</p>
+            ) : (
+              <div className="doctor-slot-days">
+                {slotDays.map((day) => (
+                  <article key={day.date}>
+                    <h3>
+                      {day.label}
+                      <small>{day.date}</small>
+                    </h3>
+                    {day.closed ? (
+                      <p className="doctor-clinic-closed">Clinic Closed</p>
+                    ) : (
+                      <div className="doctor-slot-grid">
+                        {day.slots.map((slot) => (
+                          <button
+                            className={`${slot.available ? "is-available" : "is-booked"}${chosenSlot?.date === day.date && chosenSlot.time === slot.time ? " is-selected" : ""}`}
+                            type="button"
+                            disabled={!slot.available}
+                            onClick={() =>
+                              setChosenSlot({ date: day.date, time: slot.time })
+                            }
+                            key={slot.time}
+                          >
+                            {slot.time}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+            <footer>
+              <span>
+                {chosenSlot
+                  ? `Selected: ${chosenSlot.date} at ${chosenSlot.time}`
+                  : "Select an available time slot"}
+              </span>
+              <div>
+                <button type="button" onClick={() => setSlotDialog(false)}>
+                  Cancel
+                </button>
+                <button
+                  className="is-confirm"
+                  type="button"
+                  disabled={!chosenSlot || busy}
+                  onClick={() => void confirmNextAppointment()}
+                >
+                  {busy ? "Scheduling…" : "Confirm Appointment"}
+                </button>
+              </div>
+            </footer>
+          </section>
+        </div>
+      )}
     </div>
   );
 };

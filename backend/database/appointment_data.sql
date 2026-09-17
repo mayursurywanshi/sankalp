@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS appointment_requests (
   phone VARCHAR(20) NOT NULL,
   email VARCHAR(120) NOT NULL,
   preferred_date DATE NOT NULL,
-  preferred_time VARCHAR(20) NOT NULL,
+  preferred_time VARCHAR(20),
   consent BOOLEAN NOT NULL,
   status "AppointmentRequestStatus" NOT NULL DEFAULT 'REQUESTED',
   patient_db_id UUID,
@@ -72,6 +72,7 @@ ALTER TABLE appointment_requests ADD COLUMN IF NOT EXISTS assignment_note VARCHA
 ALTER TABLE appointment_requests ADD COLUMN IF NOT EXISTS assigned_at TIMESTAMPTZ;
 ALTER TABLE appointment_requests ADD COLUMN IF NOT EXISTS assigned_by_admin_id UUID;
 ALTER TABLE appointment_requests ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE appointment_requests ALTER COLUMN preferred_time DROP NOT NULL;
 
 INSERT INTO patients (patient_name, normalized_patient_name, parent_name, primary_phone, email)
 SELECT DISTINCT ON (lower(trim(child_name)), phone) child_name, lower(trim(child_name)), parent_name, phone, email

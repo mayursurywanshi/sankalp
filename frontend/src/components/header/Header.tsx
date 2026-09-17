@@ -5,8 +5,11 @@ import { ButtonLink } from "../button/ButtonLink";
 import "./Header.css";
 
 const navigation = [
-  ["Home", "/"], ["About Us", "/about"], ["Services", "/services"],
-  ["Child Development", "/child-development"], ["Our Impact", "/our-impact"],
+  ["Home", "/"],
+  ["About Us", "/about"],
+  ["Services", "/services"],
+  ["Child Development", "/child-development"],
+  ["Our Impact", "/our-impact"],
   ["Contact Us", "/contact"],
 ] as const;
 
@@ -16,22 +19,54 @@ export const Header = () => {
     <header className="site-header">
       <div className="site-header__inner">
         <Link className="brand" to="/" aria-label="Sankalp home">
-          <img src={logo} alt="Sankalp Child Development Center" decoding="async" />
+          <img
+            src={logo}
+            alt="Sankalp Child Development Center"
+            decoding="async"
+          />
         </Link>
-        <button className="menu-toggle" type="button" aria-label="Toggle navigation"
-          aria-expanded={isOpen} onClick={() => setIsOpen((open) => !open)}>
-          <span /><span /><span />
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-label="Toggle navigation"
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
         </button>
-        <nav className={isOpen ? "main-nav is-open" : "main-nav"} aria-label="Main navigation">
+        <nav
+          className={isOpen ? "main-nav is-open" : "main-nav"}
+          aria-label="Main navigation"
+        >
           {navigation.map(([label, path], index) => (
-            <NavLink className={({ isActive }) => isActive ? "active" : undefined}
-              end={index === 0} to={path} key={label} onClick={() => setIsOpen(false)}>{label}</NavLink>
+            <NavLink
+              className={({ isActive }) => (isActive ? "active" : undefined)}
+              end={index === 0}
+              to={path}
+              key={label}
+              onClick={() => setIsOpen(false)}
+            >
+              {label}
+            </NavLink>
           ))}
-          <NavLink className={({ isActive }) => `header-login${isActive ? " active" : ""}`}
-            to="/login" onClick={() => setIsOpen(false)}><span aria-hidden="true">♙</span> Login</NavLink>
-          <ButtonLink href="/book-appointment" size="small" onClick={() => setIsOpen(false)}>
+          <ButtonLink
+            href="/book-appointment"
+            size="small"
+            onClick={() => setIsOpen(false)}
+          >
             Book Appointment
           </ButtonLink>
+          <NavLink
+            className={({ isActive }) =>
+              `header-login${isActive ? " active" : ""}`
+            }
+            to="/login"
+            onClick={() => setIsOpen(false)}
+          >
+            <span aria-hidden="true">♙</span> Login
+          </NavLink>
         </nav>
       </div>
     </header>

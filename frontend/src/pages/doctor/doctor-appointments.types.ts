@@ -34,7 +34,7 @@ export type DoctorAppointmentDetail = DoctorAppointment & {
   email: string;
   childDateOfBirth: string | null;
   preferredDate: string;
-  preferredTime: string;
+  preferredTime: string | null;
   patient: {
     patientId: string;
     patientName: string;
@@ -47,7 +47,6 @@ export type DoctorAppointmentDetail = DoctorAppointment & {
 };
 export type CaseHistoryForm = {
   appointmentDate: string;
-  nextAppointmentDate: string;
   presentingConcern: string;
   medicalHistory: string;
   assessment: string;
@@ -58,6 +57,10 @@ export type CaseHistoryForm = {
   recommendations: string;
   caseHistory: string;
   additionalNotes: string;
+};
+export type DoctorSlotAvailability = {
+  date: string;
+  slots: Array<{ time: string; available: boolean }>;
 };
 export type PatientHistory = {
   patient: {

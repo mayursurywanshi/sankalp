@@ -2,7 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AdminSidebar } from "../../components/admin/AdminSidebar";
 import { clearAccessToken } from "../login/auth-storage";
-import { fetchAdminDashboard, logoutAdmin, searchAdminRecords } from "./admin-dashboard.service";
+import {
+  fetchAdminDashboard,
+  logoutAdmin,
+  searchAdminRecords,
+} from "./admin-dashboard.service";
 import { AdminSearchResults, DashboardData } from "./admin-dashboard.types";
 import "./AdminDashboard.css";
 
@@ -31,7 +35,9 @@ export const AdminDashboard = () => {
   const [error, setError] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
   const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState<AdminSearchResults | null>(null);
+  const [searchResults, setSearchResults] = useState<AdminSearchResults | null>(
+    null,
+  );
   const [searching, setSearching] = useState(false);
   const searchRequest = useRef(0);
 
@@ -58,12 +64,24 @@ export const AdminDashboard = () => {
   useEffect(() => {
     const query = search.trim();
     const requestNumber = ++searchRequest.current;
-    if (query.length < 2) { setSearchResults(null); setSearching(false); return; }
+    if (query.length < 2) {
+      setSearchResults(null);
+      setSearching(false);
+      return;
+    }
     const timer = window.setTimeout(async () => {
       setSearching(true);
-      try { const results = await searchAdminRecords(query); if (requestNumber === searchRequest.current) setSearchResults(results); }
-      catch (caught) { if (caught instanceof Error && caught.message === "SESSION_INVALID") navigate("/login", { replace: true }); else if (requestNumber === searchRequest.current) setSearchResults(null); }
-      finally { if (requestNumber === searchRequest.current) setSearching(false); }
+      try {
+        const results = await searchAdminRecords(query);
+        if (requestNumber === searchRequest.current) setSearchResults(results);
+      } catch (caught) {
+        if (caught instanceof Error && caught.message === "SESSION_INVALID")
+          navigate("/login", { replace: true });
+        else if (requestNumber === searchRequest.current)
+          setSearchResults(null);
+      } finally {
+        if (requestNumber === searchRequest.current) setSearching(false);
+      }
     }, 400);
     return () => window.clearTimeout(timer);
   }, [navigate, search]);
@@ -111,17 +129,103 @@ export const AdminDashboard = () => {
             <>
               <header className="admin-topbar">
                 <div className="admin-global-search">
-                <label>
-                  <span aria-hidden="true">⌕</span>
-                  <input
-                    type="search"
-                    placeholder="Search patients, appointments, doctors…"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    aria-label="Dashboard search"
-                  />
-                </label>
-                {search.trim().length >= 2 && <section className="admin-search-results" aria-label="Search results">{searching ? <p>Searching clinic records…</p> : searchResults && searchResults.totalResults > 0 ? <>{searchResults.patients.length > 0 && <div><h3>Patients</h3>{searchResults.patients.map((item) => <button type="button" onClick={() => navigate(`/admin/patients?search=${encodeURIComponent(item.patientId)}`)} key={item.patientId}><span>🧒</span><b>{item.patientName}<small>{item.patientId} · {item.parentName}</small></b></button>)}</div>}{searchResults.appointments.length > 0 && <div><h3>Appointments</h3>{searchResults.appointments.map((item) => <button type="button" onClick={() => navigate(`/admin/appointments?search=${encodeURIComponent(item.referenceId)}`)} key={item.referenceId}><span>📅</span><b>{item.childName}<small>{item.referenceId} · {item.status}</small></b></button>)}</div>}{searchResults.doctors.length > 0 && <div><h3>Doctors</h3>{searchResults.doctors.map((item) => <button type="button" onClick={() => navigate(`/admin/doctors?search=${encodeURIComponent(item.doctorId)}`)} key={item.doctorId}><span>🩺</span><b>Dr. {item.firstName} {item.lastName}<small>{item.doctorId} · {item.designation}</small></b></button>)}</div>}</> : <p>No matching clinic records.</p>}</section>}
+                  <label>
+                    <span aria-hidden="true">⌕</span>
+                    <input
+                      type="search"
+                      placeholder="Search patients, appointments, doctors…"
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      aria-label="Dashboard search"
+                    />
+                  </label>
+                  {search.trim().length >= 2 && (
+                    <section
+                      className="admin-search-results"
+                      aria-label="Search results"
+                    >
+                      {searching ? (
+                        <p>Searching clinic records…</p>
+                      ) : searchResults && searchResults.totalResults > 0 ? (
+                        <>
+                          {searchResults.patients.length > 0 && (
+                            <div>
+                              <h3>Patients</h3>
+                              {searchResults.patients.map((item) => (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    navigate(
+                                      `/admin/patients?search=${encodeURIComponent(item.patientId)}`,
+                                    )
+                                  }
+                                  key={item.patientId}
+                                >
+                                  <span>🧒</span>
+                                  <b>
+                                    {item.patientName}
+                                    <small>
+                                      {item.patientId} · {item.parentName}
+                                    </small>
+                                  </b>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          {searchResults.appointments.length > 0 && (
+                            <div>
+                              <h3>Appointments</h3>
+                              {searchResults.appointments.map((item) => (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    navigate(
+                                      `/admin/appointments?search=${encodeURIComponent(item.referenceId)}`,
+                                    )
+                                  }
+                                  key={item.referenceId}
+                                >
+                                  <span>📅</span>
+                                  <b>
+                                    {item.childName}
+                                    <small>
+                                      {item.referenceId} · {item.status}
+                                    </small>
+                                  </b>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          {searchResults.doctors.length > 0 && (
+                            <div>
+                              <h3>Doctors</h3>
+                              {searchResults.doctors.map((item) => (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    navigate(
+                                      `/admin/doctors?search=${encodeURIComponent(item.doctorId)}`,
+                                    )
+                                  }
+                                  key={item.doctorId}
+                                >
+                                  <span>🩺</span>
+                                  <b>
+                                    Dr. {item.firstName} {item.lastName}
+                                    <small>
+                                      {item.doctorId} · {item.designation}
+                                    </small>
+                                  </b>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <p>No matching clinic records.</p>
+                      )}
+                    </section>
+                  )}
                 </div>
                 <div className="admin-profile">
                   <span aria-hidden="true">🔔</span>
@@ -186,7 +290,10 @@ export const AdminDashboard = () => {
                               {item.childAge} · Parent: {item.parentName}
                             </p>
                             <span>
-                              {item.preferredDate} at {item.preferredTime}
+                              {item.preferredDate}
+                              {item.preferredTime
+                                ? ` at ${item.preferredTime}`
+                                : " · Time pending"}
                             </span>
                           </div>
                           <button type="button" disabled>
