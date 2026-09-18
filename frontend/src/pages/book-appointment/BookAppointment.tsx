@@ -270,7 +270,7 @@ export const BookAppointment = () => {
                   <small>{fieldErrors.email[0]}</small>
                 )}
               </label>
-              <label>
+              <label className="appointment-form__date">
                 Preferred Date
                 <input
                   name="preferredDate"
@@ -286,6 +286,11 @@ export const BookAppointment = () => {
                 )}
               </label>
             </div>
+            <p className="appointment-form__date-note">
+              <span aria-hidden="true">📅</span>
+              Choose a convenient date. Our team will confirm the available time
+              with you by phone.
+            </p>
             <label className="appointment-consent">
               <input
                 name="consent"

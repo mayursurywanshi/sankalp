@@ -87,11 +87,11 @@ export const postInvitation = async (request: Request, response: Response) => {
         .json({ success: false, message: "Patient was not found." });
       return;
     }
-    if (result.outcome === "NO_COMPLETED_APPOINTMENT") {
+    if (result.outcome === "NO_ASSIGNED_APPOINTMENT") {
       response.status(409).json({
         success: false,
         message:
-          "Feedback links can be created only after a completed visit or after the Doctor saves case history for a current or previous appointment.",
+          "Assign this patient to a Doctor before creating a feedback link.",
       });
       return;
     }

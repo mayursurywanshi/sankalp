@@ -2,6 +2,7 @@ export type FeedbackModerationStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 export interface EligibleAppointment {
   referenceId: string;
+  status: "ASSIGNED" | "COMPLETED";
   scheduledDate: string | null;
   scheduledTime: string | null;
   feedbackInvitations: Array<{

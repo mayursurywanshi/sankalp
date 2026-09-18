@@ -58,6 +58,7 @@
 }
 .family-feedback-card header p,
 .family-feedback-success p,
+.family-feedback-already-submitted p,
 .family-feedback-unavailable p {
   color: #667793;
   line-height: 1.6;
@@ -155,6 +156,7 @@
 }
 .family-feedback-submit,
 .family-feedback-success a,
+.family-feedback-already-submitted a,
 .family-feedback-unavailable a {
   background: linear-gradient(90deg, #0db291, #08a2aa);
   border: 0;
@@ -177,21 +179,29 @@
   text-align: center;
 }
 .family-feedback-success,
+.family-feedback-already-submitted,
 .family-feedback-unavailable {
   padding: 35px 0;
   text-align: center;
 }
 .family-feedback-success > span,
+.family-feedback-already-submitted > span,
 .family-feedback-unavailable > span {
   display: block;
   font-size: 4rem;
   margin-bottom: 12px;
 }
 .family-feedback-success a,
+.family-feedback-already-submitted a,
 .family-feedback-unavailable a {
   display: inline-block;
   margin-top: 8px;
   padding: 12px 22px;
+}
+.family-feedback-already-submitted small {
+  color: #0a9a83;
+  font-weight: 900;
+  letter-spacing: 0.14em;
 }
 .family-feedback-loading {
   display: grid;

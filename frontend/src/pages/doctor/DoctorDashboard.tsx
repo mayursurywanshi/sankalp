@@ -545,10 +545,17 @@ export const DoctorDashboard = () => {
             aria-labelledby="doctor-slot-title"
           >
             <header>
-              <div>
-                <small>FOLLOW-UP SCHEDULING</small>
-                <h2 id="doctor-slot-title">Choose the Next Appointment</h2>
-                <p>Green slots are available. Red slots are already booked.</p>
+              <div className="doctor-slot-dialog__heading">
+                <span className="doctor-slot-dialog__icon" aria-hidden="true">
+                  📅
+                </span>
+                <div>
+                  <small>FOLLOW-UP SCHEDULING</small>
+                  <h2 id="doctor-slot-title">Choose the Next Appointment</h2>
+                  <p>
+                    Scheduling for <strong>{selected?.childName}</strong>
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
@@ -558,6 +565,18 @@ export const DoctorDashboard = () => {
                 ×
               </button>
             </header>
+            <div className="doctor-slot-legend" aria-label="Slot colour guide">
+              <span>
+                <i className="is-available" /> Available
+              </span>
+              <span>
+                <i className="is-booked" /> Booked
+              </span>
+              <span>
+                <i className="is-selected" /> Selected
+              </span>
+              <p>Clinic hours: 10:00 AM to 7:00 PM · 30-minute slots</p>
+            </div>
             {slotsLoading ? (
               <p className="doctor-slots-loading">Loading Doctor schedule…</p>
             ) : (

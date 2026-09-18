@@ -272,16 +272,19 @@
   display: flex;
   inset: 0;
   justify-content: center;
-  padding: 20px;
+  padding: clamp(10px, 2.5vw, 28px);
   position: fixed;
   z-index: 100;
 }
 .doctor-slot-dialog > section {
   background: linear-gradient(145deg, #fff, #f5fbff);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 22px;
   box-shadow: 0 24px 70px rgba(5, 35, 68, 0.28);
-  max-height: min(88vh, 850px);
-  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  max-height: min(92vh, 900px);
+  max-width: 960px;
   overflow: hidden;
   width: 100%;
 }
@@ -292,12 +295,33 @@
   justify-content: space-between;
   padding: 22px 26px;
 }
+.doctor-slot-dialog__heading {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+.doctor-slot-dialog__icon {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #d6e9eb;
+  border-radius: 15px;
+  box-shadow: 0 7px 18px rgba(17, 80, 105, 0.09);
+  display: flex;
+  flex: 0 0 auto;
+  font-size: 25px;
+  height: 52px;
+  justify-content: center;
+  width: 52px;
+}
 .doctor-slot-dialog h2 {
   margin: 4px 0;
 }
 .doctor-slot-dialog header p {
   color: #687b96;
   margin: 0;
+}
+.doctor-slot-dialog header p strong {
+  color: #15366e;
 }
 .doctor-slot-dialog header > button {
   background: #fff;
@@ -310,14 +334,56 @@
   line-height: 1;
   width: 38px;
 }
+.doctor-slot-dialog header > button:hover {
+  background: #fff0f2;
+  border-color: #f0bcc5;
+}
+.doctor-slot-legend {
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid #e1ebf0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 12px 26px;
+}
+.doctor-slot-legend > span {
+  align-items: center;
+  color: #536984;
+  display: flex;
+  font-size: 12px;
+  font-weight: 800;
+  gap: 6px;
+}
+.doctor-slot-legend i {
+  border-radius: 50%;
+  display: block;
+  height: 10px;
+  width: 10px;
+}
+.doctor-slot-legend i.is-available {
+  background: #35b77f;
+}
+.doctor-slot-legend i.is-booked {
+  background: #e45c70;
+}
+.doctor-slot-legend i.is-selected {
+  background: #0ca3a5;
+}
+.doctor-slot-legend p {
+  color: #708198;
+  font-size: 11px;
+  margin: 0 0 0 auto;
+}
 .doctor-slot-days {
   display: grid;
   gap: 15px;
-  max-height: 58vh;
+  min-height: 0;
   overflow-y: auto;
   padding: 20px 26px;
 }
 .doctor-slot-days article {
+  background: #fff;
   border: 1px solid #dce9ef;
   border-radius: 15px;
   padding: 15px;
@@ -326,7 +392,9 @@
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin: 0 0 12px;
+  color: #15366e;
+  font-size: 15px;
+  margin: 0 0 13px;
 }
 .doctor-slot-days h3 small {
   color: #75849a;
@@ -341,13 +409,21 @@
   border: 1px solid;
   border-radius: 9px;
   font-weight: 850;
+  min-height: 42px;
   padding: 10px 6px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 .doctor-slot-grid button.is-available {
   background: #e3f8ed;
   border-color: #94d8b5;
   color: #08784d;
   cursor: pointer;
+}
+.doctor-slot-grid button.is-available:hover {
+  box-shadow: 0 6px 14px rgba(8, 120, 77, 0.14);
+  transform: translateY(-1px);
 }
 .doctor-slot-grid button.is-booked {
   background: #ffebee;
@@ -379,11 +455,16 @@
   border-top: 1px solid #e1ebf0;
   display: flex;
   justify-content: space-between;
+  background: #fff;
+  flex: 0 0 auto;
   padding: 16px 26px;
 }
 .doctor-slot-dialog footer > span {
+  background: #f3f8fb;
+  border-radius: 9px;
   color: #536984;
   font-weight: 800;
+  padding: 9px 12px;
 }
 .doctor-slot-dialog footer div {
   display: flex;
@@ -496,6 +577,7 @@
     padding: 8px;
   }
   .doctor-slot-dialog > section > header,
+  .doctor-slot-legend,
   .doctor-slot-days,
   .doctor-slot-dialog footer {
     padding-left: 14px;
@@ -504,5 +586,12 @@
   .doctor-slot-dialog footer {
     align-items: stretch;
     flex-direction: column;
+  }
+  .doctor-slot-legend p {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+  .doctor-slot-dialog__icon {
+    display: none;
   }
 }

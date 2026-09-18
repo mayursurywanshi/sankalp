@@ -15,27 +15,25 @@ const normalizeWhatsAppPhone = (phone: string) => {
 const createToken = () => randomBytes(9).toString("base64url");
 const hashToken = (token: string) =>
   createHash("sha256").update(token).digest("hex");
+export const FEEDBACK_LINK_VALIDITY_HOURS = 24;
+export const createFeedbackExpiry = (now = new Date()) =>
+  new Date(now.getTime() + FEEDBACK_LINK_VALIDITY_HOURS * 60 * 60 * 1000);
 const displayExpiry = (date: Date) =>
   new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
     month: "long",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
     timeZone: "Asia/Kolkata",
   }).format(date);
 
 export const buildFeedbackEligibleAppointmentWhere = (
   referenceId?: string,
-  today = new Date(),
 ): Prisma.AppointmentRequestWhereInput => ({
   ...(referenceId ? { referenceId } : {}),
-  OR: [
-    { status: "COMPLETED" },
-    {
-      status: "ASSIGNED",
-      scheduledDate: { lte: today },
-      caseHistory: { isNot: null },
-    },
-  ],
+  status: { in: ["ASSIGNED", "COMPLETED"] },
 });
 
 const buildWhatsAppMessage = (
@@ -147,7 +145,6 @@ export const listEligiblePatients = (search?: string) =>
         : {}),
     },
     orderBy: { patientName: "asc" },
-    take: 25,
     select: {
       patientId: true,
       patientName: true,
@@ -158,9 +155,9 @@ export const listEligiblePatients = (search?: string) =>
       appointments: {
         where: buildFeedbackEligibleAppointmentWhere(),
         orderBy: { updatedAt: "desc" },
-        take: 5,
         select: {
           referenceId: true,
+          status: true,
           scheduledDate: true,
           scheduledTime: true,
           feedbackInvitations: {
@@ -250,7 +247,7 @@ export const createFeedbackInvitation = async (
   });
   if (!patient) return { outcome: "PATIENT_NOT_FOUND" as const };
   const appointment = patient.appointments[0];
-  if (!appointment) return { outcome: "NO_COMPLETED_APPOINTMENT" as const };
+  if (!appointment) return { outcome: "NO_ASSIGNED_APPOINTMENT" as const };
   const submitted = await prisma.feedbackInvitation.findFirst({
     where: {
       patientDbId: patient.id,
@@ -278,8 +275,7 @@ export const createFeedbackInvitation = async (
   if (existing)
     return { outcome: "ACTIVE_EXISTS" as const, invitation: existing };
   const token = createToken();
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 14);
+  const expiresAt = createFeedbackExpiry();
   const invitation = await prisma.feedbackInvitation.create({
     data: {
       referenceId: `FDB-${randomUUID().slice(0, 8).toUpperCase()}`,
@@ -346,8 +342,7 @@ export const resendFeedbackInvitation = async (referenceId: string) => {
   if (["SUBMITTED", "CANCELLED"].includes(invitation.status))
     return { outcome: "UNAVAILABLE" as const };
   const token = createToken();
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 14);
+  const expiresAt = createFeedbackExpiry();
   const updated = await prisma.feedbackInvitation.update({
     where: { id: invitation.id },
     data: {

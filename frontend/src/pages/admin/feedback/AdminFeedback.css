@@ -209,6 +209,17 @@
   cursor: not-allowed;
   opacity: 0.55;
 }
+.admin-feedback-expiry-note {
+  background: #fff8e8;
+  border: 1px solid #f1dfab;
+  border-radius: 10px;
+  color: #765b15 !important;
+  font-size: 12px;
+  font-weight: 750;
+  margin: 10px 0 12px !important;
+  padding: 9px 12px;
+  width: 100%;
+}
 .admin-feedback-preview {
   align-items: center;
   background: linear-gradient(150deg, #fff 55%, #f2efff);

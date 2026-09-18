@@ -55,4 +55,13 @@ CREATE INDEX IF NOT EXISTS feedback_invitations_expires_at_idx ON feedback_invit
 CREATE INDEX IF NOT EXISTS parent_feedback_moderation_submitted_idx ON parent_feedback_responses(moderation_status, submitted_at DESC);
 CREATE INDEX IF NOT EXISTS parent_feedback_patient_id_idx ON parent_feedback_responses(patient_db_id);
 
+-- Keep previously generated active links consistent with the current
+-- 24-hour validity policy. Submitted and cancelled links are left unchanged.
+UPDATE feedback_invitations
+SET expires_at = LEAST(
+  expires_at,
+  COALESCE(sent_at, created_at) + INTERVAL '24 hours'
+)
+WHERE status IN ('CREATED', 'SENT', 'OPENED');
+
 COMMIT;

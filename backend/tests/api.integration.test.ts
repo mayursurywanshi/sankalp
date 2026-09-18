@@ -4,7 +4,12 @@ import type { AddressInfo } from "node:net";
 import type { Server } from "node:http";
 import app from "../src/app";
 import { matchesImpactMediaSignature } from "../src/module/admin-success-stories/admin-success-stories.upload";
-import { buildFeedbackEligibleAppointmentWhere } from "../src/module/admin-feedback/admin-feedback.service";
+import {
+  buildFeedbackEligibleAppointmentWhere,
+  createFeedbackExpiry,
+  FEEDBACK_LINK_VALIDITY_HOURS,
+} from "../src/module/admin-feedback/admin-feedback.service";
+import { feedbackInvitationAvailability } from "../src/module/feedback/feedback.service";
 import { appointmentRequestSchema } from "../src/module/appointments/appointments.validation";
 
 let server: Server;
@@ -136,19 +141,36 @@ test("uploaded media is accepted by binary signature instead of declared MIME ty
   );
 });
 
-test("feedback eligibility includes completed visits and past assigned visits with case history", () => {
-  const today = new Date("2026-09-17T00:00:00.000Z");
-  const where = buildFeedbackEligibleAppointmentWhere("APT-12345678", today);
+test("feedback eligibility includes every assigned or completed appointment", () => {
+  const where = buildFeedbackEligibleAppointmentWhere("APT-12345678");
 
   assert.equal(where.referenceId, "APT-12345678");
-  assert.deepEqual(where.OR, [
-    { status: "COMPLETED" },
-    {
-      status: "ASSIGNED",
-      scheduledDate: { lte: today },
-      caseHistory: { isNot: null },
-    },
-  ]);
+  assert.deepEqual(where.status, { in: ["ASSIGNED", "COMPLETED"] });
+});
+
+test("feedback links expire exactly 24 hours after generation or resend", () => {
+  const createdAt = new Date("2026-09-18T06:15:00.000Z");
+  const expiresAt = createFeedbackExpiry(createdAt);
+
+  assert.equal(FEEDBACK_LINK_VALIDITY_HOURS, 24);
+  assert.equal(expiresAt.toISOString(), "2026-09-19T06:15:00.000Z");
+  assert.equal(expiresAt.getTime() - createdAt.getTime(), 86_400_000);
+});
+
+test("submitted feedback links remain single-use", () => {
+  const submitted = feedbackInvitationAvailability({
+    status: "SUBMITTED",
+    response: { id: "response-id" },
+    expiresAt: new Date(Date.now() + 60_000),
+  } as never);
+  const responseRecorded = feedbackInvitationAvailability({
+    status: "OPENED",
+    response: { id: "response-id" },
+    expiresAt: new Date(Date.now() + 60_000),
+  } as never);
+
+  assert.equal(submitted, "SUBMITTED");
+  assert.equal(responseRecorded, "SUBMITTED");
 });
 
 test("public appointment requests no longer require a preferred time", () => {

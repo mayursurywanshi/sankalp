@@ -206,7 +206,7 @@ export const AdminFeedback = () => {
                 <span>💬</span>
                 <div>
                   <h2>Send Feedback Link</h2>
-                  <p>Available after the Doctor saves the visit case history</p>
+                  <p>Available as soon as a patient is assigned to a Doctor</p>
                 </div>
               </header>
               <form onSubmit={generate}>
@@ -227,7 +227,7 @@ export const AdminFeedback = () => {
                   </select>
                 </label>
                 <label>
-                  Completed Visit
+                  Assigned Appointment
                   <select
                     value={appointmentId}
                     onChange={(event) => {
@@ -245,11 +245,15 @@ export const AdminFeedback = () => {
                         key={appointment.referenceId}
                       >
                         {appointment.referenceId} ·{" "}
+                        {appointment.status === "ASSIGNED"
+                          ? "Assigned"
+                          : "Completed"}{" "}
+                        ·{" "}
                         {appointment.scheduledDate
                           ? new Date(
                               appointment.scheduledDate,
                             ).toLocaleDateString("en-IN")
-                          : "Completed"}
+                          : "Date pending"}
                       </option>
                     ))}
                   </select>
@@ -403,6 +407,10 @@ export const AdminFeedback = () => {
                           ▣
                         </button>
                       </div>
+                      <p className="admin-feedback-expiry-note">
+                        ⏱ This secure link expires 24 hours after it is
+                        generated.
+                      </p>
                       <a
                         className="admin-feedback-whatsapp"
                         href={share.whatsappUrl}

@@ -1,7 +1,11 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import logo from "../../assets/sankalp-logo.webp";
-import { loadFeedbackForm, submitFeedback } from "./feedback.service";
+import {
+  FeedbackRequestError,
+  loadFeedbackForm,
+  submitFeedback,
+} from "./feedback.service";
 import "./FeedbackForm.css";
 
 export const FeedbackForm = () => {
@@ -19,12 +23,17 @@ export const FeedbackForm = () => {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [complete, setComplete] = useState(false);
+  const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
   useEffect(() => {
     let active = true;
     loadFeedbackForm(token)
       .then((data) => {
         if (active) {
+          if (data.status === "SUBMITTED") {
+            setAlreadySubmitted(true);
+            return;
+          }
           setContext(data);
           setDisplayName(data.parentName);
         }
@@ -62,6 +71,13 @@ export const FeedbackForm = () => {
       });
       setComplete(true);
     } catch (reason) {
+      if (
+        reason instanceof FeedbackRequestError &&
+        reason.code === "SUBMITTED"
+      ) {
+        setAlreadySubmitted(true);
+        return;
+      }
       setError(
         reason instanceof Error ? reason.message : "Unable to submit feedback.",
       );
@@ -88,6 +104,17 @@ export const FeedbackForm = () => {
             <span aria-hidden="true">🌈</span>
             <h1>Thank you for your feedback!</h1>
             <p>Your experience has been shared securely with Team Sankalp.</p>
+            <Link to="/">Return to Sankalp Home</Link>
+          </div>
+        ) : alreadySubmitted ? (
+          <div className="family-feedback-already-submitted">
+            <span aria-hidden="true">✅</span>
+            <small>FEEDBACK RECEIVED</small>
+            <h1>Your feedback is already submitted</h1>
+            <p>
+              Thank you! This secure feedback link has already been used and
+              cannot be submitted again.
+            </p>
             <Link to="/">Return to Sankalp Home</Link>
           </div>
         ) : error && !context ? (
