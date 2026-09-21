@@ -10,7 +10,7 @@ const menuItems = [
   ["⚕", "Doctors", "/admin/doctors"],
   ["★", "Success Stories", "/admin/success-stories"],
   ["☵", "Feedback", "/admin/feedback"],
-  ["✉", "Contact Requests", ""],
+  ["✉", "Contact Requests", "/admin/contact-requests"],
   ["⌁", "Performance", ""],
   ["♚", "Users & Roles", ""],
   ["⚙", "Settings", ""],
@@ -68,7 +68,6 @@ export const AdminSidebar = ({ onLogout, loggingOut }: Props) => {
               >
                 <span aria-hidden="true">{icon}</span>
                 {label}
-                {label === "Contact Requests" && <b>!</b>}
               </button>
             ),
           )}

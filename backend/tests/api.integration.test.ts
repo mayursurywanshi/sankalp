@@ -11,6 +11,11 @@ import {
 } from "../src/module/admin-feedback/admin-feedback.service";
 import { feedbackInvitationAvailability } from "../src/module/feedback/feedback.service";
 import { appointmentRequestSchema } from "../src/module/appointments/appointments.validation";
+import {
+  contactAppointmentSchema,
+  contactAssignmentSchema,
+  contactRequestListSchema,
+} from "../src/module/admin-contact-requests/admin-contact-requests.validation";
 
 let server: Server;
 let baseUrl: string;
@@ -58,6 +63,7 @@ test("protected Admin and Doctor endpoints reject missing Bearer tokens", async 
     "/api/admin/doctors",
     "/api/admin/appointments",
     "/api/admin/patients",
+    "/api/admin/contact-requests",
     "/api/doctor/overview",
     "/api/doctor/appointments",
   ]) {
@@ -185,4 +191,33 @@ test("public appointment requests no longer require a preferred time", () => {
     consent: true,
   });
   assert.equal(result.success, true);
+});
+
+test("contact request Admin inputs validate filters, assignments and appointment conversion", () => {
+  assert.equal(
+    contactRequestListSchema.safeParse({
+      status: "IN_PROGRESS",
+      search: "Mayur",
+      page: "1",
+      limit: "10",
+    }).success,
+    true,
+  );
+  assert.equal(
+    contactAssignmentSchema.safeParse({
+      doctorId: "DOC000001",
+      note: "Please call the parent.",
+    }).success,
+    true,
+  );
+  assert.equal(
+    contactAppointmentSchema.safeParse({
+      childName: "Aarav Patil",
+      childAge: "4 years",
+      childDateOfBirth: "2022-09-20",
+      preferredDate: "2026-09-25",
+      consent: true,
+    }).success,
+    true,
+  );
 });

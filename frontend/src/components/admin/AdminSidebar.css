@@ -66,7 +66,8 @@
   font-size: 18px;
   width: 20px;
 }
-.admin-sidebar nav button b {
+.admin-sidebar nav button b,
+.admin-sidebar nav a b {
   align-items: center;
   background: #ff6475;
   border-radius: 50%;
@@ -75,7 +76,8 @@
   height: 17px;
   justify-content: center;
   margin-left: auto;
-  width: 17px;
+  min-width: 17px;
+  padding: 0 4px;
 }
 .admin-sidebar__logout {
   background: rgba(255, 255, 255, 0.14);
