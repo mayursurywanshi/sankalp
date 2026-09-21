@@ -16,6 +16,7 @@ import {
   contactAssignmentSchema,
   contactRequestListSchema,
 } from "../src/module/admin-contact-requests/admin-contact-requests.validation";
+import { performanceQuerySchema } from "../src/module/admin-performance/admin-performance.validation";
 
 let server: Server;
 let baseUrl: string;
@@ -64,6 +65,7 @@ test("protected Admin and Doctor endpoints reject missing Bearer tokens", async 
     "/api/admin/appointments",
     "/api/admin/patients",
     "/api/admin/contact-requests",
+    "/api/admin/performance/overview",
     "/api/doctor/overview",
     "/api/doctor/appointments",
   ]) {
@@ -219,5 +221,20 @@ test("contact request Admin inputs validate filters, assignments and appointment
       consent: true,
     }).success,
     true,
+  );
+});
+
+test("performance filters accept supported periods and reject unknown periods", () => {
+  assert.equal(
+    performanceQuerySchema.safeParse({ period: "MONTH" }).success,
+    true,
+  );
+  assert.equal(
+    performanceQuerySchema.safeParse({ period: "WEEK" }).success,
+    true,
+  );
+  assert.equal(
+    performanceQuerySchema.safeParse({ period: "CUSTOM" }).success,
+    false,
   );
 });

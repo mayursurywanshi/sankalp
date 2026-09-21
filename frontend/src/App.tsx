@@ -80,6 +80,11 @@ const AdminContactRequests = lazy(() =>
     (module) => ({ default: module.AdminContactRequests }),
   ),
 );
+const AdminPerformance = lazy(() =>
+  import("./pages/admin/performance/AdminPerformance").then((module) => ({
+    default: module.AdminPerformance,
+  })),
+);
 const FeedbackForm = lazy(() =>
   import("./pages/feedback/FeedbackForm").then((module) => ({
     default: module.FeedbackForm,
@@ -146,6 +151,14 @@ function App() {
             element={
               <ProtectedAdminRoute>
                 <AdminContactRequests />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/performance"
+            element={
+              <ProtectedAdminRoute>
+                <AdminPerformance />
               </ProtectedAdminRoute>
             }
           />
