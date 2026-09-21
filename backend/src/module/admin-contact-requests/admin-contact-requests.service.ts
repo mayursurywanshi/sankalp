@@ -29,7 +29,13 @@ const contactSelect = {
   createdAt: true,
   updatedAt: true,
   assignedDoctor: { select: doctorSelect },
-  convertedAppointment: { select: { referenceId: true, status: true } },
+  convertedAppointment: {
+    select: {
+      referenceId: true,
+      status: true,
+      patient: { select: { patientId: true } },
+    },
+  },
 } as const;
 
 const presentContact = (item: any) => ({
@@ -94,6 +100,16 @@ export const getContactRequestSummary = async () => {
     inProgress: counts.get("IN_PROGRESS") ?? 0,
     resolved: counts.get("RESOLVED") ?? 0,
   };
+};
+
+export const deleteContactRequest = async (referenceId: string) => {
+  const contact = await prisma.contactMessage.findUnique({
+    where: { referenceId },
+    select: { id: true, referenceId: true },
+  });
+  if (!contact) return null;
+  await prisma.contactMessage.delete({ where: { id: contact.id } });
+  return { referenceId: contact.referenceId };
 };
 
 export const getContactRequest = async (referenceId: string) => {
@@ -254,35 +270,52 @@ export const convertContactToAppointment = async (
   if (contact.convertedAppointmentId)
     return { outcome: "ALREADY_CONVERTED" as const };
   const normalizedPatientName = input.childName
+    .trim()
     .toLowerCase()
     .replace(/\s+/g, " ");
+  const phone = contact.phone.replace(/\D/g, "").slice(-10);
   const result = await prisma.$transaction(async (transaction) => {
-    const patient = await transaction.patient.upsert({
-      where: {
-        normalizedPatientName_primaryPhone: {
-          normalizedPatientName,
-          primaryPhone: contact.phone,
-        },
-      },
-      update: {
-        patientName: input.childName,
-        parentName: contact.name,
-        email: contact.email,
-        ...(input.childDateOfBirth
-          ? { dateOfBirth: new Date(`${input.childDateOfBirth}T00:00:00Z`) }
-          : {}),
-      },
-      create: {
-        patientName: input.childName,
-        normalizedPatientName,
-        parentName: contact.name,
-        primaryPhone: contact.phone,
-        email: contact.email,
-        dateOfBirth: input.childDateOfBirth
-          ? new Date(`${input.childDateOfBirth}T00:00:00Z`)
-          : undefined,
-      },
+    const candidates = await transaction.patient.findMany({
+      where: { normalizedPatientName },
     });
+    const existingPatient = candidates.find(
+      (item) => item.primaryPhone.replace(/\D/g, "").slice(-10) === phone,
+    );
+    const patient = existingPatient
+      ? await transaction.patient.update({
+          where: { id: existingPatient.id },
+          data: {
+            patientName: input.childName,
+            parentName: contact.name,
+            primaryPhone: phone,
+            email: contact.email,
+            ...(input.childDateOfBirth
+              ? { dateOfBirth: new Date(`${input.childDateOfBirth}T00:00:00Z`) }
+              : {}),
+          },
+        })
+      : await transaction.patient.create({
+          data: {
+            patientName: input.childName,
+            normalizedPatientName,
+            parentName: contact.name,
+            primaryPhone: phone,
+            email: contact.email,
+            dateOfBirth: input.childDateOfBirth
+              ? new Date(`${input.childDateOfBirth}T00:00:00Z`)
+              : undefined,
+          },
+        });
+    const preferredDate = new Date(`${input.preferredDate}T00:00:00Z`);
+    const duplicate = await transaction.appointmentRequest.findFirst({
+      where: {
+        patientDbId: patient.id,
+        preferredDate,
+        status: { not: "CANCELLED" },
+      },
+      select: { referenceId: true },
+    });
+    if (duplicate) return { duplicateReferenceId: duplicate.referenceId };
     const appointment = await transaction.appointmentRequest.create({
       data: {
         referenceId: `APT-${randomUUID().slice(0, 8).toUpperCase()}`,
@@ -292,9 +325,9 @@ export const convertContactToAppointment = async (
         childDateOfBirth: input.childDateOfBirth
           ? new Date(`${input.childDateOfBirth}T00:00:00Z`)
           : undefined,
-        phone: contact.phone,
+        phone,
         email: contact.email,
-        preferredDate: new Date(`${input.preferredDate}T00:00:00Z`),
+        preferredDate,
         preferredTime: null,
         consent: input.consent,
         patientDbId: patient.id,
@@ -330,11 +363,18 @@ export const convertContactToAppointment = async (
       },
     });
     return {
-      contactRequestReferenceId: contact.referenceId,
-      appointmentReferenceId: appointment.referenceId,
-      patientId: patient.patientId,
-      appointmentStatus: appointment.status,
+      data: {
+        contactRequestReferenceId: contact.referenceId,
+        appointmentReferenceId: appointment.referenceId,
+        patientId: patient.patientId,
+        appointmentStatus: appointment.status,
+      },
     };
   });
-  return { outcome: "CREATED" as const, data: result };
+  if ("duplicateReferenceId" in result)
+    return {
+      outcome: "DUPLICATE_APPOINTMENT" as const,
+      referenceId: result.duplicateReferenceId,
+    };
+  return { outcome: "CREATED" as const, data: result.data };
 };

@@ -4,6 +4,7 @@ import { AdminSidebar } from "../../../components/admin/AdminSidebar";
 import { logoutAdmin } from "../admin-dashboard.service";
 import {
   createPatient,
+  deletePatient,
   fetchPatient,
   fetchPatients,
   fetchPatientSummary,
@@ -154,6 +155,26 @@ export const AdminPatients = () => {
       const issue = reason as Error & { errors?: Record<string, string[]> };
       setFieldErrors(issue.errors ?? {});
       setError(issue.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  const removePatient = async (patientId: string, patientName: string) => {
+    if (
+      !window.confirm(
+        `Delete ${patientName} (${patientId})? This permanently removes appointments, case history and feedback records.`,
+      )
+    )
+      return;
+    setBusy(true);
+    setError("");
+    try {
+      await deletePatient(patientId);
+      if (selected?.patient.patientId === patientId) setSelected(null);
+      setNotice("Patient and associated records deleted successfully.");
+      await load();
+    } catch (reason) {
+      handleError(reason);
     } finally {
       setBusy(false);
     }
@@ -362,12 +383,28 @@ export const AdminPatients = () => {
                           </i>
                         </td>
                         <td>
-                          <button
-                            type="button"
-                            onClick={() => void viewPatient(patient)}
-                          >
-                            View
-                          </button>
+                          <span className="patient-row-actions">
+                            <button
+                              type="button"
+                              onClick={() => void viewPatient(patient)}
+                            >
+                              View
+                            </button>
+                            <button
+                              type="button"
+                              className="patient-row-delete"
+                              disabled={busy}
+                              onClick={() =>
+                                void removePatient(
+                                  patient.patientId,
+                                  patient.patientName,
+                                )
+                              }
+                              aria-label={`Delete ${patient.patientName}`}
+                            >
+                              Delete
+                            </button>
+                          </span>
                         </td>
                       </tr>
                     ))}
@@ -446,6 +483,19 @@ export const AdminPatients = () => {
                   </div>
                   <button type="button" onClick={openEdit}>
                     ✎ Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="patient-delete-button"
+                    disabled={busy}
+                    onClick={() =>
+                      void removePatient(
+                        selected.patient.patientId,
+                        selected.patient.patientName,
+                      )
+                    }
+                  >
+                    🗑 Delete
                   </button>
                 </div>
               </header>

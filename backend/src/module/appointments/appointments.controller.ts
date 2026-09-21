@@ -3,11 +3,17 @@ import { APPOINTMENT_CONTENT } from "../../constants/appointments.constants";
 import { createAppointmentRequest } from "./appointments.service";
 import { appointmentRequestSchema } from "./appointments.validation";
 
-export const getAppointmentContent = (_request: Request, response: Response): void => {
+export const getAppointmentContent = (
+  _request: Request,
+  response: Response,
+): void => {
   response.status(200).json({ success: true, data: APPOINTMENT_CONTENT });
 };
 
-export const submitAppointmentRequest = async (request: Request, response: Response): Promise<void> => {
+export const submitAppointmentRequest = async (
+  request: Request,
+  response: Response,
+): Promise<void> => {
   const validation = appointmentRequestSchema.safeParse(request.body);
 
   if (!validation.success) {
@@ -28,7 +34,11 @@ export const submitAppointmentRequest = async (request: Request, response: Respo
       success: false,
       message: "Please select an available appointment date.",
       errors: {
-        preferredDate: [appointmentDate.getDay() === 0 ? "The clinic is closed on Sunday" : "Preferred date cannot be in the past"],
+        preferredDate: [
+          appointmentDate.getDay() === 0
+            ? "The clinic is closed on Sunday"
+            : "Preferred date cannot be in the past",
+        ],
       },
     });
     return;
@@ -36,6 +46,15 @@ export const submitAppointmentRequest = async (request: Request, response: Respo
 
   try {
     const receipt = await createAppointmentRequest(validation.data);
+    if (receipt.outcome === "DUPLICATE") {
+      response.status(409).json({
+        success: false,
+        message:
+          "An appointment request already exists for this child on the selected date.",
+        data: { existingReferenceId: receipt.referenceId },
+      });
+      return;
+    }
     response.status(201).json({
       success: true,
       message: APPOINTMENT_CONTENT.successMessage,

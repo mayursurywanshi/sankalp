@@ -395,6 +395,7 @@
 }
 .admin-contact-final-actions {
   border-top: 1px solid #e5edf2;
+  flex-wrap: wrap;
   justify-content: space-between;
   padding-top: 14px;
 }
@@ -403,6 +404,14 @@
 }
 .admin-contact-final-actions button.is-appointment {
   background: #6533aa;
+}
+.admin-contact-final-actions button.is-delete-patient {
+  background: #d9485f;
+}
+.admin-contact-final-actions button.is-delete-request {
+  background: #fff0f2;
+  border: 1px solid #eaa2ae;
+  color: #b72740;
 }
 .contact-appointment-dialog {
   align-items: center;

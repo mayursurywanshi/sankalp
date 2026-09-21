@@ -10,32 +10,59 @@ export const createAppointmentRequest = async (
     .toLowerCase()
     .replace(/\s+/g, " ");
   return prisma.$transaction(async (transaction) => {
-    const patient = await transaction.patient.upsert({
-      where: {
-        normalizedPatientName_primaryPhone: {
-          normalizedPatientName,
-          primaryPhone: request.phone,
-        },
-      },
-      update: {
-        patientName: request.childName,
-        parentName: request.parentName,
-        email: request.email,
-        ...(request.childDateOfBirth
-          ? { dateOfBirth: new Date(`${request.childDateOfBirth}T00:00:00Z`) }
-          : {}),
-      },
-      create: {
-        patientName: request.childName,
-        normalizedPatientName,
-        parentName: request.parentName,
-        primaryPhone: request.phone,
-        email: request.email,
-        dateOfBirth: request.childDateOfBirth
-          ? new Date(`${request.childDateOfBirth}T00:00:00Z`)
-          : undefined,
-      },
+    const phone = request.phone.replace(/\D/g, "").slice(-10);
+    const sameNamePatients = await transaction.patient.findMany({
+      where: { normalizedPatientName },
     });
+    const existingPatient = sameNamePatients.find(
+      (item) => item.primaryPhone.replace(/\D/g, "").slice(-10) === phone,
+    );
+    const patient = existingPatient
+      ? await transaction.patient.update({
+          where: { id: existingPatient.id },
+          data: {
+            patientName: request.childName,
+            parentName: request.parentName,
+            primaryPhone: phone,
+            email: request.email,
+            ...(request.childDateOfBirth
+              ? {
+                  dateOfBirth: new Date(
+                    `${request.childDateOfBirth}T00:00:00Z`,
+                  ),
+                }
+              : {}),
+          },
+        })
+      : await transaction.patient.create({
+          data: {
+            patientName: request.childName,
+            normalizedPatientName,
+            parentName: request.parentName,
+            primaryPhone: phone,
+            email: request.email,
+            dateOfBirth: request.childDateOfBirth
+              ? new Date(`${request.childDateOfBirth}T00:00:00Z`)
+              : undefined,
+          },
+        });
+    const preferredDate = new Date(`${request.preferredDate}T00:00:00Z`);
+    const duplicateAppointment = await transaction.appointmentRequest.findFirst(
+      {
+        where: {
+          patientDbId: patient.id,
+          preferredDate,
+          status: { not: "CANCELLED" },
+        },
+        select: { referenceId: true },
+      },
+    );
+    if (duplicateAppointment) {
+      return {
+        outcome: "DUPLICATE" as const,
+        referenceId: duplicateAppointment.referenceId,
+      };
+    }
     const appointment = await transaction.appointmentRequest.create({
       data: {
         parentName: request.parentName,
@@ -44,9 +71,9 @@ export const createAppointmentRequest = async (
         childDateOfBirth: request.childDateOfBirth
           ? new Date(`${request.childDateOfBirth}T00:00:00Z`)
           : undefined,
-        phone: request.phone,
+        phone,
         email: request.email,
-        preferredDate: new Date(`${request.preferredDate}T00:00:00Z`),
+        preferredDate,
         preferredTime: null,
         consent: request.consent,
         patientDbId: patient.id,
@@ -63,6 +90,7 @@ export const createAppointmentRequest = async (
       },
     });
     return {
+      outcome: "CREATED" as const,
       referenceId: appointment.referenceId,
       patientId: patient.patientId,
       status: appointment.status,

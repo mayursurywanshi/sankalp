@@ -25,6 +25,7 @@ export interface ContactRequest {
   convertedAppointment: {
     referenceId: string;
     status: string;
+    patient: { patientId: string };
   } | null;
 }
 

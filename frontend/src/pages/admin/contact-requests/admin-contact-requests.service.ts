@@ -101,6 +101,14 @@ export const saveContactStatus = async (
     ),
   );
 
+export const deleteContactRequest = async (referenceId: string) =>
+  parse<{ success: true; message: string; data: { referenceId: string } }>(
+    await authorizedFetch(
+      `/api/admin/contact-requests/${encodeURIComponent(referenceId)}`,
+      { method: "DELETE" },
+    ),
+  );
+
 export const createAppointmentFromContact = async (
   referenceId: string,
   body: {

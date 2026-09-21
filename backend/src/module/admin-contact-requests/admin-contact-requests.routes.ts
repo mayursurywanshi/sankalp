@@ -7,6 +7,7 @@ import {
   patchContactFollowUp,
   patchContactStatus,
   postContactAppointment,
+  removeContactRequest,
 } from "./admin-contact-requests.controller";
 
 const adminContactRequestsRouter = Router();
@@ -14,6 +15,7 @@ const adminContactRequestsRouter = Router();
 adminContactRequestsRouter.get("/", getContactRequests);
 adminContactRequestsRouter.get("/summary", getContactSummary);
 adminContactRequestsRouter.get("/:referenceId", getContactDetails);
+adminContactRequestsRouter.delete("/:referenceId", removeContactRequest);
 adminContactRequestsRouter.patch(
   "/:referenceId/assignment",
   patchContactAssignment,

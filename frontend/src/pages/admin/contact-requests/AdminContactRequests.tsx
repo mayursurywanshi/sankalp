@@ -4,9 +4,11 @@ import { AdminSidebar } from "../../../components/admin/AdminSidebar";
 import { logoutAdmin } from "../admin-dashboard.service";
 import { fetchDoctors } from "../doctors/admin-doctors.service";
 import { Doctor } from "../doctors/admin-doctors.types";
+import { deletePatient } from "../patients/admin-patients.service";
 import {
   assignContactDoctor,
   createAppointmentFromContact,
+  deleteContactRequest,
   fetchContactRequestDetails,
   fetchContactRequests,
   fetchContactRequestSummary,
@@ -211,6 +213,49 @@ export const AdminContactRequests = () => {
       await refresh(
         `${result.message} Reference: ${result.data.appointmentReferenceId}`,
       );
+    } catch (reason) {
+      handleError(reason);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const removeConvertedPatient = async () => {
+    const patientId = selected?.convertedAppointment?.patient.patientId;
+    if (!selected || !patientId) return;
+    if (
+      !window.confirm(
+        `Delete patient ${patientId}? This permanently removes the patient, appointments, case history and feedback records.`,
+      )
+    )
+      return;
+    setBusy(true);
+    setError("");
+    try {
+      await deletePatient(patientId);
+      await refresh("Patient and associated records deleted successfully.");
+    } catch (reason) {
+      handleError(reason);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const removeSelectedContactRequest = async () => {
+    if (!selected) return;
+    if (
+      !window.confirm(
+        `Delete contact request ${selected.referenceId} from ${selected.name}? This removes the enquiry and its activity history only.`,
+      )
+    )
+      return;
+    setBusy(true);
+    setError("");
+    try {
+      const result = await deleteContactRequest(selected.referenceId);
+      setSelected(null);
+      setNotice(result.message);
+      await load();
     } catch (reason) {
       handleError(reason);
     } finally {
@@ -497,6 +542,14 @@ export const AdminContactRequests = () => {
                   </details>
                 )}
                 <div className="admin-contact-final-actions">
+                  <button
+                    type="button"
+                    className="is-delete-request"
+                    disabled={busy}
+                    onClick={() => void removeSelectedContactRequest()}
+                  >
+                    Delete Contact Request
+                  </button>
                   {selected.status === "RESOLVED" ? (
                     <button
                       type="button"
@@ -527,6 +580,17 @@ export const AdminContactRequests = () => {
                       ? `Appointment ${selected.convertedAppointment.referenceId}`
                       : "+ Create Appointment"}
                   </button>
+                  {selected.convertedAppointment && (
+                    <button
+                      type="button"
+                      className="is-delete-patient"
+                      disabled={busy}
+                      onClick={() => void removeConvertedPatient()}
+                    >
+                      Delete Patient{" "}
+                      {selected.convertedAppointment.patient.patientId}
+                    </button>
+                  )}
                 </div>
               </>
             )}

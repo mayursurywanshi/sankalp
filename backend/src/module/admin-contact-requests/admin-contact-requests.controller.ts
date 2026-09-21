@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   assignContactRequest,
   convertContactToAppointment,
+  deleteContactRequest,
   getContactRequest,
   getContactRequestSummary,
   listContactRequests,
@@ -69,6 +70,31 @@ export const getContactDetails = async (
         ? { success: true, data }
         : { success: false, message: "Contact request was not found." },
     );
+};
+
+export const removeContactRequest = async (
+  request: Request,
+  response: Response,
+) => {
+  const reference = contactReferenceSchema.safeParse(
+    request.params.referenceId,
+  );
+  if (!reference.success) {
+    invalidReference(response);
+    return;
+  }
+  const deleted = await deleteContactRequest(reference.data);
+  if (!deleted) {
+    response
+      .status(404)
+      .json({ success: false, message: "Contact request was not found." });
+    return;
+  }
+  response.status(200).json({
+    success: true,
+    message: "Contact request deleted successfully.",
+    data: deleted,
+  });
 };
 
 export const patchContactAssignment = async (
@@ -230,6 +256,15 @@ export const postContactAppointment = async (
       success: false,
       message:
         "An appointment has already been created from this contact request.",
+    });
+    return;
+  }
+  if (result.outcome === "DUPLICATE_APPOINTMENT") {
+    response.status(409).json({
+      success: false,
+      message:
+        "An appointment request already exists for this child on the selected date.",
+      data: { existingReferenceId: result.referenceId },
     });
     return;
   }
