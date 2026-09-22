@@ -103,7 +103,7 @@
   box-shadow: 0 8px 22px rgba(18, 52, 109, 0.05);
   display: flex;
   gap: 12px;
-  padding: 17px;
+  padding: 18px 20px;
 }
 .performance-metrics article > span {
   align-items: center;
@@ -147,7 +147,7 @@
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(18, 52, 109, 0.05);
   min-width: 0;
-  padding: 18px;
+  padding: 20px;
 }
 .performance-card h2 {
   font-size: 14px;

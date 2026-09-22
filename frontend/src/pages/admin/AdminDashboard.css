@@ -140,7 +140,8 @@
   font-size: 11px;
 }
 .admin-welcome {
-  padding: 28px 0 19px;
+  box-sizing: border-box;
+  padding: 22px 24px;
 }
 .admin-welcome p,
 .admin-panel header small {
