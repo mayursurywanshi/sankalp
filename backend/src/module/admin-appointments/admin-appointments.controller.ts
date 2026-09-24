@@ -21,33 +21,27 @@ export const getAppointments = async (
 ): Promise<void> => {
   const query = appointmentListQuerySchema.safeParse(request.query);
   if (!query.success) {
-    response
-      .status(400)
-      .json({
-        success: false,
-        message: "Invalid appointment filters.",
-        errors: query.error.flatten().fieldErrors,
-      });
+    response.status(400).json({
+      success: false,
+      message: "Invalid appointment filters.",
+      errors: query.error.flatten().fieldErrors,
+    });
     return;
   }
   try {
-    response
-      .status(200)
-      .json({
-        success: true,
-        data: await listAdminAppointments(
-          query.data.status as AppointmentRequestStatus | undefined,
-          query.data.doctorId,
-        ),
-      });
+    response.status(200).json({
+      success: true,
+      data: await listAdminAppointments(
+        query.data.status as AppointmentRequestStatus | undefined,
+        query.data.doctorId,
+      ),
+    });
   } catch (error) {
     console.error("Unable to list appointments", error);
-    response
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to load appointment requests.",
-      });
+    response.status(500).json({
+      success: false,
+      message: "Unable to load appointment requests.",
+    });
   }
 };
 
@@ -73,12 +67,10 @@ export const getAvailability = async (
 ): Promise<void> => {
   const validation = availabilityQuerySchema.safeParse(request.query);
   if (!validation.success) {
-    response
-      .status(400)
-      .json({
-        success: false,
-        message: "Select a valid Doctor and clinic date.",
-      });
+    response.status(400).json({
+      success: false,
+      message: "Select a valid Doctor and clinic date.",
+    });
     return;
   }
   try {
@@ -94,12 +86,10 @@ export const getAvailability = async (
       return;
     }
     if (result.outcome !== "AVAILABLE") {
-      response
-        .status(400)
-        .json({
-          success: false,
-          message: "Select an available clinic working date.",
-        });
+      response.status(400).json({
+        success: false,
+        message: "Select an available clinic working date.",
+      });
       return;
     }
     response.status(200).json({ success: true, data: result });
@@ -120,12 +110,10 @@ export const getAppointment = async (
       String(request.params.referenceId ?? ""),
     );
     if (!data) {
-      response
-        .status(404)
-        .json({
-          success: false,
-          message: "Appointment request was not found.",
-        });
+      response.status(404).json({
+        success: false,
+        message: "Appointment request was not found.",
+      });
       return;
     }
     response.status(200).json({ success: true, data });
@@ -143,13 +131,11 @@ export const postAssignment = async (
 ): Promise<void> => {
   const validation = assignmentSchema.safeParse(request.body);
   if (!validation.success) {
-    response
-      .status(400)
-      .json({
-        success: false,
-        message: "Please correct the assignment fields.",
-        errors: validation.error.flatten().fieldErrors,
-      });
+    response.status(400).json({
+      success: false,
+      message: "Please correct the assignment fields.",
+      errors: validation.error.flatten().fieldErrors,
+    });
     return;
   }
   try {
@@ -176,13 +162,11 @@ export const postAssignment = async (
       response.status(status).json({ success: false, message });
       return;
     }
-    response
-      .status(200)
-      .json({
-        success: true,
-        message: "Appointment assigned successfully.",
-        data: result.appointment,
-      });
+    response.status(200).json({
+      success: true,
+      message: "Appointment assigned successfully.",
+      data: result.appointment,
+    });
   } catch (error) {
     console.error("Unable to assign appointment", error);
     response
@@ -197,13 +181,11 @@ export const patchStatus = async (
 ): Promise<void> => {
   const validation = appointmentStatusSchema.safeParse(request.body);
   if (!validation.success) {
-    response
-      .status(400)
-      .json({
-        success: false,
-        message: "Please correct the status fields.",
-        errors: validation.error.flatten().fieldErrors,
-      });
+    response.status(400).json({
+      success: false,
+      message: "Please correct the status fields.",
+      errors: validation.error.flatten().fieldErrors,
+    });
     return;
   }
   try {
@@ -226,20 +208,16 @@ export const patchStatus = async (
       response.status(status).json({ success: false, message });
       return;
     }
-    response
-      .status(200)
-      .json({
-        success: true,
-        message: `Appointment marked ${validation.data.status.toLowerCase()}.`,
-        data: result.appointment,
-      });
+    response.status(200).json({
+      success: true,
+      message: `Appointment marked ${validation.data.status.toLowerCase()}.`,
+      data: result.appointment,
+    });
   } catch (error) {
     console.error("Unable to update appointment status", error);
-    response
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to update appointment status.",
-      });
+    response.status(500).json({
+      success: false,
+      message: "Unable to update appointment status.",
+    });
   }
 };

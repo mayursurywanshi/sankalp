@@ -1,7 +1,10 @@
 import { AuthenticatedUser } from "../login/login.types";
 
 export type AppointmentStatus =
-  "REQUESTED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+  "REQUESTED" | "ASSIGNED" | "COMPLETED" | "CANCELLED";
+
+export type SchedulePeriod =
+  "TODAY" | "LAST_7_DAYS" | "LAST_15_DAYS" | "THIS_MONTH" | "CUSTOM";
 
 export type DashboardData = {
   admin: AuthenticatedUser;
@@ -27,10 +30,16 @@ export type DashboardData = {
     assigned: number;
     completed: number;
     cancelled: number;
+    range: {
+      period: SchedulePeriod;
+      fromDate: string;
+      toDate: string;
+      label: string;
+    };
   };
   recentActivities: Array<{
     id: string;
-    type: "APPOINTMENT_REQUEST" | "CONTACT_ENQUIRY";
+    type: "APPOINTMENT" | "CONTACT";
     message: string;
     createdAt: string;
   }>;

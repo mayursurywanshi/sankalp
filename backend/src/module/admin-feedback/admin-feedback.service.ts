@@ -6,6 +6,7 @@ import {
   InvitationListQuery,
   ResponseListQuery,
 } from "./admin-feedback.validation";
+import { getSettings } from "../settings/settings.service";
 
 const normalizeWhatsAppPhone = (phone: string) => {
   const digits = phone.replace(/\D/g, "");
@@ -18,6 +19,12 @@ const hashToken = (token: string) =>
 export const FEEDBACK_LINK_VALIDITY_HOURS = 24;
 export const createFeedbackExpiry = (now = new Date()) =>
   new Date(now.getTime() + FEEDBACK_LINK_VALIDITY_HOURS * 60 * 60 * 1000);
+const createConfiguredFeedbackExpiry = async (now = new Date()) => {
+  const settings = await getSettings();
+  return new Date(
+    now.getTime() + settings.feedbackExpiryHours * 60 * 60 * 1000,
+  );
+};
 const displayExpiry = (date: Date) =>
   new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
@@ -275,7 +282,7 @@ export const createFeedbackInvitation = async (
   if (existing)
     return { outcome: "ACTIVE_EXISTS" as const, invitation: existing };
   const token = createToken();
-  const expiresAt = createFeedbackExpiry();
+  const expiresAt = await createConfiguredFeedbackExpiry();
   const invitation = await prisma.feedbackInvitation.create({
     data: {
       referenceId: `FDB-${randomUUID().slice(0, 8).toUpperCase()}`,
@@ -342,7 +349,7 @@ export const resendFeedbackInvitation = async (referenceId: string) => {
   if (["SUBMITTED", "CANCELLED"].includes(invitation.status))
     return { outcome: "UNAVAILABLE" as const };
   const token = createToken();
-  const expiresAt = createFeedbackExpiry();
+  const expiresAt = await createConfiguredFeedbackExpiry();
   const updated = await prisma.feedbackInvitation.update({
     where: { id: invitation.id },
     data: {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AdminSidebar } from "../../components/admin/AdminSidebar";
 import { clearAccessToken } from "../login/auth-storage";
 import { fetchAdminDashboard, logoutAdmin } from "./admin-dashboard.service";
-import { DashboardData } from "./admin-dashboard.types";
+import { DashboardData, SchedulePeriod } from "./admin-dashboard.types";
 import "./AdminDashboard.css";
 
 const metricCards = [
@@ -25,16 +25,34 @@ const timeAgo = (value: string) => {
   return hours < 24 ? `${hours} hr ago` : `${Math.floor(hours / 24)} day ago`;
 };
 
+const scheduleGradient = (schedule: DashboardData["todaySchedule"]) => {
+  if (!schedule.total) return "conic-gradient(#e8f0f3 0 100%)";
+  const assigned = (schedule.assigned / schedule.total) * 100;
+  const requested = assigned + (schedule.requested / schedule.total) * 100;
+  const completed = requested + (schedule.completed / schedule.total) * 100;
+  return `conic-gradient(#48a6e8 0 ${assigned}%, #ffbc42 ${assigned}% ${requested}%, #72c789 ${requested}% ${completed}%, #f56b78 ${completed}% 100%)`;
+};
+
 export const AdminDashboard = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
+  const [schedulePeriod, setSchedulePeriod] = useState<SchedulePeriod>("TODAY");
+  const [customFrom, setCustomFrom] = useState("");
+  const [customTo, setCustomTo] = useState("");
 
   const loadDashboard = useCallback(async () => {
     setError("");
     try {
-      setData(await fetchAdminDashboard());
+      if (schedulePeriod === "CUSTOM" && (!customFrom || !customTo)) return;
+      setData(
+        await fetchAdminDashboard({
+          period: schedulePeriod,
+          fromDate: customFrom || undefined,
+          toDate: customTo || undefined,
+        }),
+      );
     } catch (caught) {
       if (caught instanceof Error && caught.message === "SESSION_INVALID") {
         clearAccessToken();
@@ -45,7 +63,7 @@ export const AdminDashboard = () => {
         "We could not load the dashboard. Please check the server and try again.",
       );
     }
-  }, [navigate]);
+  }, [customFrom, customTo, navigate, schedulePeriod]);
 
   useEffect(() => {
     void loadDashboard();
@@ -124,7 +142,10 @@ export const AdminDashboard = () => {
                       <small>REQUESTS</small>
                       <h2>Appointment Requests</h2>
                     </div>
-                    <button type="button" disabled>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/admin/appointments")}
+                    >
                       View All
                     </button>
                   </header>
@@ -150,7 +171,14 @@ export const AdminDashboard = () => {
                                 : " · Time pending"}
                             </span>
                           </div>
-                          <button type="button" disabled>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              navigate(
+                                `/admin/appointments?search=${encodeURIComponent(item.referenceId)}`,
+                              )
+                            }
+                          >
                             Assign Doctor
                           </button>
                         </article>
@@ -164,21 +192,62 @@ export const AdminDashboard = () => {
                   <section className="admin-panel admin-schedule">
                     <header>
                       <div>
-                        <small>TODAY</small>
+                        <small>
+                          {data.todaySchedule.range.label.toUpperCase()}
+                        </small>
                         <h2>Schedule Summary</h2>
                       </div>
-                      <strong>{data.todaySchedule.total}</strong>
+                      <div className="admin-schedule-filter">
+                        <select
+                          value={schedulePeriod}
+                          onChange={(event) =>
+                            setSchedulePeriod(
+                              event.target.value as SchedulePeriod,
+                            )
+                          }
+                          aria-label="Schedule summary period"
+                        >
+                          <option value="TODAY">Today</option>
+                          <option value="LAST_7_DAYS">Last 7 days</option>
+                          <option value="LAST_15_DAYS">Last 15 days</option>
+                          <option value="THIS_MONTH">This month</option>
+                          <option value="CUSTOM">Select date range</option>
+                        </select>
+                        <strong>{data.todaySchedule.total}</strong>
+                      </div>
                     </header>
+                    {schedulePeriod === "CUSTOM" && (
+                      <div className="admin-schedule-dates">
+                        <label>
+                          From
+                          <input
+                            type="date"
+                            value={customFrom}
+                            onChange={(event) =>
+                              setCustomFrom(event.target.value)
+                            }
+                            max={customTo || undefined}
+                          />
+                        </label>
+                        <label>
+                          To
+                          <input
+                            type="date"
+                            value={customTo}
+                            onChange={(event) =>
+                              setCustomTo(event.target.value)
+                            }
+                            min={customFrom || undefined}
+                          />
+                        </label>
+                      </div>
+                    )}
                     <div className="admin-schedule__body">
                       <div
                         className="admin-donut"
-                        style={
-                          {
-                            "--requested": data.todaySchedule.total
-                              ? `${(data.todaySchedule.requested / data.todaySchedule.total) * 100}%`
-                              : "0%",
-                          } as React.CSSProperties
-                        }
+                        style={{
+                          background: scheduleGradient(data.todaySchedule),
+                        }}
                       >
                         <span>
                           {data.todaySchedule.total}
@@ -217,9 +286,7 @@ export const AdminDashboard = () => {
                         {data.recentActivities.map((activity) => (
                           <li key={`${activity.type}-${activity.id}`}>
                             <span aria-hidden="true">
-                              {activity.type === "APPOINTMENT_REQUEST"
-                                ? "📅"
-                                : "💬"}
+                              {activity.type === "APPOINTMENT" ? "📅" : "💬"}
                             </span>
                             <p>
                               {activity.message}

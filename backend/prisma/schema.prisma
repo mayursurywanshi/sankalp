@@ -117,9 +117,32 @@ model AdminLoginLog {
   feedbackInvitations        FeedbackInvitation[]         @relation("FeedbackInvitationCreator")
   moderatedFeedbackResponses ParentFeedbackResponse[]     @relation("FeedbackResponseModerator")
   contactRequestActivities   ContactRequestActivity[]
+  settingsUpdates            ClinicSettings[]             @relation("ClinicSettingsUpdater")
 
   @@index([role], map: "admin_login_logs_role_idx")
   @@map("admin_login_logs")
+}
+
+model ClinicSettings {
+  id                        Int           @id @default(1)
+  phone                     String        @db.VarChar(20)
+  whatsapp                  String        @db.VarChar(20)
+  email                     String        @db.VarChar(120)
+  address                   String        @db.Text
+  instagramUrl              String        @map("instagram_url") @db.Text
+  mapEmbedUrl               String        @map("map_embed_url") @db.Text
+  directionsUrl             String        @map("directions_url") @db.Text
+  openingTime               String        @map("opening_time") @db.VarChar(5)
+  closingTime               String        @map("closing_time") @db.VarChar(5)
+  slotDurationMinutes       Int           @map("slot_duration_minutes")
+  workingDays               Int[]         @map("working_days")
+  maximumAdvanceBookingDays Int           @map("maximum_advance_booking_days")
+  feedbackExpiryHours       Int           @map("feedback_expiry_hours")
+  updatedByAdminId          String?       @map("updated_by_admin_id") @db.Uuid
+  updatedAt                 DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  updatedBy                 AdminLoginLog? @relation("ClinicSettingsUpdater", fields: [updatedByAdminId], references: [id], onDelete: SetNull)
+
+  @@map("clinic_settings")
 }
 
 model OurImpactPost {

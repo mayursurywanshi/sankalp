@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { APPOINTMENT_TIME_SLOTS } from "../../constants/appointments.constants";
 
 const displayDate = /^\d{2}-\d{2}-\d{4}$/;
 export const parseDisplayDate = (value: string) => {
@@ -20,9 +19,9 @@ export const assignmentSchema = z.object({
     .string()
     .regex(displayDate, "Use DD-MM-YYYY format")
     .refine(parseDisplayDate, "Enter a valid date"),
-  scheduledTime: z.enum(APPOINTMENT_TIME_SLOTS, {
-    error: "Select a valid appointment time",
-  }),
+  scheduledTime: z
+    .string()
+    .regex(/^\d{1,2}:\d{2} [AP]M$/, "Select a valid appointment time"),
   note: z.string().trim().max(500).optional(),
 });
 

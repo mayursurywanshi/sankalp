@@ -7,7 +7,8 @@
       transparent 14px
     ),
     linear-gradient(135deg, #dff8f5, #eee8ff);
-  border-bottom: 1px solid #dfe9ef;
+  border-bottom: 0;
+  box-shadow: 0 8px 24px rgba(30, 93, 117, 0.06);
   column-gap: 24px;
   display: grid;
   grid-template-columns: 220px minmax(320px, 1fr) auto;
@@ -27,7 +28,7 @@
 }
 .admin-global-header__brand img {
   background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 0;
   border-radius: 15px;
   box-shadow: 0 7px 18px rgba(24, 71, 112, 0.12);
   height: 62px;
@@ -140,7 +141,18 @@
   color: #71819a;
 }
 .admin-sidebar {
-  background: linear-gradient(180deg, #12aaa5, #078c91);
+  background:
+    radial-gradient(
+      circle at 16% 82%,
+      rgba(255, 224, 139, 0.22) 0 34px,
+      transparent 35px
+    ),
+    radial-gradient(
+      circle at 88% 18%,
+      rgba(220, 245, 255, 0.15) 0 46px,
+      transparent 47px
+    ),
+    linear-gradient(180deg, #12aaa5, #078c91);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -227,9 +239,17 @@
 .admin-feedback-shell,
 .admin-impact-shell,
 .admin-performance-shell,
-.admin-doctors-shell {
+.admin-doctors-shell,
+.admin-users-shell,
+.admin-settings-shell {
   background-color: #f5fbfd;
   background-image:
+    linear-gradient(
+      90deg,
+      rgba(10, 148, 150, 0.1) 0,
+      rgba(10, 148, 150, 0.04) 42px,
+      transparent 105px
+    ),
     radial-gradient(
       circle at 92% 14%,
       rgba(255, 210, 111, 0.18) 0 55px,
@@ -282,8 +302,13 @@ html body .performance-heading h1 {
 .admin-feedback-heading,
 .admin-contact-heading,
 .performance-heading {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #d9e8ed;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.94),
+    rgba(234, 249, 247, 0.94) 58%,
+    rgba(244, 239, 255, 0.94)
+  );
+  border: 0;
   border-radius: 17px;
   box-shadow: 0 9px 25px rgba(21, 57, 103, 0.07);
   margin-bottom: 22px !important;

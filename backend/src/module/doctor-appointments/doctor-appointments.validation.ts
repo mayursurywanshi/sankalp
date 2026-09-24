@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { parseDisplayDate } from "../admin-appointments/admin-appointments.validation";
-import { APPOINTMENT_TIME_SLOTS } from "../../constants/appointments.constants";
 
 const dateField = z
   .string()
@@ -32,9 +31,9 @@ export const caseHistoryIdSchema = z
 export const doctorAvailabilityQuerySchema = z.object({ date: dateField });
 export const followUpAppointmentSchema = z.object({
   scheduledDate: dateField,
-  scheduledTime: z.enum(APPOINTMENT_TIME_SLOTS, {
-    error: "Select an available clinic time",
-  }),
+  scheduledTime: z
+    .string()
+    .regex(/^\d{1,2}:\d{2} [AP]M$/, "Select an available clinic time"),
 });
 export type CaseHistoryInput = z.infer<typeof caseHistorySchema>;
 export type CaseHistoryUpdateInput = z.infer<typeof caseHistoryUpdateSchema>;

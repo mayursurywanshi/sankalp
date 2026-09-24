@@ -15,35 +15,47 @@ import doctorDashboardRouter from "./module/doctor-dashboard/doctor-dashboard.ro
 import { env } from "./config/env.config";
 import { preventSensitiveResponseCaching } from "./middleware/sensitive-response-cache";
 import feedbackRouter from "./module/feedback/feedback.routes";
+import { publicSettingsRouter } from "./module/settings/settings.routes";
 
 const app = express();
 
 const configuredOrigins = new Set([
   env.FRONTEND_URL,
-  ...env.CORS_ALLOWED_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean),
+  ...env.CORS_ALLOWED_ORIGINS.split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
 ]);
 
 const isAllowedOrigin = (origin?: string) => {
   if (!origin || configuredOrigins.has(origin)) return true;
   if (env.NODE_ENV !== "production") {
-    return /^https?:\/\/(?:localhost|127\.0\.0\.1|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})(?::\d+)?$/.test(origin);
+    return /^https?:\/\/(?:localhost|127\.0\.0\.1|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})(?::\d+)?$/.test(
+      origin,
+    );
   }
   return false;
 };
 
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-}));
-app.use(cors({
-  origin: (origin, callback) => {
-    if (isAllowedOrigin(origin)) callback(null, true);
-    else {
-      callback(new Error("Origin is not allowed by CORS"));
-    }
-  },
-}));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) callback(null, true);
+      else {
+        callback(new Error("Origin is not allowed by CORS"));
+      }
+    },
+  }),
+);
 app.use(express.json());
-app.use("/uploads/our-impact", express.static(path.resolve(process.cwd(), "uploads", "our-impact")));
+app.use(
+  "/uploads/our-impact",
+  express.static(path.resolve(process.cwd(), "uploads", "our-impact")),
+);
 app.use("/api/auth", preventSensitiveResponseCaching);
 app.use("/api/admin", preventSensitiveResponseCaching);
 app.use("/api/doctor", preventSensitiveResponseCaching);
@@ -66,13 +78,22 @@ app.use("/api/home", homeRouter);
 app.use("/api/our-impact", ourImpactRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/services", servicesRouter);
+app.use("/api/settings", publicSettingsRouter);
 
-app.use((error: Error, _request: Request, response: Response, next: NextFunction) => {
-  if (error.message === "Origin is not allowed by CORS") {
-    response.status(403).json({ success: false, message: "This website origin is not allowed to access the Sankalp API." });
-    return;
-  }
-  next(error);
-});
+app.use(
+  (error: Error, _request: Request, response: Response, next: NextFunction) => {
+    if (error.message === "Origin is not allowed by CORS") {
+      response
+        .status(403)
+        .json({
+          success: false,
+          message:
+            "This website origin is not allowed to access the Sankalp API.",
+        });
+      return;
+    }
+    next(error);
+  },
+);
 
 export default app;

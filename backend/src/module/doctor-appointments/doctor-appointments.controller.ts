@@ -21,12 +21,10 @@ export const getMyAppointments = async (
   response: Response,
 ): Promise<void> => {
   try {
-    response
-      .status(200)
-      .json({
-        success: true,
-        data: await listDoctorAppointments(response.locals.doctor.id),
-      });
+    response.status(200).json({
+      success: true,
+      data: await listDoctorAppointments(response.locals.doctor.id),
+    });
   } catch (error) {
     console.error("Unable to list Doctor appointments", error);
     response
@@ -44,12 +42,10 @@ export const getMyAppointment = async (
       String(request.params.referenceId ?? ""),
     );
     if (!data) {
-      response
-        .status(404)
-        .json({
-          success: false,
-          message: "Assigned appointment was not found.",
-        });
+      response.status(404).json({
+        success: false,
+        message: "Assigned appointment was not found.",
+      });
       return;
     }
     response.status(200).json({ success: true, data });
@@ -77,12 +73,10 @@ export const getMyAvailability = async (
       validation.data.date,
     );
     if (result.outcome !== "AVAILABLE") {
-      response
-        .status(400)
-        .json({
-          success: false,
-          message: "The clinic is closed for the selected date.",
-        });
+      response.status(400).json({
+        success: false,
+        message: "The clinic is closed for the selected date.",
+      });
       return;
     }
     response.status(200).json({ success: true, data: result });
@@ -99,13 +93,11 @@ export const postFollowUp = async (
 ): Promise<void> => {
   const validation = followUpAppointmentSchema.safeParse(request.body);
   if (!validation.success) {
-    response
-      .status(400)
-      .json({
-        success: false,
-        message: "Select a valid available appointment slot.",
-        errors: validation.error.flatten().fieldErrors,
-      });
+    response.status(400).json({
+      success: false,
+      message: "Select a valid available appointment slot.",
+      errors: validation.error.flatten().fieldErrors,
+    });
     return;
   }
   try {
@@ -131,21 +123,17 @@ export const postFollowUp = async (
       response.status(status).json({ success: false, message });
       return;
     }
-    response
-      .status(201)
-      .json({
-        success: true,
-        message: "Next appointment scheduled successfully.",
-        data: result.appointment,
-      });
+    response.status(201).json({
+      success: true,
+      message: "Next appointment scheduled successfully.",
+      data: result.appointment,
+    });
   } catch (error) {
     console.error("Unable to schedule follow-up", error);
-    response
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to schedule the next appointment.",
-      });
+    response.status(500).json({
+      success: false,
+      message: "Unable to schedule the next appointment.",
+    });
   }
 };
 export const getPatientCaseHistory = async (
@@ -164,28 +152,22 @@ export const getPatientCaseHistory = async (
       return;
     }
     if (result.outcome === "FORBIDDEN") {
-      response
-        .status(403)
-        .json({
-          success: false,
-          message: "This patient is not assigned to you.",
-        });
+      response.status(403).json({
+        success: false,
+        message: "This patient is not assigned to you.",
+      });
       return;
     }
-    response
-      .status(200)
-      .json({
-        success: true,
-        data: { patient: result.patient, caseHistory: result.caseHistory },
-      });
+    response.status(200).json({
+      success: true,
+      data: { patient: result.patient, caseHistory: result.caseHistory },
+    });
   } catch (error) {
     console.error("Unable to load case history", error);
-    response
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to load patient case history.",
-      });
+    response.status(500).json({
+      success: false,
+      message: "Unable to load patient case history.",
+    });
   }
 };
 export const postCaseHistory = async (
@@ -194,13 +176,11 @@ export const postCaseHistory = async (
 ): Promise<void> => {
   const validation = caseHistorySchema.safeParse(request.body);
   if (!validation.success) {
-    response
-      .status(400)
-      .json({
-        success: false,
-        message: "Please correct the case-history fields.",
-        errors: validation.error.flatten().fieldErrors,
-      });
+    response.status(400).json({
+      success: false,
+      message: "Please correct the case-history fields.",
+      errors: validation.error.flatten().fieldErrors,
+    });
     return;
   }
   try {
@@ -225,21 +205,17 @@ export const postCaseHistory = async (
       response.status(status).json({ success: false, message });
       return;
     }
-    response
-      .status(201)
-      .json({
-        success: true,
-        message: "Patient case history created successfully.",
-        data: result.history,
-      });
+    response.status(201).json({
+      success: true,
+      message: "Patient case history created successfully.",
+      data: result.history,
+    });
   } catch (error) {
     console.error("Unable to create case history", error);
-    response
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to create patient case history.",
-      });
+    response.status(500).json({
+      success: false,
+      message: "Unable to create patient case history.",
+    });
   }
 };
 export const patchCaseHistory = async (
@@ -257,13 +233,11 @@ export const patchCaseHistory = async (
   }
   const validation = caseHistoryUpdateSchema.safeParse(request.body);
   if (!validation.success) {
-    response
-      .status(400)
-      .json({
-        success: false,
-        message: "Please correct the case-history fields.",
-        errors: validation.error.flatten().fieldErrors,
-      });
+    response.status(400).json({
+      success: false,
+      message: "Please correct the case-history fields.",
+      errors: validation.error.flatten().fieldErrors,
+    });
     return;
   }
   try {
@@ -279,29 +253,23 @@ export const patchCaseHistory = async (
       return;
     }
     if (result.outcome === "LOCKED") {
-      response
-        .status(409)
-        .json({
-          success: false,
-          message:
-            "Completed appointment history is locked and cannot be edited.",
-        });
+      response.status(409).json({
+        success: false,
+        message:
+          "Completed appointment history is locked and cannot be edited.",
+      });
       return;
     }
-    response
-      .status(200)
-      .json({
-        success: true,
-        message: "Patient case history updated successfully.",
-        data: result.history,
-      });
+    response.status(200).json({
+      success: true,
+      message: "Patient case history updated successfully.",
+      data: result.history,
+    });
   } catch (error) {
     console.error("Unable to update case history", error);
-    response
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to update patient case history.",
-      });
+    response.status(500).json({
+      success: false,
+      message: "Unable to update patient case history.",
+    });
   }
 };

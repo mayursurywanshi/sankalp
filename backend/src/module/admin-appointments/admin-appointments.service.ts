@@ -167,6 +167,18 @@ export const assignAppointment = async (
   )
     return { outcome: "DOCTOR_UNAVAILABLE" as const };
   const scheduledDate = parseDisplayDate(input.scheduledDate) as Date;
+  const availability = await clinicSlotAvailability(
+    doctor.id,
+    input.scheduledDate,
+    referenceId,
+  );
+  if (
+    availability.outcome !== "AVAILABLE" ||
+    !availability.slots.some(
+      (slot) => slot.time === input.scheduledTime && slot.available,
+    )
+  )
+    return { outcome: "SLOT_CONFLICT" as const };
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   if (scheduledDate < today || scheduledDate.getUTCDay() === 0)

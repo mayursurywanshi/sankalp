@@ -9,6 +9,8 @@ import adminSuccessStoriesRouter from "../admin-success-stories/admin-success-st
 import adminFeedbackRouter from "../admin-feedback/admin-feedback.routes";
 import adminContactRequestsRouter from "../admin-contact-requests/admin-contact-requests.routes";
 import adminPerformanceRouter from "../admin-performance/admin-performance.routes";
+import adminUsersRolesRouter from "../admin-users-roles/admin-users-roles.routes";
+import { adminSettingsRouter } from "../settings/settings.routes";
 
 const adminDashboardRouter = Router();
 
@@ -23,5 +25,7 @@ adminDashboardRouter.use("/success-stories-posts", adminSuccessStoriesRouter);
 adminDashboardRouter.use("/feedback", adminFeedbackRouter);
 adminDashboardRouter.use("/contact-requests", adminContactRequestsRouter);
 adminDashboardRouter.use("/performance", adminPerformanceRouter);
+adminDashboardRouter.use("/users-roles", adminUsersRolesRouter);
+adminDashboardRouter.use("/settings", adminSettingsRouter);
 
 export default adminDashboardRouter;

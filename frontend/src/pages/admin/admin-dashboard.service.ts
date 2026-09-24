@@ -1,5 +1,14 @@
-import { clearAccessToken, getBearerAuthorization } from "../login/auth-storage";
-import { AdminSearchResults, DashboardData, DashboardResponse, SessionResponse } from "./admin-dashboard.types";
+import {
+  clearAccessToken,
+  getBearerAuthorization,
+} from "../login/auth-storage";
+import {
+  AdminSearchResults,
+  DashboardData,
+  DashboardResponse,
+  SchedulePeriod,
+  SessionResponse,
+} from "./admin-dashboard.types";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 
@@ -17,24 +26,53 @@ export const authorizedFetch = async (path: string, init?: RequestInit) => {
 
 export const verifySession = async () => {
   const response = await authorizedFetch("/api/auth/session");
-  const result = await response.json() as SessionResponse;
+  const result = (await response.json()) as SessionResponse;
   if (!response.ok || !result.success) throw new Error("SESSION_INVALID");
   return result.data;
 };
 
-export const fetchAdminDashboard = async (): Promise<DashboardData> => {
-  const response = await authorizedFetch("/api/admin/dashboard");
-  const result = await response.json() as DashboardResponse;
+export const fetchAdminDashboard = async (schedule?: {
+  period: SchedulePeriod;
+  fromDate?: string;
+  toDate?: string;
+}): Promise<DashboardData> => {
+  const query = new URLSearchParams();
+  if (schedule) {
+    query.set("schedulePeriod", schedule.period);
+    if (schedule.fromDate) query.set("fromDate", schedule.fromDate);
+    if (schedule.toDate) query.set("toDate", schedule.toDate);
+  }
+  const response = await authorizedFetch(
+    `/api/admin/dashboard${query.size ? `?${query}` : ""}`,
+  );
+  const result = (await response.json()) as DashboardResponse;
   if (!response.ok || !result.success || !result.data) {
-    throw new Error(response.status === 401 || response.status === 403 ? "SESSION_INVALID" : result.message ?? "DASHBOARD_ERROR");
+    throw new Error(
+      response.status === 401 || response.status === 403
+        ? "SESSION_INVALID"
+        : (result.message ?? "DASHBOARD_ERROR"),
+    );
   }
   return result.data;
 };
 
-export const searchAdminRecords = async (query: string): Promise<AdminSearchResults> => {
-  const response = await authorizedFetch(`/api/admin/search?query=${encodeURIComponent(query)}`);
-  const result = await response.json() as { success: boolean; message?: string; data?: AdminSearchResults };
-  if (!response.ok || !result.success || !result.data) throw new Error(response.status === 401 || response.status === 403 ? "SESSION_INVALID" : result.message ?? "SEARCH_ERROR");
+export const searchAdminRecords = async (
+  query: string,
+): Promise<AdminSearchResults> => {
+  const response = await authorizedFetch(
+    `/api/admin/search?query=${encodeURIComponent(query)}`,
+  );
+  const result = (await response.json()) as {
+    success: boolean;
+    message?: string;
+    data?: AdminSearchResults;
+  };
+  if (!response.ok || !result.success || !result.data)
+    throw new Error(
+      response.status === 401 || response.status === 403
+        ? "SESSION_INVALID"
+        : (result.message ?? "SEARCH_ERROR"),
+    );
   return result.data;
 };
 

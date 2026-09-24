@@ -1,6 +1,6 @@
 import { prisma } from "../../config/database.config";
-import { APPOINTMENT_TIME_SLOTS } from "../../constants/appointments.constants";
 import { parseDisplayDate } from "../admin-appointments/admin-appointments.validation";
+import { getConfiguredSlots } from "../settings/settings.service";
 
 export const clinicSlotAvailability = async (
   doctorDbId: string,
@@ -9,9 +9,10 @@ export const clinicSlotAvailability = async (
 ) => {
   const date = parseDisplayDate(displayDate);
   if (!date) return { outcome: "INVALID_DATE" as const };
+  const { settings, slots } = await getConfiguredSlots();
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  if (date < today || date.getUTCDay() === 0)
+  if (date < today || !settings.workingDays.includes(date.getUTCDay()))
     return { outcome: "CLOSED" as const };
 
   const booked = await prisma.appointmentRequest.findMany({
@@ -31,7 +32,7 @@ export const clinicSlotAvailability = async (
   return {
     outcome: "AVAILABLE" as const,
     date: displayDate,
-    slots: APPOINTMENT_TIME_SLOTS.map((time) => ({
+    slots: slots.map((time) => ({
       time,
       available: !bookedTimes.has(time),
     })),

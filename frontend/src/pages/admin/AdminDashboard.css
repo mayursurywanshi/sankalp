@@ -16,7 +16,29 @@
   width: 26px;
 }
 .admin-dashboard-shell {
-  background: #f4f9fc;
+  background-color: #f5fbfd;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(10, 148, 150, 0.1) 0,
+      rgba(10, 148, 150, 0.04) 42px,
+      transparent 105px
+    ),
+    radial-gradient(
+      circle at 92% 14%,
+      rgba(255, 210, 111, 0.18) 0 55px,
+      transparent 56px
+    ),
+    radial-gradient(
+      circle at 78% 88%,
+      rgba(157, 123, 220, 0.12) 0 85px,
+      transparent 86px
+    ),
+    radial-gradient(
+      circle at 22% 78%,
+      rgba(35, 190, 171, 0.12) 0 70px,
+      transparent 71px
+    );
   min-height: 100vh;
 }
 .admin-dashboard {
@@ -141,7 +163,20 @@
 }
 .admin-welcome {
   box-sizing: border-box;
+  overflow: hidden;
   padding: 22px 24px;
+  position: relative;
+}
+.admin-welcome::after {
+  background: rgba(255, 211, 105, 0.24);
+  border-radius: 50%;
+  content: "";
+  height: 78px;
+  pointer-events: none;
+  position: absolute;
+  right: 34px;
+  top: -31px;
+  width: 78px;
 }
 .admin-welcome p,
 .admin-panel header small {
@@ -293,7 +328,7 @@
   font-weight: 800;
   padding: 7px 9px;
 }
-.admin-schedule header > strong {
+.admin-schedule-filter > strong {
   align-items: center;
   background: #e8f7f7;
   border-radius: 10px;
@@ -304,6 +339,46 @@
   justify-content: center;
   width: 42px;
 }
+.admin-schedule-filter {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+.admin-schedule-filter select {
+  background: #f5fbfc;
+  border: 1px solid #d4e5e9;
+  border-radius: 9px;
+  color: #24436f;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  min-height: 36px;
+  padding: 0 30px 0 10px;
+}
+.admin-schedule-dates {
+  background: linear-gradient(90deg, #effaf8, #f5f1ff);
+  border-radius: 11px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 13px;
+  padding: 11px 13px;
+}
+.admin-schedule-dates label {
+  color: #556a86;
+  display: grid;
+  font-size: 10px;
+  font-weight: 800;
+  gap: 4px;
+}
+.admin-schedule-dates input {
+  background: #fff;
+  border: 1px solid #d4e3ea;
+  border-radius: 8px;
+  color: #24436f;
+  font: inherit;
+  padding: 8px 9px;
+}
 .admin-schedule__body {
   align-items: center;
   display: flex;
@@ -313,12 +388,7 @@
 }
 .admin-donut {
   align-items: center;
-  background: conic-gradient(
-    #48a6e8 0 var(--requested),
-    #72c789 var(--requested) 58%,
-    #ffbc42 58% 82%,
-    #f56b78 82%
-  );
+  background: #e8f0f3;
   border-radius: 50%;
   display: flex;
   height: 125px;

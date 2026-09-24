@@ -24,11 +24,17 @@ export type DashboardScheduleSummary = {
   assigned: number;
   completed: number;
   cancelled: number;
+  range: {
+    period: "TODAY" | "LAST_7_DAYS" | "LAST_15_DAYS" | "THIS_MONTH" | "CUSTOM";
+    fromDate: string;
+    toDate: string;
+    label: string;
+  };
 };
 
 export type DashboardActivity = {
   id: string;
-  type: "APPOINTMENT_REQUEST" | "CONTACT_ENQUIRY";
+  type: "APPOINTMENT" | "CONTACT";
   message: string;
   createdAt: string;
 };

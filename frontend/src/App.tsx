@@ -85,6 +85,16 @@ const AdminPerformance = lazy(() =>
     default: module.AdminPerformance,
   })),
 );
+const AdminUsersRoles = lazy(() =>
+  import("./pages/admin/users-roles/AdminUsersRoles").then((module) => ({
+    default: module.AdminUsersRoles,
+  })),
+);
+const AdminSettings = lazy(() =>
+  import("./pages/admin/settings/AdminSettings").then((module) => ({
+    default: module.AdminSettings,
+  })),
+);
 const FeedbackForm = lazy(() =>
   import("./pages/feedback/FeedbackForm").then((module) => ({
     default: module.FeedbackForm,
@@ -159,6 +169,22 @@ function App() {
             element={
               <ProtectedAdminRoute>
                 <AdminPerformance />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/users-roles"
+            element={
+              <ProtectedAdminRoute>
+                <AdminUsersRoles />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <ProtectedAdminRoute>
+                <AdminSettings />
               </ProtectedAdminRoute>
             }
           />

@@ -2,12 +2,28 @@ import { Request, Response } from "express";
 import { APPOINTMENT_CONTENT } from "../../constants/appointments.constants";
 import { createAppointmentRequest } from "./appointments.service";
 import { appointmentRequestSchema } from "./appointments.validation";
+import { getConfiguredSlots, getSettings } from "../settings/settings.service";
 
-export const getAppointmentContent = (
+export const getAppointmentContent = async (
   _request: Request,
   response: Response,
-): void => {
-  response.status(200).json({ success: true, data: APPOINTMENT_CONTENT });
+): Promise<void> => {
+  const { settings, slots } = await getConfiguredSlots();
+  response
+    .status(200)
+    .json({
+      success: true,
+      data: {
+        ...APPOINTMENT_CONTENT,
+        phone: settings.phone,
+        email: settings.email,
+        clinicHours: {
+          weekdays: `${settings.openingTime}–${settings.closingTime}`,
+          sunday: "Closed days are unavailable",
+        },
+        timeSlots: slots,
+      },
+    });
 };
 
 export const submitAppointmentRequest = async (
@@ -29,15 +45,26 @@ export const submitAppointmentRequest = async (
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  if (appointmentDate < today || appointmentDate.getDay() === 0) {
+  const settings = await getSettings();
+  const maximumDate = new Date(today);
+  maximumDate.setDate(
+    maximumDate.getDate() + settings.maximumAdvanceBookingDays,
+  );
+  if (
+    appointmentDate < today ||
+    appointmentDate > maximumDate ||
+    !settings.workingDays.includes(appointmentDate.getDay())
+  ) {
     response.status(400).json({
       success: false,
       message: "Please select an available appointment date.",
       errors: {
         preferredDate: [
-          appointmentDate.getDay() === 0
-            ? "The clinic is closed on Sunday"
-            : "Preferred date cannot be in the past",
+          appointmentDate < today
+            ? "Preferred date cannot be in the past"
+            : appointmentDate > maximumDate
+              ? `Appointments can be requested up to ${settings.maximumAdvanceBookingDays} days ahead`
+              : "The clinic is closed on the selected day",
         ],
       },
     });

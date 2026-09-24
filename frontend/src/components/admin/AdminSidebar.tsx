@@ -14,8 +14,8 @@ const menuItems = [
   ["☵", "Feedback", "/admin/feedback"],
   ["✉", "Contact Requests", "/admin/contact-requests"],
   ["⌁", "Performance", "/admin/performance"],
-  ["♚", "Users & Roles", ""],
-  ["⚙", "Settings", ""],
+  ["♚", "Users & Roles", "/admin/users-roles"],
+  ["⚙", "Settings", "/admin/settings"],
 ] as const;
 
 type Props = { onLogout: () => void; loggingOut: boolean };
